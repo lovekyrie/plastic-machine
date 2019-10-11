@@ -2,7 +2,7 @@
   <div id="container">
     <div class="log-operate">
       <div class="person">
-        <div>
+        <div @click="toPersonal">
           <img :src="personImg" />
         </div>
       </div>
@@ -89,6 +89,9 @@ export default {
       propaganda,
       indexLine
     };
+  },
+  methods: {
+    toPersonal() {}
   }
 };
 </script>

@@ -1,20 +1,22 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" :src="backArrow" />
-        <p class="text-center">
-          <span>MAIL</span>
+        <img class="arrow-left" :src="backArrow" @click="back" />
+        <p class="text-center" @click="showOption">
+          <span>{{ category }}</span>
           <!-- 下拉图标 -->
           <img class="arrow-side" :src="pullDown" />
         </p>
-        <div type="false" class="ul-style" style="display:none;">
-          <li>MAIIS</li>
-          <li>MAⅡ</li>
-          <li>MA/G</li>
-          <li>VEⅡ</li>
-          <li>ZE</li>
+        <div type="false" class="ul-style" v-if="showType">
+          <li
+            v-for="(item, index) in categoryList"
+            :key="index"
+            @click="chooseCategory(item)"
+          >
+            {{ item }}
+          </li>
         </div>
       </div>
     </div>
@@ -22,34 +24,30 @@
       <div class="content">
         <!-- 左侧选项 -->
         <div class="left">
-          <div class="row active">
-            <span>MA600II/130</span>
+          <div v-for="(item, index) in productList" :key="index">
+            <div
+              @click="selectIndex = index"
+              class="row"
+              :class="{ active: index === selectIndex }"
+            >
+              <span>{{ item }}</span>
+            </div>
+            <div class="row-segment"></div>
           </div>
-          <div class="row-segment"></div>
         </div>
         <div class="right">
           <div class="title">
-            <div class="active introduce">
-              <span>机型简介</span>
-            </div>
-            <div>
-              <span>性能特征</span>
-            </div>
-            <div>
-              <span>典型制品</span>
-            </div>
-            <div class="standard">
-              <span>标准配置</span>
-            </div>
-            <div>
-              <span>技术参数</span>
-            </div>
-            <div>
-              <span>相关尺寸</span>
+            <div
+              v-for="(item, index) in introduceList"
+              :key="index"
+              :class="{ active: index === selectTab }"
+              @click="chooseTab(index)"
+            >
+              <span>{{ item }}</span>
             </div>
           </div>
           <!-- 机型简介 -->
-          <div class="concept" style="display:block">
+          <div class="concept" v-show="selectTab === 0">
             <p>2005年，HTF普通型注塑机</p>
             <p>2006年-2011年，天隆MA伺服节能注塑机</p>
             <p>2012年后，天隆MAII伺服节能、高效、精密注塑机</p>
@@ -61,20 +59,26 @@
             </p>
           </div>
           <!-- 标准配置 -->
-          <div class="standard-set" style="display:none;">
+          <div class="standard-set" v-show="selectTab === 3">
             <div class="wrap">
               <div class="injection">
                 <div class="part">注射部分</div>
                 <div class="triangle"></div>
               </div>
-              <div class="injection-ct"></div>
+              <div class="injection-ct">
+                <p v-for="(item, index) in injectionList" :key="index">
+                  {{ item }}
+                </p>
+              </div>
             </div>
             <div class="warp">
               <div class="lock">
                 <div class="part">锁模部分</div>
                 <div class="triangle"></div>
               </div>
-              <div class="lock-ct"></div>
+              <div class="lock-ct">
+                <p v-for="(item, index) in lockList" :key="index">{{ item }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -91,20 +95,88 @@ export default {
   data() {
     return {
       backArrow,
-      pullDown
+      pullDown,
+      selectIndex: 0,
+      selectTab: 0,
+      showType:false,
+      category:'MAIIS',
+      productList: [
+        "MA600II/130",
+        "MA900II/260",
+        "MA1200II/370",
+        "MA1600II/540",
+        "MA2000II/700",
+        "MA2500II/1000",
+        "MA2800II/1350",
+        "MA3200II/1700",
+        "MA3800II/1350",
+        "MA3200II/1700",
+        "MA3800II/2250",
+        "MA4700II/2950",
+        "MA5300II/4000",
+        "MA6000II/4000",
+        "MA7000II/5000",
+        "MA8000II/6800",
+        "MA9000/6800"
+      ],
+      introduceList: [
+        "机型简介",
+        "性能特征",
+        "典型制品",
+        "标准配置",
+        "技术参数",
+        "相关尺寸"
+      ],
+      injectionList: [
+        "1、合模部分封闭式防护门",
+        "2、三色调标准颜色",
+        "3、机器防震可调垫铁",
+        "4、附件箱",
+        "5、易损随机备件",
+        "6、常用维修及安装工具",
+        "7、警报灯"
+      ],
+      lockList: [
+        "1、双缸平衡注射系统",
+        "2、单缸座台进移",
+        "3、注射转保压起点控制",
+        "4、注射位置检测功能，注射位置尺控制",
+        "5、注射防护罩",
+        "6、喷嘴防护罩",
+        "7、警报灯"
+      ],
+      categoryList:[
+        "MAIIS",
+        "MAⅡ",
+        "MA/G",
+        "VEⅡ",
+        "ZE"
+      ]
     };
+  },
+  methods: {
+    back() {
+      window.history.back();
+    },
+    chooseTab(index) {
+      this.selectTab = index;
+    },
+    showOption() {
+      this.showType=!this.showType
+    },
+    chooseCategory(item) {
+      this.showType=false
+      this.category=item
+
+    }
   },
   components: {}
 };
 </script>
 
 <style scoped lang="less">
-html,
-body {
-  height: 100%;
-}
-
-.container {
+#container {
+  padding: 0 15px;
   width: 100%;
   background-color: #fff;
 }
@@ -140,6 +212,7 @@ body {
   color: #00338d;
   display: -webkit-flex;
   display: flex;
+  display: block;
   width: 15%;
   z-index: 12;
   list-style: none;
@@ -192,7 +265,7 @@ body {
   background-size: cover;
 }
 
-.content .left > .active {
+.content .left .active {
   background-image: url("./images/左侧导航_选中.png");
 }
 

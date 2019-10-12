@@ -17,12 +17,12 @@
         </div>
       </div>
       <div class="product">
-        <div>
+        <div @click="toProduct">
           <img :src="productImg" alt />
         </div>
       </div>
       <div class="pick">
-        <div>
+        <div @click="toPick">
           <img :src="pickImg" alt />
         </div>
       </div>
@@ -32,15 +32,15 @@
         </div>
       </div>
       <div class="list">
-        <div>
+        <div @click="toList">
           <img :src="listImg" alt />
         </div>
       </div>
     </div>
     <!-- 宣传视频 -->
-    <div class="propaganda">
+    <div class="propaganda" @click="showVideo">
       <img :src="propaganda" alt />
-      <div class="video-play" style="display:none;">
+      <div class="video-play" v-show="showVideoFlag">
         <video controls>
           <source
             type="video/mp4"
@@ -86,11 +86,26 @@ export default {
       industryImg,
       listImg,
       propaganda,
-      indexLine
+      indexLine,
+      showVideoFlag: false
     };
   },
   methods: {
-    toPersonal() {}
+    toPersonal() {
+      this.until.href("personal.html");
+    },
+    toProduct() {
+      this.until.href("productOverview.html");
+    },
+    toPick() {
+      this.until.href("optional.html");
+    },
+    toList() {
+      this.until.href("optionalCart.html");
+    },
+    showVideo() {
+      this.showVideoFlag = true;
+    }
   }
 };
 </script>

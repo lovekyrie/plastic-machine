@@ -1,5 +1,4 @@
 // const hostUrl = 'http://192.165.2.195'
-const clubId = 90;
 import $ from "jquery";
 import { MessageBox } from "element-ui";
 import { Message } from "element-ui";
@@ -624,4 +623,4 @@ class reg {
   }
 }
 
-export { until, reg, judge, clubId };
+export { until, reg, judge };

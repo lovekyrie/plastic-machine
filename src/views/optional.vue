@@ -138,12 +138,16 @@
                 </li>
                 <li>
                   <div></div>
-                  <span type="false">(AGE0200)机器颜色超出可选21种（附张总报告）</span>
+                  <span type="false"
+                    >(AGE0200)机器颜色超出可选21种（附张总报告）</span
+                  >
                   <img :src="infoIcon" alt />
                 </li>
                 <li>
                   <div></div>
-                  <span type="false">(AGE0300)机器喷字非标（需公司总裁书面批准）</span>
+                  <span type="false"
+                    >(AGE0300)机器喷字非标（需公司总裁书面批准）</span
+                  >
                   <img :src="infoIcon" alt />
                 </li>
               </div>

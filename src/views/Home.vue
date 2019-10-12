@@ -37,7 +37,6 @@
         </div>
       </div>
     </div>
-    <router-view />
     <!-- 宣传视频 -->
     <div class="propaganda">
       <img :src="propaganda" alt />
@@ -97,12 +96,6 @@ export default {
 </script>
 
 <style lang="less">
-html,
-body {
-  height: 100%;
-  background-color: #f2f5f9;
-}
-
 #container {
   width: 100%;
   position: relative;

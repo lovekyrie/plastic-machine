@@ -92,10 +92,11 @@
           <!-- 不要title，因为没有内容，也撑不开 -->
           <p>请详细写下您的意见和问题，我们会尽快解决您的反馈：</p>
           <div class="text-suggest">
-            <textarea class="textarea-sugg" placeholder="请填写您的意见和问题......"></textarea>
-            <p>
-              <span class="suggest-len">0</span>/200
-            </p>
+            <textarea
+              class="textarea-sugg"
+              placeholder="请填写您的意见和问题......"
+            ></textarea>
+            <p><span class="suggest-len">0</span>/200</p>
             <div>
               <!-- 默认的文件上传控件是没有+符号的 -->
               <input type="file" />
@@ -106,7 +107,9 @@
             <!--可输入 -->
             <input type="text" placeholder="请填写您的手机、QQ、邮箱" />
           </div>
-          <span>选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span>
+          <span
+            >选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span
+          >
           <div>提交</div>
         </div>
       </div>

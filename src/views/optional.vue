@@ -30,11 +30,7 @@
           <span>机型：</span>
           <input type="text" class="text-sel" />
           <div class="ul-style" style="display:none;">
-            <li>MAIIS</li>
-            <li>MAⅡ</li>
-            <li>MA/G</li>
-            <li>VEⅡ</li>
-            <li>ZE</li>
+            <li v-for="(item, index) in modelList" :key="index">{{ item }}</li>
           </div>
           <img :src="pullDown" alt />
         </div>
@@ -42,11 +38,9 @@
           <span>锁模力：</span>
           <input type="text" class="text-sel" />
           <div class="ul-style" style="display:none;">
-            <li>900</li>
-            <li>1200</li>
-            <li>1600</li>
-            <li>2000</li>
-            <li>2500</li>
+            <li v-for="(item, index) in clampingForceList" :key="index">
+              {{ item }}
+            </li>
           </div>
           <img :src="pullDown" alt />
         </div>
@@ -54,10 +48,9 @@
           <span>注射当量：</span>
           <input type="text" class="text-sel" />
           <div class="ul-style" style="display:none;">
-            <li>130</li>
-            <li>140</li>
-            <li>150</li>
-            <li>160</li>
+            <li v-for="(item, index) in injectionList" :key="index">
+              {{ item }}
+            </li>
           </div>
           <img :src="pullDown" alt />
         </div>
@@ -65,10 +58,9 @@
           <span>螺杆型号：</span>
           <input type="text" class="text-sel" />
           <div class="ul-style" style="display:none;">
-            <li>A</li>
-            <li>B</li>
-            <li>C</li>
-            <li>D</li>
+            <li v-for="(item, index) in screwModelList" :key="index">
+              {{ item }}
+            </li>
           </div>
           <img :src="pullDown" alt />
         </div>
@@ -223,13 +215,11 @@
         <div class="model-sel">
           <div>
             <span>机型：</span>
-            <input type="text" class="text-sel" />
-            <div class="ul-style" style="display:none;">
-              <li>MAIIS</li>
-              <li>MAⅡ</li>
-              <li>MA/G</li>
-              <li>VEⅡ</li>
-              <li>ZE</li>
+            <input type="text" class="text-sel" @click="showModelOp" />
+            <div class="ul-style" v-show="showModel">
+              <li v-for="(item, index) in modelList" :key="index">
+                {{ item }}
+              </li>
             </div>
             <img :src="pullDown" alt />
           </div>
@@ -307,8 +297,21 @@ export default {
       required,
       uploadIcon,
       addSetting,
-      closeIcon
+      closeIcon,
+      modelList: ["MAIIS", "MAII", "MA/G", "VEII", "ZE"],
+      clampingForceList: ["900", "1200", "1600", "2000", "2500"],
+      injectionList: ["130", "140", "150", "160"],
+      screwModelList: ["A", "B", "C", "D"],
+      showModel: false,
+      showClampingForce: false,
+      showInjection: false,
+      showScrew: false
     };
+  },
+  methods: {
+    showModelOp() {
+      this.showModel = !this.showModel;
+    }
   },
   components: {}
 };
@@ -762,6 +765,7 @@ body {
 .model-sel > div > .ul-style {
   display: -webkit-flex;
   display: flex;
+  display: block;
   width: 78%;
   z-index: 9999;
   list-style: none;

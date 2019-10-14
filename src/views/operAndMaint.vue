@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <div class="row">
+    <div class="row" ref="scroll">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
@@ -46,19 +46,30 @@
               class="inspect-type"
               v-for="(item, index) in options"
               :class="{ active: selectRepairType === index }"
-              @click="selectRepairType = index"
+              @click="selectRepairTypeOp(index)"
               :key="index"
             >
               {{ item.label }}
               <i class="el-icon-arrow-right"></i>
+            </div>
+            <div class="inspect-type-child" v-show="showRepairChild">
+              <div
+                class="inspect-child-item"
+                v-for="(item, index) in optionChilds"
+                :class="{ active: selectRepairChild === index }"
+                @click="selectRepairChildOp(index)"
+                :key="index"
+              >
+                {{ item.label }}
+              </div>
             </div>
           </div>
         </div>
         <div class="right">
           <!-- 调试 -->
           <div style="height: 1200px;" v-if="showDebugger">
-            <el-steps direction="vertical" :active="1">
-              <el-step title="步骤 1" :description="description1"> </el-step>
+            <el-steps direction="vertical" :active="activeStep">
+              <el-step title="步骤 1" :description="description1"></el-step>
               <el-step title="步骤 2"></el-step>
               <el-step
                 title="步骤 3"
@@ -159,9 +170,11 @@ export default {
       selectTab: 3,
       selectType: 0,
       selectRepairType: 0,
-      showDebugger:true,
+      selectRepairChild: 0,
+      showDebugger: true,
       showMaintain: false,
       showRepair: false,
+      showRepairChild: false,
       options: [
         {
           value: "zhinan",
@@ -302,6 +315,7 @@ export default {
           ]
         }
       ],
+      optionChilds: [],
       repairList: [
         {
           no: 1,
@@ -328,7 +342,8 @@ export default {
             "将流量先导阀清洗（起先怀疑此阀已坏，拆洗麻烦），装上，恢复正常"
         }
       ],
-      description1:`检查注塑机有无损坏；
+      activeStep: 4,
+      description1: `检查注塑机有无损坏；
       检查备件有无缺少配件；`
     };
   },
@@ -342,24 +357,46 @@ export default {
     showOption() {
       this.showType = !this.showType;
     },
+    selectRepairTypeOp(i) {
+      this.selectRepairType = i;
+      //查找子项
+      let filter = this.options.filter((item, index) => index === i);
+      this.optionChilds = filter[0].children;
+      this.showRepairChild = true;
+    },
+    selectRepairChildOp(index) {
+      this.selectRepairChild = index;
+      this.showRepairChild = false;
+    },
     chooseOperate(item) {
       this.operate = item;
       this.showType = false;
       if (item === "注塑机维修") {
         this.showRepair = true;
         this.showMaintain = false;
-        this.showDebugger=false;
+        this.showDebugger = false;
       } else if (item === "注塑机维护") {
         this.showMaintain = true;
         this.showRepair = false;
-        this.showDebugger=false
+        this.showDebugger = false;
+      } else {
+        this.showDebugger = true;
+        this.showRepair = false;
+        this.showMaintain = false;
       }
-      else{
-        this.showDebugger=true
-        this.showRepair=false
-        this.showMaintain=false
-      }
+    },
+    scrollLoad() {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        let { scrollTop } = this.$refs.scroll;
+        if (scrollTop > 100) {
+          this.activeStep++;
+        }
+      }, 100);
     }
+  },
+  mounted() {
+    window.addEventListener("scroll", this.scrollLoad, true);
   },
   components: {}
 };
@@ -463,11 +500,24 @@ body {
 
     .repair {
       margin-top: 60px;
+      position: relative;
       .inspect-type {
         text-align: left;
         padding-left: 40px;
         i {
           margin-left: 100px;
+        }
+      }
+      .inspect-type-child {
+        position: absolute;
+        top: 0;
+        left: 260px;
+        width: 260px;
+        height: 300px;
+        background-color: #fafafa;
+        > div {
+          height: 60px;
+          line-height: 60px;
         }
       }
     }

@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" :src="backArrow" />
+        <img class="arrow-left" :src="backArrow" @click="back" />
         <p class="text-center">
           选配清单
           <!-- 下拉图标 -->
@@ -12,36 +12,50 @@
           <img :src="searchIcon" alt />
           <input type="text" placeholder="请输入搜索关键字" />
         </div>
-        <span class="confirmBtn">添加机型</span>
+        <span class="confirmBtn" @click="toOptional">添加机型</span>
       </div>
     </div>
     <div class="row">
       <p class="select-all">
-        <img id="pickAll" :src="pickAll" alt />
+        <img
+          id="pickAll"
+          :src="pickAllMark ? pickAll : noPick"
+          @click="pickAllOp"
+          alt
+        />
         <span>全选</span>
       </p>
     </div>
     <div class="row">
       <div class="content">
         <!-- 每一条商品信息 -->
-        <div class="product-info">
+        <div
+          class="product-info"
+          v-for="(item, index) in cartList"
+          :key="index"
+        >
           <!-- 产品名称 -->
-          <img class="pick" :src="pickAll" alt pick="true" />
+          <img
+            class="pick"
+            :src="item.selected ? pickAll : noPick"
+            @click="pickOne(item, index)"
+            alt
+          />
           <div>
-            <span>MA600 / 130 /A(标准机)</span>
+            <span>{{ item.name }}</span>
           </div>
           <!-- 产品数量 -->
           <div class="count-detail">
             <!-- 数量详细 -->
             <div>
-              <span>选配时间：2018-08-16 09:45</span>
+              <span>选配时间：{{ item.time }}</span>
             </div>
             <div class="count">
               <span>数量：</span>
               <img :src="numIcon" alt />
-              <span>1</span>
-              <button class="left-btn"></button>
-              <button class="right-btn"></button>
+              <span>{{ item.count }}</span>
+              <button class="left-btn" @click="mins(item)"></button>
+              <button class="right-btn" @click="plus(item)"></button>
             </div>
             <div>
               <img :src="editIcon" alt />
@@ -61,11 +75,13 @@
       </div>
     </div>
     <div class="row footer">
-      <div class="create-order col-md-1 col-md-offset-10">生成订单</div>
+      <div @click="saveOrder" class="create-order col-md-1 col-md-offset-10">
+        生成订单
+      </div>
     </div>
-    <div class="submit-wrap" style="display:none;">
-      <div class="submit" style="display:none;">
-        <img :src="closeIcon" alt />
+    <div class="submit-wrap" v-show="showDialog">
+      <div class="submit" style="display:block;">
+        <img :src="closeIcon" @click="showDialog = false" alt />
         <h3>提交信息</h3>
         <div class="email">
           <div>
@@ -76,7 +92,7 @@
           </div>
           <div>
             <span></span>
-            <div class="sumbit-btn">提交</div>
+            <div class="sumbit-btn" @click="save">提交</div>
           </div>
         </div>
       </div>
@@ -114,21 +130,82 @@ export default {
       editIcon,
       deleteIcon,
       noPick,
-      closeIcon
+      closeIcon,
+      pickAllMark: true,
+      showDialog:false,
+      cartList: [
+        {
+          name: "MA600 / 130 /A(标准机)",
+          time: "2018-08-16 09:45",
+          count: 1
+        },
+        {
+          name: "MA600 / 130 /A(标准机)",
+          time: "2018-08-16 09:45",
+          count: 1
+        },
+        {
+          name: "MA600 / 130 /A(标准机)",
+          time: "2018-08-16 09:45",
+          count: 1
+        }
+      ]
     };
+  },
+  methods: {
+    back() {
+      window.history.back();
+    },
+    pickAllOp() {
+      this.pickAllMark = !this.pickAllMark;
+      this.cartList.map(item => (item.selected = this.pickAllMark));
+    },
+    pickOne(item, i) {
+      item.selected = !item.selected;
+      this.$set(this.cartList, i, item);
+
+      let index = this.cartList.findIndex(item => !item.selected);
+      if (index > -1) {
+        this.pickAllMark=false
+      }
+      else{
+        this.pickAllMark=true
+      }
+    },
+    mins(item) {
+      if(item.count>=1){
+
+        item.count--
+      }
+    },
+    plus(item) {
+      item.count++
+    },
+    toOptional(){
+      this.until.href("optional.html")
+    },
+    saveOrder() {
+      this.showDialog=true
+    },
+    save() {
+      this.showDialog=false
+    }
+  },
+  mounted() {
+    this.cartList.map((item, index) => {
+      item.selected = true;
+      this.$set(this.cartList, index, item);
+    });
   },
   components: {}
 };
 </script>
 
 <style scoped lang="less">
-html,
-body {
-  height: 100%;
-}
-
-.container {
+#container {
+  padding: 0 15px;
   width: 100%;
+  height: 100%;
   background-color: #fff;
 }
 

@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" />
         <div class="option">
-          <div class="col-md-4 active usual">
-            <span>常规选配</span>
-          </div>
-          <div class="col-md-4 recommend">
-            <span>特殊选配(推荐)</span>
-          </div>
-          <div class="col-md-4 unique">
-            <span>特殊选配(定制SO)</span>
+          <div
+            class="col-md-4"
+            :class="{ active: selectTab === item }"
+            @click="selectTabOp(item, index)"
+            v-for="(item, index) in optionList"
+            :key="index"
+          >
+            <span>{{ item }}</span>
           </div>
         </div>
         <div class="search">
@@ -28,17 +28,37 @@
       <div class="select-opt">
         <div class="sel-wrap">
           <span>机型：</span>
-          <input type="text" class="text-sel" />
-          <div class="ul-style" style="display:none;">
-            <li v-for="(item, index) in modelList" :key="index">{{ item }}</li>
+          <input
+            type="text"
+            @click="showModelTwo = !showModelTwo"
+            v-model="form.model"
+            class="text-sel"
+          />
+          <div class="ul-style" v-show="showModelTwo">
+            <li
+              v-for="(item, index) in modelList"
+              :key="index"
+              @click="chooseModelTwo(item)"
+            >
+              {{ item }}
+            </li>
           </div>
           <img :src="pullDown" alt />
         </div>
         <div class="sel-wrap">
           <span>锁模力：</span>
-          <input type="text" class="text-sel" />
-          <div class="ul-style" style="display:none;">
-            <li v-for="(item, index) in clampingForceList" :key="index">
+          <input
+            type="text"
+            @click="showClampingForceTwo = !showClampingForceTwo"
+            v-model="form.clampingForce"
+            class="text-sel"
+          />
+          <div class="ul-style" v-show="showClampingForceTwo">
+            <li
+              v-for="(item, index) in clampingForceList"
+              :key="index"
+              @click="chooseClampingTwo(item)"
+            >
               {{ item }}
             </li>
           </div>
@@ -46,9 +66,18 @@
         </div>
         <div class="sel-wrap">
           <span>注射当量：</span>
-          <input type="text" class="text-sel" />
-          <div class="ul-style" style="display:none;">
-            <li v-for="(item, index) in injectionList" :key="index">
+          <input
+            type="text"
+            @click="showInjectionTwo = !showInjectionTwo"
+            v-model="form.injection"
+            class="text-sel"
+          />
+          <div class="ul-style" v-show="showInjectionTwo">
+            <li
+              v-for="(item, index) in injectionList"
+              :key="index"
+              @click="chooseInjectionTwo(item)"
+            >
               {{ item }}
             </li>
           </div>
@@ -56,9 +85,18 @@
         </div>
         <div class="sel-wrap">
           <span>螺杆型号：</span>
-          <input type="text" class="text-sel" />
-          <div class="ul-style" style="display:none;">
-            <li v-for="(item, index) in screwModelList" :key="index">
+          <input
+            type="text"
+            @click="showScrewTwo = !showScrewTwo"
+            v-model="form.screw"
+            class="text-sel"
+          />
+          <div class="ul-style" v-show="showScrewTwo">
+            <li
+              v-for="(item, index) in screwModelList"
+              :key="index"
+              @click="chooseScrewTwo(item)"
+            >
               {{ item }}
             </li>
           </div>
@@ -99,7 +137,7 @@
           </div>
         </div>
         <!-- 常规选配 -->
-        <div class="usual-pick" style="display:block;">
+        <div class="usual-pick" v-show="showUsual">
           <div class="sel-two">
             <div>
               <span>安全认证标准</span>
@@ -121,25 +159,25 @@
           <div class="sel-three">
             <div>
               <span>整机颜色和喷字</span>
-              <input type="text" class="text-nosel" />
-              <div class="ul-multi-style" style="display:none;">
+              <input
+                @click="showColorAndFont = !showColorAndFont"
+                type="text"
+                class="text-nosel"
+              />
+              <div class="ul-multi-style" v-show="showColorAndFont">
                 <li>
                   <div></div>
-                  <span type="false">(AGE0100)机器颜色只可选21种特殊定制</span>
+                  <span>(AGE0100)机器颜色只可选21种特殊定制</span>
                   <img :src="infoIcon" alt />
                 </li>
                 <li>
                   <div></div>
-                  <span type="false"
-                    >(AGE0200)机器颜色超出可选21种（附张总报告）</span
-                  >
+                  <span>(AGE0200)机器颜色超出可选21种（附张总报告）</span>
                   <img :src="infoIcon" alt />
                 </li>
                 <li>
                   <div></div>
-                  <span type="false"
-                    >(AGE0300)机器喷字非标（需公司总裁书面批准）</span
-                  >
+                  <span>(AGE0300)机器喷字非标（需公司总裁书面批准）</span>
                   <img :src="infoIcon" alt />
                 </li>
               </div>
@@ -160,7 +198,7 @@
           </div>
         </div>
         <!-- 特殊选配(定制SO) -->
-        <div class="unique-pick" style="display:none;">
+        <div class="unique-pick" v-show="uniquePick">
           <div class="setting-wrap">
             <div>
               <img :src="required" alt />
@@ -202,22 +240,31 @@
             <span class="about-size">相关尺寸图</span>
           </div>
           <div>
-            <span class="current-order">当前清单</span>
+            <span class="current-order" @click="toOptionalList">当前清单</span>
           </div>
-          <div class="certain-option">确认</div>
+          <div class="certain-option" @click="toOptionResult">确认</div>
         </div>
       </div>
     </div>
-    <div class="basic-model" style="display:block;">
+    <div class="basic-model" v-show="showDialog">
       <div class="dialog" style="display:block;">
         <img class="btn-close" :src="closeIcon" alt />
         <h3>基础机型</h3>
         <div class="model-sel">
           <div>
             <span>机型：</span>
-            <input type="text" class="text-sel" @click="showModelOp" />
+            <input
+              type="text"
+              v-model="model"
+              class="text-sel"
+              @click="showModelOp"
+            />
             <div class="ul-style" v-show="showModel">
-              <li v-for="(item, index) in modelList" :key="index">
+              <li
+                v-for="(item, index) in modelList"
+                :key="index"
+                @click="chooseModel(item)"
+              >
                 {{ item }}
               </li>
             </div>
@@ -225,42 +272,65 @@
           </div>
           <div>
             <span>锁模力：</span>
-            <input type="text" class="text-sel" />
-            <div class="ul-style" style="display:none;">
-              <li>900</li>
-              <li>1200</li>
-              <li>1600</li>
-              <li>2000</li>
-              <li>2500</li>
+            <input
+              type="text"
+              v-model="clampingForce"
+              class="text-sel"
+              @click="showClampingForceOp"
+            />
+            <div class="ul-style" v-show="showClampingForce">
+              <li
+                v-for="(item, index) in clampingForceList"
+                :key="index"
+                @click="chooseClamping(item)"
+              >
+                {{ item }}
+              </li>
             </div>
             <img :src="pullDown" alt />
           </div>
           <div>
             <span>注射当量：</span>
-            <input type="text" class="text-sel" />
-            <div class="ul-style" style="display:none;">
-              <li>130</li>
-              <li>140</li>
-              <li>150</li>
-              <li>160</li>
+            <input
+              type="text"
+              v-model="injection"
+              class="text-sel"
+              @click="showInjectionOp"
+            />
+            <div class="ul-style" v-show="showInjection">
+              <li
+                v-for="(item, index) in injectionList"
+                :key="index"
+                @click="chooseInjection(item)"
+              >
+                {{ item }}
+              </li>
             </div>
             <img :src="pullDown" alt />
           </div>
           <div>
             <span>螺杆型号：</span>
-            <input type="text" class="text-sel" />
-            <div class="ul-style" style="display:none;">
-              <li>A</li>
-              <li>B</li>
-              <li>C</li>
-              <li>D</li>
+            <input
+              type="text"
+              v-model="screw"
+              class="text-sel"
+              @click="showScrewOp"
+            />
+            <div class="ul-style" v-show="showScrew">
+              <li
+                v-for="(item, index) in screwModelList"
+                :key="index"
+                @click="chooseScrew(item)"
+              >
+                {{ item }}
+              </li>
             </div>
             <img :src="pullDown" alt />
           </div>
           <p>注射重量(PS):46g</p>
           <div>
             <span></span>
-            <button class="confirmPick">确认</button>
+            <button class="confirmPick" @click="confirm">确认</button>
           </div>
         </div>
       </div>
@@ -303,32 +373,119 @@ export default {
       injectionList: ["130", "140", "150", "160"],
       screwModelList: ["A", "B", "C", "D"],
       showModel: false,
+      showModelTwo: false,
       showClampingForce: false,
+      showClampingForceTwo: false,
       showInjection: false,
-      showScrew: false
+      showInjectionTwo: false,
+      showScrew: false,
+      showScrewTwo: false,
+      showDialog: true,
+      showUsual: false,
+      model: "MAIIS",
+      clampingForce: "900",
+      injection: "130",
+      screw: "A",
+      showColorAndFont: false,
+      uniquePick: false,
+      optionList: ["常规选配", "特殊选配(推荐)", "特殊选配(定制SO)"],
+      selectTab: "常规选配",
+      form: {
+        model: "",
+        clampingForce: "",
+        injection: "",
+        screw: ""
+      }
     };
   },
   methods: {
     showModelOp() {
       this.showModel = !this.showModel;
+    },
+    showClampingForceOp() {
+      this.showClampingForce = !this.showClampingForce;
+    },
+    showInjectionOp() {
+      this.showInjection = !this.showInjection;
+    },
+    showScrewOp() {
+      this.showScrew = !this.showScrew;
+    },
+    chooseModel(item) {
+      this.model = item;
+      this.showModel = false;
+    },
+    chooseClamping(item) {
+      this.clampingForce = item;
+      this.showClampingForce = false;
+    },
+    chooseInjection(item) {
+      this.injection = item;
+      this.showInjection = false;
+    },
+    chooseScrew(item) {
+      this.screw = item;
+      this.showScrew = false;
+    },
+    chooseModelTwo(item) {
+      this.form.model = item;
+      this.showModelTwo = false;
+    },
+    chooseClampingTwo(item) {
+      this.form.clampingForce = item;
+      this.showClampingForceTwo = false;
+    },
+    chooseInjectionTwo(item) {
+      this.form.injection = item;
+      this.showInjectionTwo = false;
+    },
+    chooseScrewTwo(item) {
+      this.form.screw = item;
+      this.showScrewTwo = false;
+    },
+    selectTabOp(item,index) {
+      this.selectTab = item;
+      if(index===2){
+        this.uniquePick=true
+        this.showUsual=false
+      }
+      else{
+        this.showUsual=true
+        this.uniquePick=false
+      }
+    },
+    confirm() {
+      this.form.model = this.model;
+      this.form.clampingForce = this.clampingForce;
+      this.form.injection = this.injection;
+      this.form.screw = this.screw;
+
+      this.showDialog = false;
+      this.showUsual = true;
+    },
+    toOptionResult() {
+      this.until.href("optionalResult.html")
+    },
+    toOptionalList() {
+      this.until.href("optionalList.html")
     }
   },
   components: {}
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 html,
 body {
-  height: 100%;
   background-color: #fff;
 }
 
-.container {
+#container {
+  padding: 0 15px;
   width: 100%;
 }
 
-.container .main-opt {
+#container .main-opt {
   background-color: #f2f5f9;
 }
 
@@ -382,7 +539,7 @@ body {
   outline: none;
 }
 
-.container .row .option {
+#container .row .option {
   width: 46%;
   padding-left: 0;
   padding-right: 0;
@@ -449,6 +606,7 @@ body {
 .select-opt > div > .ul-style {
   display: -webkit-flex;
   display: flex;
+  display: block;
   width: 60%;
   z-index: 9999;
   list-style: none;
@@ -513,7 +671,7 @@ body {
 
 .content {
   height: 100%;
-  padding-bottom: 30%;
+  padding-bottom: 20%;
   font-size: 16px;
   width: 100%;
   background-color: #fff;
@@ -771,7 +929,7 @@ body {
   list-style: none;
   position: absolute;
   top: 100%;
-  left: 21%;
+  left: 20%;
   border: 1px solid #d2d2d2;
   background-color: #00338d;
 }
@@ -821,6 +979,7 @@ body {
 .sel-three > div > .ul-multi-style {
   display: -webkit-flex;
   display: flex;
+  display: block;
   width: 100%;
   z-index: 9999;
   list-style: none;

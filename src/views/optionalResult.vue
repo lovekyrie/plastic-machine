@@ -1,14 +1,14 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" :src="backArrow" />
+        <img class="arrow-left" :src="backArrow" @click="back" />
         <p class="text-center">
           选配结果
           <!-- 下拉图标 -->
         </p>
-        <span class="confirmBtn">保存</span>
+        <span class="confirmBtn" @click="toCart">保存</span>
       </div>
     </div>
     <div class="row">
@@ -46,12 +46,16 @@
             <div></div>
             <div></div>
           </div>
-          <div class="concept">
-            <div>1</div>
-            <div>螺杆型号</div>
-            <div></div>
-            <div></div>
-            <div></div>
+          <div
+            class="concept"
+            v-for="(item, index) in productInfoList"
+            :key="index"
+          >
+            <div>{{ item.num }}</div>
+            <div>{{ item.name }}</div>
+            <div>{{ item.unit }}</div>
+            <div>{{ item.format }}</div>
+            <div>{{ item.note }}</div>
           </div>
         </div>
       </div>
@@ -64,21 +68,112 @@ import backArrow from "./images/返回.png";
 export default {
   data() {
     return {
-      backArrow
+      backArrow,
+      productInfoList: [
+        {
+          num: 1,
+          name: "螺杆型号",
+          unit: "mm",
+          format: "24",
+          note: ""
+        },
+        {
+          num: 2,
+          name: "螺杆直径",
+          unit: "mm",
+          format: "24",
+          note: ""
+        },
+        {
+          num: 3,
+          name: "螺杆长径比",
+          unit: "L/D",
+          format: "23.3",
+          note: ""
+        },
+        {
+          num: 4,
+          name: "理论注射容量",
+          unit: "cm3",
+          format: "50",
+          note: ""
+        },
+        {
+          num: 5,
+          name: "注射重量(PS)",
+          unit: "g",
+          format: "46",
+          note: ""
+        },
+        {
+          num: 6,
+          name: "注射压力",
+          unit: "Mpa",
+          format: "250",
+          note: ""
+        },
+        {
+          num: 7,
+          name: "螺杆转速",
+          unit: "rpm",
+          format: "0-265",
+          note: ""
+        },
+        {
+          num: 8,
+          name: "锁模力",
+          unit: "KN",
+          format: "600",
+          note: ""
+        },
+        {
+          num: 9,
+          name: "最大移模行程",
+          unit: "mm",
+          format: "270",
+          note: ""
+        },
+        {
+          num: 10,
+          name: "拉杆内距",
+          unit: "mm",
+          format: "310*310",
+          note: ""
+        },
+        {
+          num: 11,
+          name: "最大模厚",
+          unit: "mm",
+          format: "330",
+          note: ""
+        },
+        {
+          num: 12,
+          name: "最小模厚",
+          unit: "mm",
+          format: "120",
+          note: ""
+        }
+      ]
     };
+  },
+  methods: {
+    back(){
+       window.history.back();
+    },
+    toCart(){
+      this.until.href("optionalCart.html")
+    }
   },
   components: {}
 };
 </script>
 
 <style scoped lang="less">
-html,
-body {
-  height: 100vh;
-}
-
-.container {
+#container {
+  padding: 0 15px;
   width: 100%;
+  height: 100%;
   background-color: #fff;
 }
 

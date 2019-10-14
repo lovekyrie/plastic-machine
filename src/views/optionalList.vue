@@ -3,12 +3,12 @@
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" :src="backArrow" />
+        <img class="arrow-left" :src="backArrow" @click="back" />
         <p class="text-center">
           当前清单
           <!-- 下拉图标 -->
         </p>
-        <span class="confirmBtn">确定</span>
+        <span class="confirmBtn" @click="toOptionResult">确定</span>
       </div>
     </div>
     <div class="row">
@@ -17,10 +17,16 @@
           <div>
             <input type="text" value="常规选配" />
           </div>
+          <div v-for="i in 13" :key="i">
+            <input type="text" />
+          </div>
         </div>
         <div class="right-side">
           <div>
             <input type="text" value="特殊选配" />
+          </div>
+          <div v-for="i in 13" :key="i">
+            <input type="text" />
           </div>
         </div>
       </div>
@@ -35,6 +41,14 @@ export default {
     return {
       backArrow
     };
+  },
+  methods: {
+    back() {
+      window.history.back()
+    },
+    toOptionResult() {
+      this.until.href("optionalResult.html")
+    }
   },
   components: {}
 };

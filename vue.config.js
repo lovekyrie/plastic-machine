@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const glob = require("glob");
 const colors = require("colors-console");
+const configObj = require("./src/assets/js/config");
 
 // 配置选项
 const config = {
@@ -14,7 +15,7 @@ const config = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://106.14.184.214:90", //接口地址
+        target: configObj.serverUrl, //接口地址
         changeOrigin: true,
         ws: true,
         pathRewrite: {

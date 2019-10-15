@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" :src="bankArrow" />
+        <img class="arrow-left" @click="back" :src="bankArrow" />
         <p class="text-center">
           个人中心
           <!-- 下拉图标 -->
@@ -14,29 +14,22 @@
       <div class="content">
         <!-- 左侧选项 -->
         <div class="left">
-          <div class="row order active">
-            <div></div>
-            <span>我的订单</span>
-          </div>
-          <div class="row-segment"></div>
-          <div class="row suggest">
-            <div></div>
-            <span>意见反馈</span>
-          </div>
-          <div class="row-segment"></div>
-          <div class="row multi-set">
-            <div></div>
-            <span>高级设置</span>
-          </div>
-          <div class="row-segment"></div>
-          <div class="row about-me">
-            <div></div>
-            <span>关于我们</span>
+          <div
+            class="row order"
+            :class="{ active: item.selected }"
+            v-for="(item, index) in leftNavigationList"
+            @click="pickOne(item, index)"
+            :key="index"
+          >
+            <div>
+              <img :src="item.selected ? item.activeUrl : item.imgUrl" alt />
+            </div>
+            <span>{{ item.title }}</span>
           </div>
           <div class="row-segment"></div>
         </div>
         <!-- 高级设置 -->
-        <div class="right" style="display:none;">
+        <div class="right" v-show="showSetting">
           <div class="title">
             <div class="active introduce">
               <span>内贸</span>
@@ -46,13 +39,13 @@
             </div>
           </div>
           <div class="set-content">
-            <div class="change-email">邮箱修改</div>
-            <div class="change-pwd">密码修改</div>
-            <div class="login-out">退出登录</div>
+            <div class="change-email" @click="toShowEmail">邮箱修改</div>
+            <div class="change-pwd" @click="toShowPassword">密码修改</div>
+            <div class="login-out" @click="loginOut">退出登录</div>
           </div>
         </div>
         <!-- 我的订单 -->
-        <div class="order-content">
+        <div class="order-content" v-show="showOrder">
           <div class="title">
             <div>
               <span>订单编号</span>
@@ -85,10 +78,53 @@
               <span>删除</span>
             </div>
           </div>
-          <div class="order-wrap"></div>
+          <div class="order-wrap">
+            <div
+              class="concept"
+              v-for="(item, index) in orderList"
+              :key="index"
+            >
+              <div>
+                <span>{{ item.orderno }}</span>
+              </div>
+              <div>
+                <span>{{ item.customerNm }}</span>
+              </div>
+              <div class="multi-row">
+                <span v-for="(itemC, index) in item.machineList" :key="index">
+                  {{ itemC }}
+                </span>
+              </div>
+              <div class="multi-row">
+                <span v-for="(itemC1, index) in item.priceList" :key="index">
+                  {{ itemC1 }}
+                </span>
+              </div>
+              <div class="multi-row">
+                <span v-for="(itemC2, index) in item.numList" :key="index">
+                  {{ itemC2 }}
+                </span>
+              </div>
+              <div>
+                <span>{{ item.totalPrice }}</span>
+              </div>
+              <div>
+                <span>{{ item.time }}</span>
+              </div>
+              <div>
+                <img :src="editIcon" />
+              </div>
+              <div :class="{ active: item.status === 0 }">
+                <span>{{ item.status === 0 ? "生成订单" : "订单已生成" }}</span>
+              </div>
+              <div>
+                <img class="del-img" :src="delOrder" />
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 意见反馈 -->
-        <div class="suggest-content" style="display:none;">
+        <div class="suggest-content" v-show="showSuggest">
           <!-- 不要title，因为没有内容，也撑不开 -->
           <p>请详细写下您的意见和问题，我们会尽快解决您的反馈：</p>
           <div class="text-suggest">
@@ -114,36 +150,56 @@
         </div>
       </div>
     </div>
-    <div class="pwd-wrap" style="display:none;">
+    <div class="pwd-wrap" v-show="showPassword">
       <div class="changepwd">
-        <img :src="close" alt="关闭" />
+        <img :src="close" @click="showPassword = false" alt="关闭" />
         <h3>密码修改</h3>
         <div class="pwd-region">
           <div>
-            <input type="text" placeholder="请输入原始密码" />
+            <input
+              type="password"
+              v-model="pwd.password"
+              placeholder="请输入原始密码"
+            />
           </div>
           <div>
-            <input type="text" placeholder="请输入新密码" />
+            <input
+              type="password"
+              v-model="pwd.newPassword"
+              placeholder="请输入新密码"
+            />
           </div>
           <div>
-            <input type="text" placeholder="请输入新密码" />
+            <input
+              type="password"
+              v-model="pwd.newPasswordAgain"
+              placeholder="请输入新密码"
+            />
           </div>
-          <div class="comfirmBtn">确认</div>
+          <div class="comfirmBtn" @click="modifyPassword">确认</div>
         </div>
       </div>
     </div>
-    <div class="email-wrap" style="display:none;">
+    <div class="email-wrap" v-show="showEmail">
       <div class="changeemail">
-        <img :src="close" alt="关闭" />
+        <img :src="close" @click="showEmail = false" alt="关闭" />
         <h3>邮箱修改</h3>
         <div class="email-region">
           <div>
-            <input type="text" placeholder="请输入原始邮箱" />
+            <input
+              type="text"
+              v-model="email.superiorMail"
+              placeholder="请输入原始邮箱"
+            />
           </div>
           <div>
-            <input type="text" placeholder="请输入新邮箱" />
+            <input
+              type="text"
+              v-model="email.newSuperiorMail"
+              placeholder="请输入新邮箱"
+            />
           </div>
-          <div class="comfirmEmail">确认</div>
+          <div class="comfirmEmail" @click="modifyEmail">确认</div>
         </div>
       </div>
     </div>
@@ -171,14 +227,230 @@
 import bankArrow from "./images/返回.png";
 import close from "./images/关闭.png";
 import success from "./images/成功.png";
+import order from "./images/个人中心_我的订单.png";
+import orderActive from "./images/个人中心_我的订单_选中.png";
+import suggest from "./images/个人中心_意见反馈.png";
+import suggestActive from "./images/个人中心_意见反馈_选中.png";
+import higherSetting from "./images/个人中心_高级设置.png";
+import higherSettingActive from "./images/个人中心_高级设置_选中.png";
+import aboutMe from "./images/个人中心_关于我们.png";
+import aboutMeActive from "./images/个人中心_关于我们_选中.png";
+import editIcon from "./images/编辑.png";
+import delOrder from "./images/我的订单_删除.png";
 
 export default {
   data() {
     return {
       bankArrow,
       close,
-      success
+      success,
+      order,
+      orderActive,
+      editIcon,
+      delOrder,
+      suggest,
+      suggestActive,
+      higherSetting,
+      higherSettingActive,
+      aboutMe,
+      aboutMeActive,
+      showSetting: false,
+      showSuggest: false,
+      showOrder: true,
+      showEmail: false,
+      showPassword: false,
+      email: {
+        superiorMail: "",
+        newSuperiorMail: ""
+      },
+      pwd: {
+        password: "",
+        newPassword: "",
+        newPasswordAgain: ""
+      },
+      newEamil: "",
+      userInfo: {},
+      leftNavigationList: [
+        {
+          title: "我的订单",
+          imgUrl: order,
+          activeUrl: orderActive,
+          selected: true
+        },
+        {
+          title: "意见反馈",
+          imgUrl: suggest,
+          activeUrl: suggestActive,
+          selected: false
+        },
+        {
+          title: "高级设置",
+          imgUrl: higherSetting,
+          activeUrl: higherSettingActive,
+          selected: false
+        },
+        {
+          title: "关于我们",
+          imgUrl: aboutMe,
+          activeUrl: aboutMeActive,
+          selected: false
+        }
+      ],
+      orderList: [
+        {
+          orderno: "HT-20180826",
+          customerNm: "赢宝机械",
+          machineList: ["MA天隆-电控系统"],
+          priceList: [18000],
+          numList: [1],
+          totalPrice: 18000,
+          time: "2018-08-26",
+          status: 1
+        },
+        {
+          orderno: "HT-20180826",
+          customerNm: "赢宝机械",
+          machineList: ["MA天隆-电控系统"],
+          priceList: [18000],
+          numList: [1],
+          totalPrice: 18000,
+          time: "2018-08-26",
+          status: 0
+        },
+        {
+          orderno: "HT-20180826",
+          customerNm: "赢宝机械",
+          machineList: [
+            "MA天隆-电控系统",
+            "MA天隆-电控系统",
+            "MA天隆-电控系统"
+          ],
+          priceList: [18000, 18000, 18000],
+          numList: [1, 2, 2],
+          totalPrice: 18000,
+          time: "2018-08-26",
+          status: 1
+        }
+      ]
     };
+  },
+  mounted() {
+    const userInfoStr = this.until.loGet("userInfo");
+    if (userInfoStr) {
+      this.userInfo = JSON.parse(userInfoStr);
+    }
+  },
+  methods: {
+    pickOne(itemPick, index) {
+      itemPick.selected = true;
+      const filter = this.leftNavigationList.filter(item => item !== itemPick);
+      filter.map(item => (item.selected = false));
+
+      if (index === 0) {
+        this.showOrder = true;
+        this.showSetting = false;
+        this.showSuggest = false;
+      } else if (index === 2) {
+        this.showSetting = true;
+        this.showOrder = false;
+        this.showSuggest = false;
+      } else if (index === 1) {
+        this.showSuggest = true;
+        this.showOrder = false;
+        this.showSetting = false;
+      }
+    },
+    toShowEmail() {
+      this.showEmail = true;
+      if (this.userInfo) {
+        this.email.superiorMail = this.newEamil || this.userInfo.email;
+      }
+    },
+    toShowPassword() {
+      this.showPassword = true;
+    },
+    loginOut() {
+      this.api.sysLoginOut().then(res => {
+        if (res) {
+          this.$message({
+            message: "退出成功",
+            type: "success"
+          });
+
+          this.until.loRemove("token");
+          this.until.loRemove("userInfo");
+          setTimeout(() => {
+            this.until.href("login.html");
+          }, 1500);
+        }
+      });
+    },
+    back() {
+      window.history.back()
+    },
+    modifyEmail() {
+      //校验邮箱格式
+      if (!this.email.superiorMail) {
+        this.$message.error("请输入原始邮箱！");
+        return;
+      } else if (!this.email.newSuperiorMail) {
+        this.$message.error("请输入新邮箱！");
+        return;
+      } else {
+        if (this.reg.checkMail(this.email.superiorMail) !== "ok") {
+          this.$message.error("请输入正确的原始邮箱格式！");
+          return;
+        } else if (this.reg.checkMail(this.email.newSuperiorMail) !== "ok") {
+          this.$message.error("请输入正确的新邮箱格式！！");
+          return;
+        } else {
+          let param = this.email;
+          if (this.userInfo) {
+            param.id = this.userInfo.userId;
+          }
+          this.api.sysModifyEmail(param).then(res => {
+            if (res) {
+              this.$message({
+                message: "修改邮箱成功",
+                type: "success"
+              });
+              this.showEmail = false;
+              this.newEamil = this.email.newSuperiorMail;
+              this.email.newSuperiorMail = "";
+            }
+          });
+        }
+      }
+    },
+    modifyPassword() {
+      if (!this.pwd.password) {
+        this.$message.error("请输入原始密码");
+        return;
+      } else if (!this.pwd.newPassword || !this.pwd.newPasswordAgain) {
+        this.$message.error("请输入新密码");
+        return;
+      } else {
+        if (this.pwd.newPassword !== this.pwd.newPasswordAgain) {
+          this.$message.error("请确保两次输入的新密码一致！");
+          return;
+        }
+
+        let param = {
+          password: this.pwd.password,
+          newPassword: this.pwd.newPasswordAgain
+        };
+        this.api.sysModifyPassword(param).then(res => {
+          if (res) {
+            this.$message({
+              message: "修改密码成功",
+              type: "success"
+            });
+            this.showPassword = false;
+            this.pwd = {};
+          }
+        });
+      }
+    }
   },
   components: {}
 };
@@ -255,43 +527,6 @@ body {
   width: 30px;
   height: 30px;
   margin-left: 35%;
-  background: url("./images/个人中心_我的订单.png") no-repeat;
-}
-
-.content .customer > div {
-  background-image: url("./images/个人中心_我的客户.png");
-}
-
-.content .suggest > div {
-  background-image: url("./images/个人中心_意见反馈.png");
-}
-
-.content .multi-set > div {
-  background-image: url("./images/个人中心_高级设置.png");
-}
-
-.content .about-me > div {
-  background-image: url("./images/个人中心_关于我们.png");
-}
-
-.content .order > .active {
-  background-image: url("./images/个人中心_我的订单_选中.png");
-}
-
-.content .customer > .active {
-  background-image: url("./images/个人中心_我的客户_选中.png");
-}
-
-.content .suggest > .active {
-  background-image: url("./images/个人中心_意见反馈_选中.png");
-}
-
-.content .multi-set > .active {
-  background-image: url("./images/个人中心_高级设置_选中.png");
-}
-
-.content .about-me > .active {
-  background-image: url("./images/个人中心_关于我们_选中.png");
 }
 
 .content .row > span {
@@ -301,8 +536,7 @@ body {
 
 .right .title,
 .order-content .title,
-.order-wrap .concept,
-.order-wrap .concept-multi {
+.order-wrap .concept {
   margin: 0 auto;
   width: 100%;
   display: -webkit-flex;
@@ -310,11 +544,6 @@ body {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-}
-
-.order-wrap .concept-multi {
-  flex-wrap: wrap;
-  justify-content: space-around;
 }
 
 .order-content .title {
@@ -325,16 +554,14 @@ body {
   justify-content: space-around;
 }
 
-.order-wrap .concept,
-.order-wrap .concept-multi {
+.order-wrap .concept {
   padding: 20px 0;
   background-color: #fafbfd;
   border-bottom: 1px solid #f2f5f9;
 }
 
 .order-content .title > div,
-.order-wrap .concept > div,
-.concept-multi > div {
+.order-wrap .concept > div {
   padding: 0.5% 0 0.5% 1%;
 }
 
@@ -345,23 +572,12 @@ body {
   width: 13%;
 }
 
-.concept-multi > div:nth-of-type(10n + 1),
-.concept-multi > div:nth-of-type(10n + 7) {
-  width: 13%;
-}
-
 .order-content > .title > div:nth-of-type(5),
 .order-content > .title > div:nth-of-type(8),
 .order-content > .title > div:nth-of-type(10),
 .concept > div:nth-of-type(5),
 .concept > div:nth-of-type(8),
 .concept > div:nth-of-type(10) {
-  width: 5%;
-}
-
-.concept-multi > div:nth-of-type(10n + 5),
-.concept-multi > div:nth-of-type(10n + 8),
-.concept-multi > div:nth-of-type(10n + 10) {
   width: 5%;
 }
 
@@ -376,24 +592,14 @@ body {
   color: #000;
 }
 
-.concept > div.active,
-.concept-multi > div.active {
+.concept > div.active {
   background-color: #00338d;
   border-radius: 5px;
   color: #fff;
 }
 
-.concept-multi > div:nth-of-type(10n + 9) {
-  color: #d5d5d5;
-  text-align: center;
-}
-
 .order-content > .title > div:nth-of-type(3),
 .concept > div:nth-of-type(3) {
-  width: 19%;
-}
-
-.concept-multi > div:nth-of-type(10n + 3) {
   width: 19%;
 }
 
@@ -408,11 +614,20 @@ body {
   width: 8%;
 }
 
-.concept-multi > div:nth-of-type(10n + 2),
-.concept-multi > div:nth-of-type(10n + 4),
-.concept-multi > div:nth-of-type(10n + 6),
-.concept-multi > div:nth-of-type(10n + 9) {
-  width: 8%;
+.order-wrap {
+  .concept {
+    .multi-row {
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: column wrap;
+      > span {
+        flex: 1;
+        &:not(:nth-of-type(1)) {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
 }
 
 .suggest-content {
@@ -536,6 +751,7 @@ body {
   text-align: center;
   border: 1px solid #00338d;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .change-email {

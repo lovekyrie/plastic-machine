@@ -204,6 +204,9 @@ class until {
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success(data) {
+          if (data.code !== 0) {
+            Message.error(data.msg);
+          }
           resolve(data);
         },
         error(data) {

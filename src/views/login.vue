@@ -74,6 +74,9 @@ export default {
               message: "登录成功",
               type: "success"
             });
+
+            this.until.loSave('token',res.token)
+            this.until.loSave('userInfo',JSON.stringify(res.userInfo))
             setTimeout(() => {
               window.location.href = "home.html";
             }, 1500);

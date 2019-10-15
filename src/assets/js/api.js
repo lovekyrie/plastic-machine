@@ -14,6 +14,55 @@ class api {
       });
     });
   }
+  //登出
+  sysLoginOut() {
+    let header = {
+      "yui3-token": untilApi.loGet("token")
+    };
+    return new Promise((resolve, reject) => {
+      untilApi.get("/api/general/access/logout", "", header).then(res => {
+        if (res.code === 0) {
+          resolve(res);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //修改邮箱
+  sysModifyEmail(data) {
+    let header = {
+      "yui3-token": untilApi.loGet("token")
+    };
+    return new Promise((resolve, reject) => {
+      untilApi
+        .postData("/api/suji/appuser/updEmail", JSON.stringify(data), header)
+        .then(res => {
+          if (res.code === 0) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        });
+    });
+  }
+  //修改密码
+  sysModifyPassword(data) {
+    let header = {
+      "yui3-token": untilApi.loGet("token")
+    };
+    return new Promise((resolve, reject) => {
+      untilApi
+        .postData("/api/suji/appuser/passwordPc", JSON.stringify(data), header)
+        .then(res => {
+          if (res.code === 0) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        });
+    });
+  }
 }
 
 export { api };

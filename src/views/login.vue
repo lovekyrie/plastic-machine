@@ -46,9 +46,13 @@ export default {
       accountIcon,
       passwordIcon,
       rememberClick: false,
-      account:"",
-      password:""
+      account: "",
+      password: "",
+      macAddress: ""
     };
+  },
+  mounted() {
+
   },
   methods: {
     login() {
@@ -57,7 +61,24 @@ export default {
       } else if (!this.password) {
         alert("请输入密码");
       } else {
-        window.location.href = "home.html";
+        //调用接口
+        let param = {
+          username: this.account,
+          password: this.password,
+          rememberMe: this.rememberClick
+        };
+
+        this.api.sysLoginNotCheckEquip(param).then(res => {
+          if (res) {
+            this.$message({
+              message: "登录成功",
+              type: "success"
+            });
+            setTimeout(() => {
+              window.location.href = "home.html";
+            }, 1500);
+          }
+        });
       }
     }
   },

@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="operation">
-        <div>
+        <div @click="toOper">
           <img :src="operationImg" alt />
         </div>
       </div>
@@ -102,6 +102,9 @@ export default {
     },
     toList() {
       this.until.href("optionalCart.html");
+    },
+    toOper() {
+      this.until.href("operAndMaint.html");
     },
     showVideo() {
       this.showVideoFlag = true;

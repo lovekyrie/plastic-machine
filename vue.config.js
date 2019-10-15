@@ -10,7 +10,19 @@ const colors = require("colors-console");
 const config = {
   pages: Object.assign(getPages(), {
     app: "./src/main.js" // 配置主入口文件（会生成 app.html，vue cli3并没有提供直接配置入口文件的选项）
-  })
+  }),
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://106.14.184.214:90", //接口地址
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          "^/api": ""
+        }
+      }
+    }
+  }
 };
 
 // 获取多页面的配置数据

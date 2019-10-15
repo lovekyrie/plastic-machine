@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { MessageBox } from "element-ui";
 import { Message } from "element-ui";
+
 class until {
   //判断是否登录
   ifLogin() {
@@ -154,7 +155,6 @@ class until {
     let promise = new Promise((resolve, reject) => {
       $.ajax({
         type: "POST",
-        // url:hostUrl+url,
         url,
         data,
         async: true,
@@ -218,7 +218,6 @@ class until {
     let promise = new Promise((resolve, reject) => {
       $.ajax({
         type: "GET",
-        // url:hostUrl+url,
         url,
         data,
         cache: false,

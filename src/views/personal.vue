@@ -129,6 +129,7 @@
           <p>请详细写下您的意见和问题，我们会尽快解决您的反馈：</p>
           <div class="text-suggest">
             <textarea
+              v-model="sug.content"
               class="textarea-sugg"
               placeholder="请填写您的意见和问题......"
             ></textarea>
@@ -141,12 +142,16 @@
           <p>联系方式：</p>
           <div class="text-linked">
             <!--可输入 -->
-            <input type="text" placeholder="请填写您的手机、QQ、邮箱" />
+            <input
+              v-model="sug.contact"
+              type="text"
+              placeholder="请填写您的手机、QQ、邮箱"
+            />
           </div>
           <span
             >选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span
           >
-          <div>提交</div>
+          <div @click="submitSuggest">提交</div>
         </div>
       </div>
     </div>
@@ -268,6 +273,10 @@ export default {
         newPassword: "",
         newPasswordAgain: ""
       },
+      sug: {
+        content: "",
+        contact: ""
+      },
       newEamil: "",
       userInfo: {},
       leftNavigationList: [
@@ -386,7 +395,7 @@ export default {
       });
     },
     back() {
-      window.history.back()
+      window.history.back();
     },
     modifyEmail() {
       //校验邮箱格式
@@ -450,8 +459,34 @@ export default {
           }
         });
       }
+    },
+    submitSuggest() {
+      if (!this.sug.content) {
+        this.$message.error("请填写您的意见和问题再提交！");
+        return;
+      }
+      if (!this.sug.contact) {
+        this.$message.error("请填写您的联系方式再提交！");
+        return;
+      }
+
+      let param = this.sug;
+      if (this.userInfo) {
+        param.appuserId = this.userInfo.userId;
+      }
+
+      this.api.sysSuggestCallback(param).then(res => {
+        if (res) {
+          this.$message({
+            message: "您填写的意见反馈已经提交",
+            type: "success"
+          });
+          this.sug = {};
+        }
+      });
     }
   },
+
   components: {}
 };
 </script>

@@ -63,6 +63,23 @@ class api {
         });
     });
   }
+  //意见反馈
+  sysSuggestCallback(data) {
+    let header = {
+      "yui3-token": untilApi.loGet("token")
+    };
+    return new Promise((resolve, reject) => {
+      untilApi
+        .postData("/api/suji/suggest/addOut", JSON.stringify(data), header)
+        .then(res => {
+          if (res.code === 0) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        });
+    });
+  }
 }
 
 export { api };

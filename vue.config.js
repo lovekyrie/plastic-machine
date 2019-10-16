@@ -6,12 +6,13 @@ const fs = require("fs");
 const glob = require("glob");
 const colors = require("colors-console");
 const configObj = require("./src/assets/js/config");
+const vConsolePlugin = require("vconsole-webpack-plugin"); // 引入 移动端模拟开发者工具 插件 （另：https://github.com/liriliri/eruda）
+const CompressionPlugin = require("compression-webpack-plugin"); //Gzip
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin; //Webpack包文件分析器
 
 // 配置选项
 const config = {
-  pages: Object.assign(getPages(), {
-    app: "./src/main.js" // 配置主入口文件（会生成 app.html，vue cli3并没有提供直接配置入口文件的选项）
-  }),
   devServer: {
     proxy: {
       "/api": {
@@ -22,6 +23,44 @@ const config = {
           "^/api": ""
         }
       }
+    }
+  },
+  publicPath: process.env.NODE_ENV === "production" ? "/pc/" : "/",
+  outputDir: "dist", //默认为dist
+  assetsDir: "static",
+  pages: Object.assign(getPages(), {
+    app: "./src/main.js" // 配置主入口文件（会生成 app.html，vue cli3并没有提供直接配置入口文件的选项）
+  }),
+  runtimeCompiler: false,
+  productionSourceMap: false,
+  configureWebpack: config => {
+    //生产and测试环境
+    let pluginsPro = [
+      new CompressionPlugin({
+        //文件开启Gzip，也可以通过服务端(如：nginx)(https://github.com/webpack-contrib/compression-webpack-plugin)
+        filename: "[path].gz[query]",
+        algorithm: "gzip",
+        test: new RegExp("\\.(" + ["js", "css"].join("|") + ")$"),
+        threshold: 8192,
+        minRatio: 0.8
+      }),
+      //	Webpack包文件分析器(https://github.com/webpack-contrib/webpack-bundle-analyzer)
+      new BundleAnalyzerPlugin()
+    ];
+    //开发环境
+    let pluginsDev = [
+      //移动端模拟开发者工具(https://github.com/diamont1001/vconsole-webpack-plugin  https://github.com/Tencent/vConsole)
+      new vConsolePlugin({
+        filter: [], // 需要过滤的入口文件
+        enable: true // 发布代码前记得改回 false
+      })
+    ];
+    if (process.env.NODE_ENV === "production") {
+      // 为生产环境修改配置...process.env.NODE_ENV !== 'development'
+      config.plugins = [...config.plugins, ...pluginsPro];
+    } else {
+      // 为开发环境修改配置...
+      config.plugins = [...config.plugins, ...pluginsDev];
     }
   }
 };
@@ -46,7 +85,8 @@ function getPages() {
       if (exists) return;
       // 创建文件及写入文件内容
       const appTpl = "." + pageUrl;
-      const entryData = `import Vue from 'vue';\nimport App from '${appTpl}';\nVue.config.productionTip = false;\nnew Vue({ render: h => h(App) }).$mount('#${pageCode}'); `;
+      const entryData = `import Vue from 'vue';\nimport App from '${appTpl}';\nimport init from "../src/assets/js/init";\n
+        Vue.use(init);\nVue.config.productionTip = false;\nnew Vue({ render: h => h(App) }).$mount('#${pageCode}'); `;
       fs.writeFile(entryFile, entryData, function(err) {
         // err.code === 'ENOENT'
         if (err) console.log(err);

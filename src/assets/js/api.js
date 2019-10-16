@@ -175,7 +175,7 @@ class api {
   //系统消息列表
   msgList(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/suji/notice/pageOut", data).then(res => {
+      untilApi.get("/suji/notice/pageOut", data).then(res => {
         if (res.code === 0) {
           resolve(res);
         } else {
@@ -187,7 +187,7 @@ class api {
   //系统消息详情
   msgDetail(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/suji/notice/infoOut/" + data).then(res => {
+      untilApi.get("/suji/notice/infoOut/" + data).then(res => {
         if (res.code === 0) {
           resolve(res.data);
         } else {
@@ -199,7 +199,7 @@ class api {
   //运维指南顶部下拉列表
   operAndMainTopList(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/sys/cat/listByPcd2", data).then(res => {
+      untilApi.get("/sys/cat/listByPcd2", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -212,7 +212,7 @@ class api {
   //运维指南顶部左边列表
   operAndMainLeftList(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/suji/trainTypeOne/listPC", data).then(res => {
+      untilApi.get("/suji/trainTypeOne/listPC", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -224,7 +224,7 @@ class api {
   //运维指南顶部左边列表二级
   operAndMainLeftList2(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/suji/trainTypeTwo/listPC", data).then(res => {
+      untilApi.get("/suji/trainTypeTwo/listPC", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -236,7 +236,7 @@ class api {
   //运维指南内容
   operAndMainDetail(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api//suji/trainContent/getContent", data).then(res => {
+      untilApi.get("/suji/trainContent/getContent", data).then(res => {
         if (res.code === 0) {
           resolve(res.data);
         } else {
@@ -248,7 +248,7 @@ class api {
   //冷却水管分页列表
   waterPipeList(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/api/suji/coolingPipe/pagePC", data).then(res => {
+      untilApi.get("/suji/coolingPipe/pagePC", data).then(res => {
         if (res.code === 0) {
           resolve(res);
         } else {

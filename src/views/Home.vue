@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="message">
-        <div>
+        <div @click="toMsg">
           <img :src="messageImg" alt />
         </div>
       </div>
@@ -105,6 +105,9 @@ export default {
     },
     toOper() {
       this.until.href("operAndMaint.html");
+    },
+    toMsg() {
+      this.until.href("msgList.html");
     },
     showVideo() {
       this.showVideoFlag = true;

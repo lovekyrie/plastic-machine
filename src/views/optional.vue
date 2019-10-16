@@ -111,52 +111,22 @@
     <div class="row">
       <div class="content">
         <div class="sel-one">
-          <div class="active">
-            <span>总体</span>
-          </div>
-          <div>
-            <span>基础</span>
-          </div>
-          <div>
-            <span>注射</span>
-          </div>
-          <div>
-            <span>合模</span>
-          </div>
-          <div>
-            <span>塑化</span>
-          </div>
-          <div>
-            <span>电气接口</span>
-          </div>
-          <div>
-            <span>自动化</span>
-          </div>
-          <div>
-            <span>搜索</span>
+          <div
+            :class="{ active: bigMenuIndex === index }"
+            v-for="(item, index) in bigMenuList"
+            :key="item.id"
+            @click="chooseBigMenu(item, index)"
+          >
+            <span>{{ item.nameCh }}</span>
           </div>
         </div>
         <!-- 常规选配 -->
         <div class="usual-pick" v-show="showUsual">
-          <div class="sel-two">
-            <div>
-              <span>安全认证标准</span>
-              <input type="text" readonly />
-            </div>
-            <div>
-              <span>行业专机</span>
-              <input type="text" readonly />
-            </div>
-            <div>
-              <span>地区标准</span>
-              <input type="text" readonly />
-            </div>
-            <div>
-              <span>整机电压</span>
-              <input type="text" readonly />
-            </div>
-          </div>
           <div class="sel-three">
+            <div v-for="(item, index) in smallMenuList" :key="index">
+              <span>{{ item.secondLevelMenuNm }}</span>
+              <input type="text" readonly />
+            </div>
             <div>
               <span>整机颜色和喷字</span>
               <input
@@ -182,18 +152,6 @@
                 </li>
               </div>
               <img :src="pullDown" alt />
-            </div>
-            <div>
-              <span>多国语言标牌</span>
-              <input type="text" readonly />
-            </div>
-            <div>
-              <span>多国语言说明</span>
-              <input type="text" readonly />
-            </div>
-            <div>
-              <span>地区标准特殊条款</span>
-              <input type="text" readonly />
             </div>
           </div>
         </div>
@@ -269,7 +227,7 @@
                 :key="index"
                 @click="chooseModel(item)"
               >
-                {{ item }}
+                {{ item.name }}
               </li>
             </div>
             <img :src="pullDown" alt />
@@ -288,7 +246,7 @@
                 :key="index"
                 @click="chooseClamping(item)"
               >
-                {{ item }}
+                {{ item.name }}
               </li>
             </div>
             <img :src="pullDown" alt />
@@ -307,7 +265,7 @@
                 :key="index"
                 @click="chooseInjection(item)"
               >
-                {{ item }}
+                {{ item.name }}
               </li>
             </div>
             <img :src="pullDown" alt />
@@ -326,7 +284,7 @@
                 :key="index"
                 @click="chooseScrew(item)"
               >
-                {{ item }}
+                {{ item.name }}
               </li>
             </div>
             <img :src="pullDown" alt />
@@ -372,10 +330,12 @@ export default {
       uploadIcon,
       addSetting,
       closeIcon,
-      modelList: ["MAIIS", "MAII", "MA/G", "VEII", "ZE"],
-      clampingForceList: ["900", "1200", "1600", "2000", "2500"],
-      injectionList: ["130", "140", "150", "160"],
-      screwModelList: ["A", "B", "C", "D"],
+      modelList: [],
+      clampingForceList: [],
+      injectionList: [],
+      screwModelList: [],
+      bigMenuList: [],
+      smallMenuList: [],
       showModel: false,
       showModelTwo: false,
       showClampingForce: false,
@@ -386,10 +346,13 @@ export default {
       showScrewTwo: false,
       showDialog: true,
       showUsual: false,
-      model: "MAIIS",
-      clampingForce: "900",
-      injection: "130",
-      screw: "A",
+      model: "",
+      modelID: "",
+      clampingForce: "",
+      injection: "",
+      screw: "",
+      bigMenuIndex: 0,
+      bigMenuId: "",
       showColorAndFont: false,
       uniquePick: false,
       optionList: ["常规选配", "特殊选配(推荐)", "特殊选配(定制SO)"],
@@ -401,6 +364,14 @@ export default {
         screw: ""
       }
     };
+  },
+  async mounted() {
+    await this.getModelList();
+    await this.getClampingForceList();
+    await this.getInjectionList();
+    await this.getScrewList();
+    await this.getBigMenuList();
+    await this.getSmallMenuList();
   },
   methods: {
     showModelOp() {
@@ -416,15 +387,17 @@ export default {
       this.showScrew = !this.showScrew;
     },
     chooseModel(item) {
-      this.model = item;
+      this.model = item.name;
+      this.modelID = item.id;
       this.showModel = false;
+      this.getClampingForceList();
     },
     chooseClamping(item) {
-      this.clampingForce = item;
+      this.clampingForce = item.name;
       this.showClampingForce = false;
     },
     chooseInjection(item) {
-      this.injection = item;
+      this.injection = item.name;
       this.showInjection = false;
     },
     chooseScrew(item) {
@@ -447,22 +420,21 @@ export default {
       this.form.screw = item;
       this.showScrewTwo = false;
     },
-    selectTabOp(item,index) {
+    selectTabOp(item, index) {
       this.selectTab = item;
-      if(index===2){
-        this.uniquePick=true
-        this.showUsual=false
-      }
-      else{
-        this.showUsual=true
-        this.uniquePick=false
+      if (index === 2) {
+        this.uniquePick = true;
+        this.showUsual = false;
+      } else {
+        this.showUsual = true;
+        this.uniquePick = false;
       }
     },
-    back(){
-      window.history.back()
+    back() {
+      window.history.back();
     },
-    toIndex(){
-      this.until.href("home.html")
+    toIndex() {
+      this.until.href("home.html");
     },
     confirm() {
       this.form.model = this.model;
@@ -474,10 +446,70 @@ export default {
       this.showUsual = true;
     },
     toOptionResult() {
-      this.until.href("optionalResult.html")
+      this.until.href("optionalResult.html");
     },
     toOptionalList() {
-      this.until.href("optionalList.html")
+      this.until.href("optionalList.html");
+    },
+    chooseBigMenu(item, i) {
+      this.bigMenuIndex = i;
+      this.bigMenuId = item.id;
+    },
+    async getModelList() {
+      let query = new this.Query();
+      query.buildWhereClause("matchMenuTypeId", 21, "EQ");
+      query.buildWhereClause("status", 1, "EQ");
+      query.buildOrderClause("sort", "asc");
+
+      let param = query.getParam();
+      this.modelList = await this.api.sysGetModelList(param);
+      this.model = this.modelList[0].name;
+      this.modelID = this.modelList[0].id;
+    },
+    async getClampingForceList() {
+      let query = new this.Query();
+      query.buildWhereClause("matchMenuTypeId", 22, "EQ");
+      query.buildWhereClause("status", 1, "EQ");
+      query.buildOrderClause("sort", "asc");
+
+      let param = query.getParam();
+      param.id = this.modelID;
+      this.clampingForceList = await this.api.sysGetClampingForceList(param);
+      this.clampingForce = this.clampingForceList[0].name;
+    },
+    async getInjectionList() {
+      let query = new this.Query();
+      query.buildWhereClause("matchMenuTypeId", 23, "EQ");
+      query.buildWhereClause("status", 1, "EQ");
+      query.buildOrderClause("sort", "asc");
+
+      let param = query.getParam();
+      param.id = this.modelID;
+      this.injectionList = await this.api.sysGetInjectionList(param);
+      this.injection = this.injectionList[0].name;
+    },
+    async getScrewList() {
+      const query = new this.Query();
+      query.buildWhereClause("matchMenuTypeId", 24, "EQ");
+      query.buildWhereClause("status", 1, "EQ");
+      query.buildOrderClause("sort", "asc");
+
+      const param = query.getParam();
+      this.screwModelList = await this.api.sysGetScrewList(param);
+      this.screw = this.screwModelList[0].name;
+    },
+    async getBigMenuList() {
+      this.bigMenuList = await this.api.sysGetBigMenuList();
+      this.bigMenuId = this.bigMenuList[0].id;
+    },
+    async getSmallMenuList() {
+      const query = new this.Query();
+      query.buildWhereClause("menuNameId", this.bigMenuId, "EQ");
+      query.buildWhereClause("status", "0", "EQ");
+      query.buildOrderClause("sort", "asc");
+
+      const param = query.getParam();
+      this.smallMenuList = await this.api.sysGetSmallMenuList(param);
     }
   },
   components: {}
@@ -662,7 +694,6 @@ body {
       background-color: #fff;
       overflow: hidden;
       .sel-one,
-      .sel-two,
       .sel-three,
       .setting-wrap {
         display: -webkit-flex;
@@ -736,8 +767,10 @@ body {
           border-bottom: 1px solid #00338d;
         }
       }
-      .sel-two,
       .sel-three {
+        display: flex;
+        display: -webkit-flex;
+        flex-flow: row wrap;
         > div {
           position: relative;
           display: -webkit-flex;
@@ -747,7 +780,7 @@ body {
           align-items: center;
           padding-top: 15px;
           padding-bottom: 8px;
-          width: 22%;
+          width: 25%;
           border-bottom: 1px solid #cdcdcd;
           > span {
             display: inline-block;
@@ -897,6 +930,8 @@ body {
   display: flex;
   display: block;
   width: 78%;
+  max-height: 240px;
+  overflow-y: auto;
   z-index: 9999;
   list-style: none;
   position: absolute;

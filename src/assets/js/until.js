@@ -13,7 +13,7 @@ class until {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        window.location.href = "../entry/login.html";
+        window.location.href = "./login.html";
       });
       return false;
     } else {
@@ -234,7 +234,7 @@ class until {
               cancelButtonText: "取消",
               type: "warning"
             }).then(() => {
-              window.location.href = "../home/login.html";
+              window.location.href = "./login.html";
             });
           } else if (data.code != 0) {
             Message.error(data.msg);

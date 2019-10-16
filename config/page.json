@@ -7,5 +7,11 @@
   },
   "about": {
     "title": "关于我们"
+  },
+  "msgList":{
+    "title" : "消息中心"
+  },
+  "msgDetail":{
+    "title" : "消息详情"
   }
 }

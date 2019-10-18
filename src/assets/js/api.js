@@ -257,6 +257,126 @@ class api {
       });
     });
   }
+  //产品概览-顶部机型列表
+  sysGetProductBigModelList() {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/product/listPC", "").then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //产品概览-左侧机型列表
+  sysGetLeftSideSmallModelList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/standardMachine/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //产品概览-性能特征
+  sysGetPerformanceCharacter(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/productInfo/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //产品概览-典型制品
+  sysGetTypicalProduct(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/productInfo2/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //产品概览-标准配置
+  sysGetStandardSetting(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/productInfo1/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //产品概览-技术参数
+  sysGetTechnicalParameter(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/screwType/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //厂房规划机型列表
+  modelList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/factoryParams/listMachineModel", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //厂房规划锁模力列表
+  clampingForce(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/factoryParams/listClampForce", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //厂房规划注射列表
+  injection(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/factoryParams/listInjection", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //厂房规划详情
+  factoryInfo(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/factoryParams/getFactoryParams", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
 }
 
 export { api };

@@ -87,18 +87,101 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-h3 {
-  margin: 40px 0 0;
+.content {
+  display: -webkit-flex;
+  display: flex;
+  width: 1440px;
+  margin: 60px auto;
+  height: 100%;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.left {
+  width: 260px;
+  background-color: #fff;
+  text-align: center;
+  .img {
+    border: 1px solid #ccc;
+  }
+  .inspect-type {
+    padding: 20px 0;
+    background-color: #fafafa;
+    color: #8c8c8c;
+  }
+  .active {
+    background-color: #00338d;
+    color: #fff;
+  }
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.right {
+  width: 70%;
+
+  .maintain-right {
+    .title {
+      width: 100%;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      background-color: #f2f5f9;
+      > div {
+        margin: 0 30px;
+        padding: 15px 0;
+        flex: 6;
+        text-align: center;
+      }
+      > .active {
+        border-bottom: 1px solid #4e72b0;
+        color: #4e72b0;
+      }
+    }
+    .concept {
+      margin: 50px 150px 0 40px;
+      line-height: 30px;
+      > p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+  .repair-right {
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: column wrap;
+    > div {
+      flex: 1;
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row nowrap;
+      align-items: center;
+
+      &:nth-of-type(2n) {
+        background-color: #f7f9fb;
+      }
+      &:nth-of-type(2n + 1) {
+        background-color: #edf1f7;
+      }
+      &:nth-of-type(1) {
+        background-color: #00338d;
+        color: #fff;
+      }
+      > div {
+        padding: 5px 0;
+        &:nth-of-type(1) {
+          width: 10%;
+          text-align: center;
+        }
+        &:nth-of-type(2) {
+          width: 20%;
+        }
+        &:nth-of-type(3) {
+          width: 30%;
+        }
+        &:nth-last-of-type(1) {
+          width: 40%;
+        }
+      }
+    }
+  }
 }
 </style>

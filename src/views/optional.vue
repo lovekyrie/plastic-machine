@@ -3,108 +3,73 @@
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
-        <img class="arrow-left" @click="back" :src="backArrow" />
-        <div class="option">
-          <div
-            class="col-md-4"
-            :class="{ active: selectTab === item }"
-            @click="selectTabOp(item, index)"
+        <img class="arrow-left" :src="backArrow" @click="back" />
+        <p class="text-center" @click="showOption">
+          <span>{{ category }}</span>
+          <!-- 下拉图标 -->
+          <img class="arrow-side" :src="pullDown" />
+        </p>
+        <div type="false" class="ul-style" v-if="showType">
+          <li
             v-for="(item, index) in optionList"
             :key="index"
+            @click="chooseCategory(item)"
           >
-            <span>{{ item }}</span>
-          </div>
-        </div>
-        <div class="search">
-          <img :src="searchIcon" alt />
-          <input type="text" placeholder="请输入搜索关键字" />
-        </div>
-        <div class="edit col-md-1" style="display:none;">
-          <span class="editInfo">编辑</span>
+            {{ item }}
+          </li>
         </div>
       </div>
     </div>
+
     <div class="row main-opt">
       <div class="select-opt">
         <div class="sel-wrap">
           <span>机型：</span>
-          <input
-            type="text"
-            @click="showModelTwo = !showModelTwo"
-            v-model="form.model"
-            class="text-sel"
-          />
-          <div class="ul-style" v-show="showModelTwo">
-            <li
-              v-for="(item, index) in modelList"
-              :key="index"
-              @click="chooseModelTwo(item)"
-            >
-              {{ item }}
-            </li>
-          </div>
-          <img :src="pullDown" alt />
+          <el-select v-model="form.model" placeholder="请选择">
+            <el-option
+              v-for="item in modelList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
         </div>
         <div class="sel-wrap">
           <span>锁模力：</span>
-          <input
-            type="text"
-            @click="showClampingForceTwo = !showClampingForceTwo"
-            v-model="form.clampingForce"
-            class="text-sel"
-          />
-          <div class="ul-style" v-show="showClampingForceTwo">
-            <li
-              v-for="(item, index) in clampingForceList"
-              :key="index"
-              @click="chooseClampingTwo(item)"
-            >
-              {{ item }}
-            </li>
-          </div>
-          <img :src="pullDown" alt />
+          <el-select v-model="form.clampingForce" placeholder="请选择">
+            <el-option
+              v-for="item in clampingForceList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
         </div>
         <div class="sel-wrap">
           <span>注射当量：</span>
-          <input
-            type="text"
-            @click="showInjectionTwo = !showInjectionTwo"
-            v-model="form.injection"
-            class="text-sel"
-          />
-          <div class="ul-style" v-show="showInjectionTwo">
-            <li
-              v-for="(item, index) in injectionList"
-              :key="index"
-              @click="chooseInjectionTwo(item)"
-            >
-              {{ item }}
-            </li>
-          </div>
-          <img :src="pullDown" alt />
+          <el-select v-model="form.injection" placeholder="请选择">
+            <el-option
+              v-for="item in injectionList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
         </div>
         <div class="sel-wrap">
           <span>螺杆型号：</span>
-          <input
-            type="text"
-            @click="showScrewTwo = !showScrewTwo"
-            v-model="form.screw"
-            class="text-sel"
-          />
-          <div class="ul-style" v-show="showScrewTwo">
-            <li
-              v-for="(item, index) in screwModelList"
-              :key="index"
-              @click="chooseScrewTwo(item)"
-            >
-              {{ item }}
-            </li>
-          </div>
-          <img :src="pullDown" alt />
+          <el-select v-model="form.screw" placeholder="请选择">
+            <el-option
+              v-for="item in screwModelList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
         </div>
         <div class="sel-wrap">
           <span>类别：</span>
-          <input readonly type="text" class="text-sel" value="标准机" />
+          <input readonly type="text" class="text-sel" v-model="machineType" />
         </div>
       </div>
     </div>
@@ -123,36 +88,38 @@
         <!-- 常规选配 -->
         <div class="usual-pick" v-show="showUsual">
           <div class="sel-three">
-            <div v-for="(item, index) in smallMenuList" :key="index">
-              <span>{{ item.secondLevelMenuNm }}</span>
-              <input type="text" readonly />
+            <div
+              v-for="(item, index) in smallMenuList"
+              :key="index"
+              :class="{ active: item.showOption }"
+            >
+              <div class="title">{{ item.secondLevelMenuNm }}</div>
+              <el-select
+                v-model="property[item.secondLevelMenuNm]"
+                multiple
+                placeholder="请选择"
+                v-if="item.showOption"
+              >
+                <el-option
+                  v-for="item1 in item.optionList"
+                  :key="item1.matchMenuId"
+                  :label="item1.name"
+                  :value="item1.cd"
+                ></el-option>
+              </el-select>
             </div>
-            <div>
-              <span>整机颜色和喷字</span>
-              <input
-                @click="showColorAndFont = !showColorAndFont"
-                type="text"
-                class="text-nosel"
-              />
-              <div class="ul-multi-style" v-show="showColorAndFont">
-                <li>
+            <!-- <div v-for="(item, index) in smallMenuList" :key="index">
+              <span>{{ item.secondLevelMenuNm }}</span>
+              <input type="text" class="text-nosel" />
+              <div class="ul-multi-style">
+                <li v-for="itemJ in item.optionList" :key="itemJ.matchMenuId">
                   <div></div>
-                  <span>(AGE0100)机器颜色只可选21种特殊定制</span>
-                  <img :src="infoIcon" alt />
-                </li>
-                <li>
-                  <div></div>
-                  <span>(AGE0200)机器颜色超出可选21种（附张总报告）</span>
-                  <img :src="infoIcon" alt />
-                </li>
-                <li>
-                  <div></div>
-                  <span>(AGE0300)机器喷字非标（需公司总裁书面批准）</span>
+                  <span>{{ itemJ.name }}</span>
                   <img :src="infoIcon" alt />
                 </li>
               </div>
               <img :src="pullDown" alt />
-            </div>
+            </div>-->
           </div>
         </div>
         <!-- 特殊选配(定制SO) -->
@@ -194,7 +161,7 @@
           <div>
             <span class="industry">行业配置</span>
           </div>
-          <div>
+          <div @click="toShowRelatedSize">
             <span class="about-size">相关尺寸图</span>
           </div>
           <div>
@@ -205,7 +172,7 @@
       </div>
     </div>
     <div class="basic-model" v-show="showDialog">
-      <div class="dialog" style="display:block;">
+      <div class="dialog" v-show="showBasic">
         <!-- <img class="btn-close" :src="closeIcon" alt /> -->
         <p @click="toIndex">
           <i class="el-icon-arrow-left"></i>
@@ -296,13 +263,16 @@
           </div>
         </div>
       </div>
-      <div class="industry-set" style="display:none;">
+      <div class="industry-set" v-show="showIndustry">
         <img class="btn-close" :src="closeIcon" alt />
       </div>
-      <div class="connect-size" style="display:none;">
-        <img class="btn-close" :src="closeIcon" alt />
+      <div class="connect-size" v-show="showRelatedSize">
+        <img class="btn-close" @click="closeRelatedSize" :src="closeIcon" alt />
+        <div>
+          <img :src="relatedSizeImg" alt />
+        </div>
       </div>
-      <div class="machine-color" style="display:none;">
+      <div class="machine-color" v-show="showMachineColor">
         <img class="btn-close" :src="closeIcon" alt />
       </div>
     </div>
@@ -320,7 +290,7 @@ import addSetting from "./images/添加配置.png";
 import closeIcon from "./images/关闭.png";
 
 export default {
-  data() {
+  data: () => {
     return {
       backArrow,
       searchIcon,
@@ -349,20 +319,30 @@ export default {
       model: "",
       modelID: "",
       clampingForce: "",
+      clampingForceId: "",
       injection: "",
+      injectionId: "",
       screw: "",
+      screwId: "",
       bigMenuIndex: 0,
       bigMenuId: "",
-      showColorAndFont: false,
       uniquePick: false,
-      optionList: ["常规选配", "特殊选配(推荐)", "特殊选配(定制SO)"],
-      selectTab: "常规选配",
+      category: "常规选配",
+      optionList: ["常规选配", "特殊选配(推荐)"],
+      showBasic: true,
+      showIndustry: false,
+      showRelatedSize: false,
+      relatedSizeImg: "",
+      showMachineColor: false,
       form: {
         model: "",
         clampingForce: "",
         injection: "",
         screw: ""
-      }
+      },
+      property: {},
+      showType: false,
+      machineType: ""
     };
   },
   async mounted() {
@@ -376,6 +356,14 @@ export default {
   methods: {
     showModelOp() {
       this.showModel = !this.showModel;
+    },
+    showOption() {
+      this.showType = !this.showType;
+    },
+    chooseCategory(item) {
+      this.showType = false;
+      this.category = item;
+      this.getSmallMenuList();
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
@@ -394,20 +382,20 @@ export default {
     },
     chooseClamping(item) {
       this.clampingForce = item.name;
+      this.clampingForceId = item.id;
       this.showClampingForce = false;
     },
     chooseInjection(item) {
       this.injection = item.name;
+      this.injectionId = item.injectionId;
       this.showInjection = false;
     },
     chooseScrew(item) {
-      this.screw = item;
+      this.screw = item.name;
+      this.screwId = item.screwTypeId;
       this.showScrew = false;
     },
-    chooseModelTwo(item) {
-      this.form.model = item;
-      this.showModelTwo = false;
-    },
+
     chooseClampingTwo(item) {
       this.form.clampingForce = item;
       this.showClampingForceTwo = false;
@@ -420,16 +408,7 @@ export default {
       this.form.screw = item;
       this.showScrewTwo = false;
     },
-    selectTabOp(item, index) {
-      this.selectTab = item;
-      if (index === 2) {
-        this.uniquePick = true;
-        this.showUsual = false;
-      } else {
-        this.showUsual = true;
-        this.uniquePick = false;
-      }
-    },
+
     back() {
       window.history.back();
     },
@@ -443,7 +422,10 @@ export default {
       this.form.screw = this.screw;
 
       this.showDialog = false;
+      this.showBasic = false;
       this.showUsual = true;
+      //根据选项得出标准机/组合机
+      this.getStandardOrCombination();
     },
     toOptionResult() {
       this.until.href("optionalResult.html");
@@ -454,6 +436,24 @@ export default {
     chooseBigMenu(item, i) {
       this.bigMenuIndex = i;
       this.bigMenuId = item.id;
+      this.getSmallMenuList();
+    },
+    toShowRelatedSize() {
+      this.showDialog = true;
+      this.showRelatedSize = true;
+      const param = {
+        machineModelId: this.modelID,
+        clampForceId: this.clampingForceId,
+        injectionId: this.injectionId
+      };
+
+      this.api.sysGetRelatedSize(param).then(res => {
+        this.relatedSizeImg = res.imgUrl;
+      });
+    },
+    closeRelatedSize() {
+      this.showDialog = false;
+      this.showRelatedSize = false;
     },
     async getModelList() {
       let query = new this.Query();
@@ -467,34 +467,26 @@ export default {
       this.modelID = this.modelList[0].id;
     },
     async getClampingForceList() {
-      let query = new this.Query();
-      query.buildWhereClause("matchMenuTypeId", 22, "EQ");
-      query.buildWhereClause("status", 1, "EQ");
-      query.buildOrderClause("sort", "asc");
-
-      let param = query.getParam();
-      param.id = this.modelID;
-      this.clampingForceList = await this.api.sysGetClampingForceList(param);
+      this.clampingForceList = await this.api.sysGetClampingForceList({
+        modelTypeId: this.modelID
+      });
       this.clampingForce = this.clampingForceList[0].name;
+      this.clampingForceId = this.clampingForceList[0].clampForceId;
     },
     async getInjectionList() {
-      let query = new this.Query();
-      query.buildWhereClause("matchMenuTypeId", 23, "EQ");
-      query.buildWhereClause("status", 1, "EQ");
-      query.buildOrderClause("sort", "asc");
-
-      let param = query.getParam();
-      param.id = this.modelID;
+      const param = {
+        modelTypeId: this.modelID,
+        clampForceId: this.clampingForceId
+      };
       this.injectionList = await this.api.sysGetInjectionList(param);
       this.injection = this.injectionList[0].name;
+      this.injectionId = this.injectionList[0].injectionId;
     },
     async getScrewList() {
-      const query = new this.Query();
-      query.buildWhereClause("matchMenuTypeId", 24, "EQ");
-      query.buildWhereClause("status", 1, "EQ");
-      query.buildOrderClause("sort", "asc");
-
-      const param = query.getParam();
+      const param = {
+        modelTypeId: this.modelID,
+        injectionId: this.injectionId
+      };
       this.screwModelList = await this.api.sysGetScrewList(param);
       this.screw = this.screwModelList[0].name;
     },
@@ -510,6 +502,53 @@ export default {
 
       const param = query.getParam();
       this.smallMenuList = await this.api.sysGetSmallMenuList(param);
+      const fixedParam = {
+        machineId: this.modelID,
+        clampForceId: this.clampingForceId,
+        injectionId: this.injectionId
+      };
+      //二级菜单循环取数
+
+      if (this.category === "常规选配") {
+        this.smallMenuList.forEach((item, index) => {
+          const param = { ...fixedParam };
+          param.secondLevelMenuId = item.secondLevelMenuId;
+          this.api.sysGetMatchMenu(param).then(res => {
+            item.optionList = res;
+            if (res.length > 0) {
+              item.showOption = true;
+            } else {
+              item.showOption = false;
+            }
+            this.$set(this.smallMenuList, index, item);
+          });
+        });
+      } else {
+        this.smallMenuList.forEach((item, index) => {
+          const param = { ...fixedParam };
+          param.screwTypeId = this.screwId;
+          param.secondLevelMenuId = item.secondLevelMenuId;
+          this.api.sysGetUniqueMatchMenu(param).then(res => {
+            item.optionList = res;
+            if (res.length > 0) {
+              item.showOption = true;
+            } else {
+              item.showOption = false;
+            }
+            this.$set(this.smallMenuList, index, item);
+          });
+        });
+      }
+    },
+    async getStandardOrCombination() {
+      const param = {
+        modelType: this.model,
+        clampForce: this.clampingForce,
+        injection: this.injection
+      };
+
+      const machine = await this.api.sysGetStandardOrCombination(param);
+      this.machineType = machine.machineType === 1 ? "标准机" : "组合机";
     }
   },
   components: {}
@@ -525,20 +564,13 @@ body {
 #container {
   padding: 0 15px;
   width: 100%;
-  .main-opt {
-    background-color: #f2f5f9;
-  }
-  .row {
-    > .header {
-      position: relative;
-      background-color: #00338d;
-      color: #fff;
-      .edit {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
+  .header {
+    position: relative;
+    background-color: #00338d;
+    color: #fff;
+    p {
+      margin: 15px 0;
+      font-size: 18px;
     }
     .arrow-left {
       position: absolute;
@@ -546,67 +578,47 @@ body {
       left: 8%;
       transform: translateY(-50%);
     }
-
-    .search {
-      width: 20%;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 9%;
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 2%;
-      border: 1px solid #fff;
-      border-radius: 5px;
-      color: #000;
-      > img {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 2%;
-      }
-      > input {
-        text-indent: 8%;
-        padding: 5px 0;
-        width: 100%;
-        border: 0;
-        &:focus {
-          outline: none;
-        }
+    .text-center {
+      font-size: 18px;
+      > span {
+        display: inline-block;
+        width: 10%;
       }
     }
-    .option {
-      width: 46%;
-      padding-left: 0;
-      padding-right: 0;
-      margin: 10px 0 10px 18%;
+    .arrow-side {
+      display: inline-block;
+      margin-left: 3%;
+    }
+    > .ul-style {
+      color: #00338d;
       display: -webkit-flex;
       display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      > div {
-        border: 1px solid #fff;
-        font-size: 16px;
-        padding: 10px 0;
-        text-align: center;
-        overflow: hidden;
-        &:nth-of-type(1) {
-          border-top-left-radius: 8px;
-          border-bottom-left-radius: 8px;
-        }
-        &:nth-last-of-type(1) {
-          border-top-right-radius: 8px;
-          border-bottom-right-radius: 8px;
-        }
-        &:not(:nth-of-type(1)) {
-          margin-left: -1px;
-        }
-      }
-      > .active {
+      display: block;
+      width: 15%;
+      z-index: 12;
+      list-style: none;
+      position: absolute;
+      top: 100%;
+      left: 43%;
+      border: 1px solid #d2d2d2;
+      background-color: #00338d;
+      box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.1);
+      > li {
+        width: 100%;
         background-color: #fff;
-        color: #00338d;
+        padding: 8px 0 8px 6%;
+        &:hover {
+          background-color: #00338d;
+          color: #fff;
+        }
       }
     }
+  }
+
+  .main-opt {
+    background-color: #f2f5f9;
+  }
+  .row {
     .select-opt {
       height: 4.5%;
       margin: 0 8%;
@@ -658,23 +670,16 @@ body {
           display: inline-block;
           width: 40%;
         }
-        > div {
-          position: relative;
-          border-bottom: 1px solid #bebebe;
-          text-align: center;
-          flex: 1;
-        }
-        > input {
-          padding: 10px 0;
-          width: 60%;
-          text-align: center;
-          text-align-last: center;
-          border: 0;
-          border-bottom: 1px solid #bebebe;
-          background-color: #f2f5f9;
-          &:focus {
-            outline: none;
+        .el-select {
+          input {
+            border: 0;
+            background-color: #f2f5f9;
           }
+        }
+        input {
+          border: 0;
+          background-color: #f2f5f9;
+          outline: none;
         }
       }
       div {
@@ -771,17 +776,26 @@ body {
         display: flex;
         display: -webkit-flex;
         flex-flow: row wrap;
+        justify-content: flex-start;
         > div {
           position: relative;
           display: -webkit-flex;
           display: flex;
-          flex-direction: row;
-          flex-wrap: nowrap;
+          flex-flow: row nowrap;
           align-items: center;
           padding-top: 15px;
           padding-bottom: 8px;
           width: 25%;
-          border-bottom: 1px solid #cdcdcd;
+          border-bottom: 1px solid #dcdfe6;
+          .title {
+            flex: 0 0 auto;
+          }
+          .el-select {
+            flex: 1;
+            input {
+              border: 0;
+            }
+          }
           > span {
             display: inline-block;
             width: 50%;
@@ -802,6 +816,7 @@ body {
         }
         .active {
           color: #000;
+          border-bottom: 1px solid #000;
           > div {
             > img {
               display: block;
@@ -877,6 +892,18 @@ body {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 15px;
+}
+
+.basic-model .connect-size {
+  top: 10%;
+  transform: translate3d(-50%, 0, 0);
+  div {
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      vertical-align: middle;
+    }
+  }
 }
 
 .basic-model .dialog > p {

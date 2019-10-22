@@ -82,11 +82,8 @@ class api {
   }
   //机型
   sysGetModelList(data) {
-    let header = {
-      "yui3-token": untilApi.loGet("token")
-    };
     return new Promise((resolve, reject) => {
-      untilApi.get("/suji/matchMenu/listPC", data, header).then(res => {
+      untilApi.get("/suji/matchMenu/listPC", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -95,13 +92,10 @@ class api {
       });
     });
   }
-  //锁模力
+  //选配-锁模力
   sysGetClampingForceList(data) {
-    let header = {
-      "yui3-token": untilApi.loGet("token")
-    };
     return new Promise((resolve, reject) => {
-      untilApi.get("/suji/matchMenu/listxPC", data, header).then(res => {
+      untilApi.get("/suji/machineParam/listClampForce", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -110,13 +104,10 @@ class api {
       });
     });
   }
-  //注射当量
+  //选配-注射当量
   sysGetInjectionList(data) {
-    let header = {
-      "yui3-token": untilApi.loGet("token")
-    };
     return new Promise((resolve, reject) => {
-      untilApi.get("/suji/matchMenu/listxPC", data, header).then(res => {
+      untilApi.get("/suji/machineParam/listInjection", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -125,13 +116,10 @@ class api {
       });
     });
   }
-  //螺杆类型
+  //选配-螺杆类型
   sysGetScrewList(data) {
-    let header = {
-      "yui3-token": untilApi.loGet("token")
-    };
     return new Promise((resolve, reject) => {
-      untilApi.get("/suji/matchMenu/listPC", data, header).then(res => {
+      untilApi.get("/suji/screwType/listScrewType", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {
@@ -369,6 +357,54 @@ class api {
   factoryInfo(data) {
     return new Promise((resolve, reject) => {
       untilApi.get("/suji/factoryParams/getFactoryParams", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //选配-尺寸查询
+  sysGetRelatedSize(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/machineParam/getImg", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //机型选配-获取选配项
+  sysGetMatchMenu(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/matchMenuPrice/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //特殊选配-获取选配项
+  sysGetUniqueMatchMenu(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/selectEditInfo/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //pc机型选配-标准机/组合机检查
+  sysGetStandardOrCombination(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/standardMachine/check", data).then(res => {
         if (res.code === 0) {
           resolve(res.data);
         } else {

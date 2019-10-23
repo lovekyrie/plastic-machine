@@ -413,6 +413,30 @@ class api {
       });
     });
   }
+  //选配-底部行业配置
+  sysGetIndustrySettingList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/featurePack/listFeaturePack", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //选配结果-参数部门
+  sysGetOptionResultParamList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/screwType/infoPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
 }
 
 export { api };

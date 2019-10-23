@@ -16,7 +16,7 @@
         </div>
         <div v-for="(item, index) in list" :key="index">
           <div v-for="(itemJ, index1) in Object.values(item)" :key="index1">
-            {{ itemJ }}
+            {{ itemJ ? itemJ : "--" }}
           </div>
         </div>
       </div>
@@ -163,7 +163,10 @@ export default {
         display: flex;
         flex-flow: column wrap;
         &:nth-of-type(1) {
-          flex: 0 0 2%;
+          flex: 0 0 4%;
+          > div {
+            padding-left: 20%;
+          }
         }
         &:nth-of-type(3) {
           flex: 0 0 10%;
@@ -172,6 +175,7 @@ export default {
           flex: 0 0 20%;
         }
         > div {
+          padding-left: 5%;
           width: 100%;
           height: 30px;
           line-height: 30px;

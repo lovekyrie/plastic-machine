@@ -12,26 +12,26 @@
       </div>
     </div>
     <div class="row">
-      <div class="pick-date">2018-08-16</div>
+      <div class="pick-date">{{ time }}</div>
     </div>
     <div class="row">
       <div class="content">
         <div class="left-part">
           <div>
             <div>机型</div>
-            <div>MA天隆-电控系统杆</div>
+            <div>{{ form.model }}</div>
           </div>
           <div>
-            <div>吨位</div>
-            <div>锁魔力：1201-1600</div>
+            <div>锁模力</div>
+            <div>{{ form.clampingForce }}</div>
           </div>
           <div>
-            <div>注册量</div>
-            <div>CP-1.0~1.5</div>
+            <div>注射量</div>
+            <div>{{ form.injection }}</div>
           </div>
           <div>
             <div>螺杆型号</div>
-            <div>氮化标准螺杆</div>
+            <div>{{ form.screw }}</div>
           </div>
         </div>
         <div class="right-part">
@@ -46,16 +46,28 @@
             <div></div>
             <div></div>
           </div>
-          <div
-            class="concept"
-            v-for="(item, index) in productInfoList"
-            :key="index"
-          >
-            <div>{{ item.num }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.unit }}</div>
-            <div>{{ item.format }}</div>
-            <div>{{ item.note }}</div>
+          <div class="param">
+            <!-- 序号 -->
+            <div>
+              <div v-for="item in 35" :key="item">{{ item }}</div>
+            </div>
+            <!-- 名称 -->
+            <div>
+              <div v-for="(item, index) in nmList" :key="index">{{ item }}</div>
+            </div>
+            <!-- 单位 -->
+            <div>
+              <div v-for="(item, index) in unList" :key="index">{{ item }}</div>
+            </div>
+            <div v-for="(item, index) in list" :key="index">
+              <div v-for="(itemJ, index1) in Object.values(item)" :key="index1">
+                {{ itemJ ? itemJ : "--" }}
+              </div>
+            </div>
+            <!-- 空白 -->
+            <div>
+              <div v-for="item in 35" :key="item"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -69,100 +81,116 @@ export default {
   data() {
     return {
       backArrow,
-      productInfoList: [
-        {
-          num: 1,
-          name: "螺杆型号",
-          unit: "mm",
-          format: "24",
-          note: ""
-        },
-        {
-          num: 2,
-          name: "螺杆直径",
-          unit: "mm",
-          format: "24",
-          note: ""
-        },
-        {
-          num: 3,
-          name: "螺杆长径比",
-          unit: "L/D",
-          format: "23.3",
-          note: ""
-        },
-        {
-          num: 4,
-          name: "理论注射容量",
-          unit: "cm3",
-          format: "50",
-          note: ""
-        },
-        {
-          num: 5,
-          name: "注射重量(PS)",
-          unit: "g",
-          format: "46",
-          note: ""
-        },
-        {
-          num: 6,
-          name: "注射压力",
-          unit: "Mpa",
-          format: "250",
-          note: ""
-        },
-        {
-          num: 7,
-          name: "螺杆转速",
-          unit: "rpm",
-          format: "0-265",
-          note: ""
-        },
-        {
-          num: 8,
-          name: "锁模力",
-          unit: "KN",
-          format: "600",
-          note: ""
-        },
-        {
-          num: 9,
-          name: "最大移模行程",
-          unit: "mm",
-          format: "270",
-          note: ""
-        },
-        {
-          num: 10,
-          name: "拉杆内距",
-          unit: "mm",
-          format: "310*310",
-          note: ""
-        },
-        {
-          num: 11,
-          name: "最大模厚",
-          unit: "mm",
-          format: "330",
-          note: ""
-        },
-        {
-          num: 12,
-          name: "最小模厚",
-          unit: "mm",
-          format: "120",
-          note: ""
-        }
+      time:"",
+      form: {},
+      list: [],
+      nmList: [
+        "螺杆型号",
+        "螺杆直径",
+        "螺杆长径比",
+        "理论注射容量",
+        "注射重量",
+        "注射速率",
+        "塑化能力",
+        "注射压力",
+        "螺杆转速",
+        "锁模力",
+        "最大移模行程",
+        "最大拉杆内间距(H×V)",
+        "最大模厚",
+        "最小模厚",
+        "顶出行程",
+        "顶出力",
+        "最大模板开距",
+        "最小模具尺寸",
+        "最大模具重量",
+        "模板尺寸(H×V)",
+        "电热功率",
+        "油泵马达(电机功率)",
+        "外形尺寸",
+        "机器重量",
+        "料斗容积",
+        "油箱容积",
+        "注射速度",
+        "保压压力",
+        "喷嘴接触力",
+        // "油泵马达",
+        "总电气容量",
+        "转盘直径",
+        "转盘承重",
+        "模具定位中心距",
+        "中托行程",
+        "中托力"
+      ],
+      unList: [
+        "",
+        "mm",
+        "L/D",
+        "cm³",
+        "g",
+        "g/s",
+        "g/s",
+        "Mpa",
+        "rpm",
+        "t",
+        "mm",
+        "mm",
+        "mm",
+        "mm",
+        "mm",
+        "KN",
+        "mm",
+        "mm",
+        "Kg",
+        "mm",
+        "Kw",
+        "Kw",
+        "m",
+        "t",
+        "Kg",
+        "L",
+        "mm/s",
+        "Mpa",
+        "Mpa",
+        // "Kw",
+        "Kw/A",
+        "mm",
+        "t",
+        "mm",
+        "mm",
+        "KN"
       ]
     };
   },
+  mounted() {
+    const option = this.until.getQueryString("option");
+    if (option) {
+      this.form = JSON.parse(option);
+      this.getParamList();
+    }
+
+    this.time = this.until.formatDay("yyyy-MM-dd");
+  },
   methods: {
-    back(){
-       window.history.back();
+    back() {
+      window.history.back();
     },
-    toCart(){
-      this.until.href("optionalCart.html")
+    toCart() {
+      this.until.href("optionalCart.html");
+    },
+    async getParamList() {
+      const param = {
+        modelTypeId: this.form.modelID,
+        clampForceId: this.form.clampingForceId,
+        injectionId: this.form.injectionId,
+        screwTypeId: this.form.screwId
+      };
+
+      const data = await this.api.sysGetOptionResultParamList(param);
+      delete data.imgUrl;
+      delete data.imgUrlEn;
+
+      this.list.push(data);
     }
   },
   components: {}
@@ -175,159 +203,149 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
-}
-
-.row > .header {
-  position: relative;
-  background-color: #00338d;
-  color: #fff;
-}
-
-.row .arrow-left {
-  position: absolute;
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
-
-.row .arrow-side {
-  display: inline-block;
-  margin-left: 2%;
-}
-.row p {
-  font-size: 18px;
-  margin: 16px 0;
-}
-
-.row .confirmBtn {
-  font-size: 16px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 8%;
-}
-
-.row .pick-date {
-  margin: 0 8%;
-  padding: 2% 0 10px 0;
-  font-size: 16px;
-  color: #00338d;
-  border-bottom: 1px solid #00338d;
-}
-
-.row .content {
-  height: 100%;
-  margin: 0 8%;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-}
-
-.left-part {
-  font-size: 16px;
-  width: 48%;
-  height: 40%;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.left-part > div {
-  margin-top: 4%;
-  width: 100%;
-}
-
-.left-part > div > div:nth-of-type(1) {
-  font-size: 16px;
-}
-
-.left-part > div > div:nth-of-type(2) {
-  color: #a5a5a5;
-}
-
-.right-part {
-  font-size: 16px;
-  width: 48%;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: #f3f6fa;
-  border-left: 1px solid #bebebe;
-}
-
-.right-part > div {
-  margin-top: 0;
-  width: 100%;
-}
-
-.right-part > div {
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-}
-
-.right-part > .param-part > div {
-  padding: 2% 0;
-  text-align: center;
-  width: 100%;
-  border-right: 1px solid #bebebe;
-  border-bottom: 1px solid #bebebe;
-}
-
-.right-part > .machine-type > div {
-  padding: 2% 0 2% 2%;
-  height: 100%;
-  border-right: 1px solid #bebebe;
-  border-bottom: 1px solid #bebebe;
-}
-
-.right-part > .machine-type > div:nth-of-type(1) {
-  padding-left: 8%;
-  width: 42.58%;
-}
-
-.right-part > .machine-type > div:nth-of-type(2) {
-  width: 15%;
-}
-
-.right-part > .machine-type > div:nth-of-type(3) {
-  width: 26%;
-}
-
-.right-part > .machine-type > div:nth-of-type(4) {
-  width: 26%;
-}
-
-.right-part > .concept > div {
-  padding: 2% 0 2% 2%;
-  height: 100%;
-  border-right: 1px solid #bebebe;
-  border-bottom: 1px solid #bebebe;
-}
-
-.right-part > .concept > div:nth-of-type(1) {
-  width: 8%;
-}
-
-.right-part > .concept > div:nth-of-type(2) {
-  width: 35%;
-}
-
-.right-part > .concept > div:nth-of-type(3) {
-  width: 15%;
-}
-
-.right-part > .concept > div:nth-of-type(4) {
-  width: 26%;
-}
-
-.right-part > .concept > div:nth-of-type(5) {
-  width: 26%;
+  .row {
+    &:nth-last-of-type(1) {
+      background-color: #fff;
+    }
+    > .header {
+      position: relative;
+      background-color: #00338d;
+      color: #fff;
+    }
+    .arrow-left {
+      position: absolute;
+      top: 50%;
+      left: 8%;
+      transform: translateY(-50%);
+    }
+    .arrow-side {
+      display: inline-block;
+      margin-left: 2%;
+    }
+    p {
+      font-size: 18px;
+      margin: 16px 0;
+    }
+    .confirmBtn {
+      font-size: 16px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 8%;
+    }
+    .pick-date {
+      margin: 0 8%;
+      padding: 2% 0 10px 0;
+      font-size: 16px;
+      color: #00338d;
+      border-bottom: 1px solid #00338d;
+    }
+    .content {
+      height: 100%;
+      margin: 0 8%;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      .left-part {
+        font-size: 16px;
+        width: 48%;
+        height: 40%;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        > div {
+          margin-top: 4%;
+          width: 100%;
+          > div {
+            &:nth-of-type(1) {
+              font-size: 16px;
+            }
+            &:nth-of-type(2) {
+              color: #a5a5a5;
+            }
+          }
+        }
+      }
+      .right-part {
+        font-size: 16px;
+        width: 48%;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: #f3f6fa;
+        border-left: 1px solid #bebebe;
+        .param-part {
+          > div {
+            padding: 2% 0;
+            text-align: center;
+            width: 100%;
+            border-right: 1px solid #bebebe;
+            border-bottom: 1px solid #bebebe;
+          }
+        }
+        .machine-type {
+          > div {
+            padding: 1% 0 1% 2%;
+            height: 100%;
+            border-right: 1px solid #bebebe;
+            border-bottom: 1px solid #bebebe;
+            &:nth-of-type(1) {
+              padding-left: 8%;
+              width: 30%;
+            }
+            &:nth-of-type(2) {
+              width: 10%;
+            }
+            &:nth-of-type(3) {
+              width: 30%;
+            }
+            &:nth-last-of-type(1) {
+              width: 30%;
+            }
+          }
+        }
+        .param {
+          display: flex;
+          display: -webkit-flex;
+          flex-flow: row nowrap;
+          > div {
+            flex: 1;
+            display: flex;
+            flex-flow: column wrap;
+            &:nth-of-type(1) {
+              flex: 0 0 5%;
+            }
+            &:nth-of-type(3) {
+              flex: 0 0 10%;
+            }
+            &:nth-of-type(2) {
+              flex: 0 0 25%;
+            }
+            > div {
+              padding-left: 10%;
+              width: 100%;
+              height: 30px;
+              line-height: 30px;
+              border-right: 1px solid #bebebe;
+              border-bottom: 1px solid #bebebe;
+            }
+          }
+        }
+        > div {
+          margin-top: 0;
+          width: 100%;
+          display: -webkit-flex;
+          display: flex;
+          flex-wrap: nowrap;
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+    }
+  }
 }
 </style>

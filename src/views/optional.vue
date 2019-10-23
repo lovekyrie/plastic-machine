@@ -104,7 +104,7 @@
                   v-for="item1 in item.optionList"
                   :key="item1.matchMenuId"
                   :label="item1.name"
-                  :value="item1.cd"
+                  :value="item1.name"
                 ></el-option>
               </el-select>
             </div>
@@ -158,7 +158,7 @@
     <div class="row">
       <div class="footer">
         <div class="foot-wrap">
-          <div>
+          <div @click="toShowIndustry">
             <span class="industry">行业配置</span>
           </div>
           <div @click="toShowRelatedSize">
@@ -264,7 +264,26 @@
         </div>
       </div>
       <div class="industry-set" v-show="showIndustry">
-        <img class="btn-close" :src="closeIcon" alt />
+        <img
+          class="btn-close"
+          @click="showIndustry = false"
+          :src="closeIcon"
+          alt
+        />
+        <div v-if="showSettingOp">
+          <span>注射当量：</span>
+          <el-select v-model="form.injection" placeholder="请选择">
+            <el-option
+              v-for="item in settingList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
+        </div>
+        <div v-else>
+          <span>没有行业配置</span>
+        </div>
       </div>
       <div class="connect-size" v-show="showRelatedSize">
         <img class="btn-close" @click="closeRelatedSize" :src="closeIcon" alt />
@@ -307,23 +326,15 @@ export default {
       bigMenuList: [],
       smallMenuList: [],
       showModel: false,
-      showModelTwo: false,
       showClampingForce: false,
-      showClampingForceTwo: false,
       showInjection: false,
-      showInjectionTwo: false,
       showScrew: false,
-      showScrewTwo: false,
       showDialog: true,
       showUsual: false,
       model: "",
-      modelID: "",
       clampingForce: "",
-      clampingForceId: "",
       injection: "",
-      injectionId: "",
       screw: "",
-      screwId: "",
       bigMenuIndex: 0,
       bigMenuId: "",
       uniquePick: false,
@@ -338,11 +349,17 @@ export default {
         model: "",
         clampingForce: "",
         injection: "",
-        screw: ""
+        screw: "",
+        modelID: "",
+        clampingForceId: "",
+        injectionId: "",
+        screwId: ""
       },
       property: {},
       showType: false,
-      machineType: ""
+      machineType: "",
+      settingList: [],
+      showSettingOp: false
     };
   },
   async mounted() {
@@ -352,6 +369,17 @@ export default {
     await this.getScrewList();
     await this.getBigMenuList();
     await this.getSmallMenuList();
+  },
+  watch: {
+    "form.model": function() {
+      this.getStandardOrCombination();
+    },
+    "form.clampingForce": function() {
+      this.getStandardOrCombination();
+    },
+    "form.injection": function() {
+      this.getStandardOrCombination();
+    }
   },
   methods: {
     showModelOp() {
@@ -374,41 +402,31 @@ export default {
     showScrewOp() {
       this.showScrew = !this.showScrew;
     },
-    chooseModel(item) {
+    async chooseModel(item) {
       this.model = item.name;
-      this.modelID = item.id;
+      this.form.modelID = item.id;
       this.showModel = false;
-      this.getClampingForceList();
+      await this.getClampingForceList();
+      await this.getInjectionList();
+      await this.getScrewList();
     },
     chooseClamping(item) {
       this.clampingForce = item.name;
-      this.clampingForceId = item.id;
+      this.form.clampingForceId = item.clampForceId;
       this.showClampingForce = false;
+      this.getInjectionList();
     },
     chooseInjection(item) {
       this.injection = item.name;
-      this.injectionId = item.injectionId;
+      this.form.injectionId = item.injectionId;
       this.showInjection = false;
+      this.getScrewList();
     },
     chooseScrew(item) {
       this.screw = item.name;
-      this.screwId = item.screwTypeId;
+      this.form.screwId = item.screwTypeId;
       this.showScrew = false;
     },
-
-    chooseClampingTwo(item) {
-      this.form.clampingForce = item;
-      this.showClampingForceTwo = false;
-    },
-    chooseInjectionTwo(item) {
-      this.form.injection = item;
-      this.showInjectionTwo = false;
-    },
-    chooseScrewTwo(item) {
-      this.form.screw = item;
-      this.showScrewTwo = false;
-    },
-
     back() {
       window.history.back();
     },
@@ -428,10 +446,25 @@ export default {
       this.getStandardOrCombination();
     },
     toOptionResult() {
-      this.until.href("optionalResult.html");
+      const option = JSON.stringify(this.form);
+      this.until.href(`optionalResult.html?option=${option}`);
     },
     toOptionalList() {
-      this.until.href("optionalList.html");
+      //需要整理property里面有数据的值，传过去
+      const propertyList = [];
+      for (let [k, v] of Object.entries(this.property)) {
+        let len = v.length;
+        if (k && len > 0) {
+          for (let index = 0; index < len; index++) {
+            const element = v[index];
+            propertyList.push({ name: element });
+          }
+        }
+      }
+      const propertyStr = JSON.stringify(propertyList);
+       const option = JSON.stringify(this.form);
+      this.until.loSave('property',propertyStr)
+      this.until.href(`optionalList.html?option=${option}`);
     },
     chooseBigMenu(item, i) {
       this.bigMenuIndex = i;
@@ -442,14 +475,30 @@ export default {
       this.showDialog = true;
       this.showRelatedSize = true;
       const param = {
-        machineModelId: this.modelID,
-        clampForceId: this.clampingForceId,
-        injectionId: this.injectionId
+        machineModelId: this.form.modelID,
+        clampForceId: this.form.clampingForceId,
+        injectionId: this.form.injectionId
       };
 
       this.api.sysGetRelatedSize(param).then(res => {
         this.relatedSizeImg = res.imgUrl;
       });
+    },
+    toShowIndustry() {
+      this.showDialog = true;
+      this.showIndustry = true;
+
+      const param = {
+        modelType: this.form.modelID,
+        clampingForce: this.form.clampingForceId,
+        injection: this.form.injectionId,
+        screwType: this.form.screwId
+      };
+
+      this.settingList = this.api.sysGetIndustrySettingList(param);
+      if (this.settingList.length > 0) {
+        this.showSettingOp = true;
+      }
     },
     closeRelatedSize() {
       this.showDialog = false;
@@ -464,31 +513,36 @@ export default {
       let param = query.getParam();
       this.modelList = await this.api.sysGetModelList(param);
       this.model = this.modelList[0].name;
-      this.modelID = this.modelList[0].id;
+      this.form.modelID = this.modelList[0].id;
     },
     async getClampingForceList() {
       this.clampingForceList = await this.api.sysGetClampingForceList({
-        modelTypeId: this.modelID
+        modelTypeId: this.form.modelID
       });
       this.clampingForce = this.clampingForceList[0].name;
-      this.clampingForceId = this.clampingForceList[0].clampForceId;
+      this.form.clampingForceId = this.clampingForceList[0].clampForceId;
     },
     async getInjectionList() {
-      const param = {
-        modelTypeId: this.modelID,
-        clampForceId: this.clampingForceId
-      };
-      this.injectionList = await this.api.sysGetInjectionList(param);
-      this.injection = this.injectionList[0].name;
-      this.injectionId = this.injectionList[0].injectionId;
+      if (this.form.modelID && this.form.clampingForceId) {
+        const param = {
+          modelTypeId: this.form.modelID,
+          clampForceId: this.form.clampingForceId
+        };
+        this.injectionList = await this.api.sysGetInjectionList(param);
+        this.injection = this.injectionList[0].name;
+        this.form.injectionId = this.injectionList[0].injectionId;
+      }
     },
     async getScrewList() {
-      const param = {
-        modelTypeId: this.modelID,
-        injectionId: this.injectionId
-      };
-      this.screwModelList = await this.api.sysGetScrewList(param);
-      this.screw = this.screwModelList[0].name;
+      if (this.form.modelID && this.form.injectionId) {
+        const param = {
+          modelTypeId: this.form.modelID,
+          injectionId: this.form.injectionId
+        };
+        this.screwModelList = await this.api.sysGetScrewList(param);
+        this.screw = this.screwModelList[0].name;
+        this.form.screwId = this.screwModelList[0].screwTypeId;
+      }
     },
     async getBigMenuList() {
       this.bigMenuList = await this.api.sysGetBigMenuList();
@@ -503,9 +557,9 @@ export default {
       const param = query.getParam();
       this.smallMenuList = await this.api.sysGetSmallMenuList(param);
       const fixedParam = {
-        machineId: this.modelID,
-        clampForceId: this.clampingForceId,
-        injectionId: this.injectionId
+        machineId: this.form.modelID,
+        clampForceId: this.form.clampingForceId,
+        injectionId: this.form.injectionId
       };
       //二级菜单循环取数
 
@@ -526,7 +580,7 @@ export default {
       } else {
         this.smallMenuList.forEach((item, index) => {
           const param = { ...fixedParam };
-          param.screwTypeId = this.screwId;
+          param.screwTypeId = this.form.screwId;
           param.secondLevelMenuId = item.secondLevelMenuId;
           this.api.sysGetUniqueMatchMenu(param).then(res => {
             item.optionList = res;
@@ -542,9 +596,9 @@ export default {
     },
     async getStandardOrCombination() {
       const param = {
-        modelType: this.model,
-        clampForce: this.clampingForce,
-        injection: this.injection
+        modelType: this.form.model,
+        clampForce: this.form.clampingForce,
+        injection: this.form.injection
       };
 
       const machine = await this.api.sysGetStandardOrCombination(param);
@@ -892,6 +946,16 @@ body {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 15px;
+}
+
+.basic-model .industry-set {
+  div {
+    margin-top: 40px;
+    span {
+      margin-left: 30px;
+      font-size: 18px;
+    }
+  }
 }
 
 .basic-model .connect-size {

@@ -17,17 +17,20 @@
           <div>
             <input type="text" value="常规选配" />
           </div>
-          <div v-for="i in 13" :key="i">
-            <input type="text" />
+          <div v-for="(item, index) in propertyArr" :key="index">
+            <p>{{ item.name }}</p>
+            <img :src="numIcon" alt />
+            <span>{{ item.count }}</span>
+            <button class="left-btn" @click="mins(item)"></button>
+            <button class="right-btn" @click="plus(item)"></button>
           </div>
+          <div v-for="i in remainLeftLen" :key="i + remainLeftLen"></div>
         </div>
         <div class="right-side">
           <div>
             <input type="text" value="特殊选配" />
           </div>
-          <div v-for="i in 13" :key="i">
-            <input type="text" />
-          </div>
+          <div v-for="i in remainRightLen" :key="i"></div>
         </div>
       </div>
     </div>
@@ -36,18 +39,61 @@
 
 <script type="text/ecmascript-6">
 import backArrow from "./images/返回.png";
+import numIcon from "./images/数量控件.png";
 export default {
   data() {
     return {
-      backArrow
+      backArrow,
+      numIcon,
+      propertyArr: [],
+      propertyRightArr: [],
+      remainLeftLen: 0,
+      remainRightLen: 0
     };
+  },
+  mounted() {
+    const proArr = this.until.loGet("property");
+    const arr = JSON.parse(proArr);
+    const length = arr.length;
+
+    arr.forEach((item, index) => {
+      item.count = 1;
+      this.$set(arr, index, item);
+    });
+
+    if (length <= 13) {
+      this.remainRightLen = 13;
+      this.remainLeftLen = 13 - length;
+      this.propertyArr = arr;
+    } else if (length > 13 && length <= 26) {
+      this.remainLeftLen = 0;
+      this.remainRightLen = 26 - length;
+
+      this.propertyArr = arr.filter((item, index) => index < 13);
+      this.propertyRightArr = arr.filter((item, index) => index > 13);
+    } else {
+      this.remainLeftLen = 13;
+      this.remainRightLen = 13;
+      this.$message.error("选择的项目过多，无法显示");
+    }
   },
   methods: {
     back() {
-      window.history.back()
+      window.history.back();
     },
     toOptionResult() {
-      this.until.href("optionalResult.html")
+      const option = this.until.getQueryString("option");
+      if (option) {
+        this.until.href(`optionalResult.html?option=${option}`);
+      }
+    },
+    mins(item) {
+      if (item.count >= 1) {
+        item.count--;
+      }
+    },
+    plus(item) {
+      item.count++;
     }
   },
   components: {}
@@ -70,6 +116,9 @@ body {
   position: relative;
   background-color: #00338d;
   color: #fff;
+  p {
+    margin: 18px 0;
+  }
 }
 
 .row .arrow-left {
@@ -81,7 +130,7 @@ body {
 
 .row p {
   font-size: 18px;
-  margin: 16px 0;
+  margin: 0;
 }
 
 .row .confirmBtn {
@@ -120,12 +169,50 @@ body {
   margin-right: 8%;
 }
 
-.left-side > div,
-.right-side > div {
-  font-size: 16px;
-  padding: 20px 0 20px 20px;
-  width: 100%;
-  border-bottom: 1px solid #bebebe;
+.left-side,
+.right-side {
+  div {
+    position: relative;
+    font-size: 16px;
+    padding: 15px 20px;
+    width: 100%;
+    border-bottom: 1px solid #bebebe;
+    &:not(:nth-of-type(1)) {
+      position: relative;
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      height: 71px;
+      p {
+        flex: 1;
+      }
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      > span {
+        position: absolute;
+        right: 13%;
+        top: 50%;
+        transform: translate3d(-50%, -50%, 0);
+      }
+      > button {
+        position: absolute;
+        top: 50%;
+        width: 50px;
+        height: 40px;
+        transform: translateY(-50%);
+        opacity: 0;
+      }
+      > .left-btn {
+        right: 20%;
+      }
+      > .right-btn {
+        right: 3%;
+      }
+    }
+  }
 }
 
 .left-side > div:nth-of-type(1),

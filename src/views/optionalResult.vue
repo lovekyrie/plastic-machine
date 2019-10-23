@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       backArrow,
-      time:"",
+      time: "",
       form: {},
       list: [],
       nmList: [
@@ -159,7 +159,13 @@ export default {
         "mm",
         "mm",
         "KN"
-      ]
+      ],
+      cart: {
+        proNm: "",
+        createTm: "",
+        num: 1
+      },
+      cartList: []
     };
   },
   mounted() {
@@ -176,7 +182,31 @@ export default {
       window.history.back();
     },
     toCart() {
-      this.until.href("optionalCart.html");
+      const { model, clampingForce, injection, screw, machineType } = this.form;
+      //保存购物车
+      this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
+      this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
+      this.cartList.push(this.cart);
+
+      const cartListStr=JSON.stringify(this.cartList)
+      this.until.loSave('cartList',cartListStr)
+
+      let userInfoStr = this.until.loGet("userInfo");
+      if (userInfoStr) {
+        const userInfo = JSON.parse(userInfoStr);
+
+        const param = {
+          userId: userInfo.userId,
+          data: cartListStr
+        };
+
+        this.api.sysPosttoCart(param).then(res => {
+          if (res) {
+            // this.until.href("optionalCart.html");
+          }
+        });
+      }
+       this.until.href("optionalCart.html");
     },
     async getParamList() {
       const param = {

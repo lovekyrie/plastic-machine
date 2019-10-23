@@ -8,10 +8,25 @@
   "about": {
     "title": "关于我们"
   },
-  "msgList":{
-    "title" : "消息中心"
+  "msgList": {
+    "title": "消息中心"
   },
-  "msgDetail":{
-    "title" : "消息详情"
+  "optional": {
+    "title": "机型选配"
+  },
+  "optionalCart": {
+    "title": "选配清单"
+  },
+  "optionalList": {
+    "title": "当前清单"
+  },
+  "optionalResult": {
+    "title": "选配结果"
+  },
+  "productOverview": {
+    "title": "产品概览"
+  },
+  "operAndMaint":{
+    "title":"运维指南"
   }
 }

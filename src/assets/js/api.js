@@ -437,6 +437,18 @@ class api {
       });
     });
   }
+  //新增到购物车
+  sysPosttoCart(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.postData("/suji/cart/addPC", JSON.stringify(data)).then(res => {
+        if (res.code === 0) {
+          resolve(res);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
 }
 
 export { api };

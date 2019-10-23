@@ -382,14 +382,6 @@ export default {
     await this.getBigMenuList();
     await this.getSmallMenuList();
   },
-  watch: {
-    "form.clampingForce": function() {
-      // this.getStandardOrCombination();
-    },
-    "form.injection": function() {
-      // this.getStandardOrCombination();
-    }
-  },
   methods: {
     showModelOp() {
       this.showModel = !this.showModel;
@@ -475,6 +467,7 @@ export default {
       this.getStandardOrCombination();
     },
     toOptionResult() {
+      this.form.machineType=this.machineType
       const option = JSON.stringify(this.form);
       this.until.href(`optionalResult.html?option=${option}`);
     },

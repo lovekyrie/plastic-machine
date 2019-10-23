@@ -42,18 +42,18 @@
             alt
           />
           <div>
-            <span>{{ item.name }}</span>
+            <span>{{ item.proNm }}</span>
           </div>
           <!-- 产品数量 -->
           <div class="count-detail">
             <!-- 数量详细 -->
             <div>
-              <span>选配时间：{{ item.time }}</span>
+              <span>选配时间：{{ item.createTm }}</span>
             </div>
             <div class="count">
               <span>数量：</span>
               <img :src="numIcon" alt />
-              <span>{{ item.count }}</span>
+              <span>{{ item.num }}</span>
               <button class="left-btn" @click="mins(item)"></button>
               <button class="right-btn" @click="plus(item)"></button>
             </div>
@@ -132,24 +132,8 @@ export default {
       noPick,
       closeIcon,
       pickAllMark: true,
-      showDialog:false,
-      cartList: [
-        {
-          name: "MA600 / 130 /A(标准机)",
-          time: "2018-08-16 09:45",
-          count: 1
-        },
-        {
-          name: "MA600 / 130 /A(标准机)",
-          time: "2018-08-16 09:45",
-          count: 1
-        },
-        {
-          name: "MA600 / 130 /A(标准机)",
-          time: "2018-08-16 09:45",
-          count: 1
-        }
-      ]
+      showDialog: false,
+      cartList: []
     };
   },
   methods: {
@@ -166,32 +150,35 @@ export default {
 
       let index = this.cartList.findIndex(item => !item.selected);
       if (index > -1) {
-        this.pickAllMark=false
-      }
-      else{
-        this.pickAllMark=true
+        this.pickAllMark = false;
+      } else {
+        this.pickAllMark = true;
       }
     },
     mins(item) {
-      if(item.count>=1){
-
-        item.count--
+      if (item.num >= 1) {
+        item.num--;
       }
     },
     plus(item) {
-      item.count++
+      item.num++;
     },
-    toOptional(){
-      this.until.href("optional.html")
+    toOptional() {
+      this.until.href("optional.html");
     },
     saveOrder() {
-      this.showDialog=true
+      this.showDialog = true;
     },
     save() {
-      this.showDialog=false
+      this.showDialog = false;
     }
   },
   mounted() {
+    //从缓存中得到购物车，因后端接口出错，等修复后，前端统一修复
+    const cartListStr = this.until.loGet("cartList");
+    if (cartListStr) {
+      this.cartList = JSON.parse(cartListStr);
+    }
     this.cartList.map((item, index) => {
       item.selected = true;
       this.$set(this.cartList, index, item);

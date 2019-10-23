@@ -25,34 +25,46 @@
       <div class="select-opt">
         <div class="sel-wrap">
           <span>机型：</span>
-          <el-select v-model="form.model" placeholder="请选择">
+          <el-select
+            v-model="form.model"
+            @change="changeModel"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in modelList"
               :key="item.value"
               :label="item.name"
-              :value="item.name"
+              :value="item"
             ></el-option>
           </el-select>
         </div>
         <div class="sel-wrap">
           <span>锁模力：</span>
-          <el-select v-model="form.clampingForce" placeholder="请选择">
+          <el-select
+            v-model="form.clampingForce"
+            @change="changeClamping"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in clampingForceList"
               :key="item.value"
               :label="item.name"
-              :value="item.name"
+              :value="item"
             ></el-option>
           </el-select>
         </div>
         <div class="sel-wrap">
           <span>注射当量：</span>
-          <el-select v-model="form.injection" placeholder="请选择">
+          <el-select
+            v-model="form.injection"
+            @change="changeInjection"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in injectionList"
               :key="item.value"
               :label="item.name"
-              :value="item.name"
+              :value="item"
             ></el-option>
           </el-select>
         </div>
@@ -371,14 +383,11 @@ export default {
     await this.getSmallMenuList();
   },
   watch: {
-    "form.model": function() {
-      this.getStandardOrCombination();
-    },
     "form.clampingForce": function() {
-      this.getStandardOrCombination();
+      // this.getStandardOrCombination();
     },
     "form.injection": function() {
-      this.getStandardOrCombination();
+      // this.getStandardOrCombination();
     }
   },
   methods: {
@@ -410,17 +419,37 @@ export default {
       await this.getInjectionList();
       await this.getScrewList();
     },
+    async changeModel(e) {
+      this.form.modelID = e.id;
+      this.form.model = e.name;
+      await this.getClampingForceList();
+      await this.getInjectionList();
+      await this.getScrewList();
+      await this.getStandardOrCombination();
+    },
     chooseClamping(item) {
       this.clampingForce = item.name;
       this.form.clampingForceId = item.clampForceId;
       this.showClampingForce = false;
       this.getInjectionList();
     },
+    async changeClamping(e) {
+      this.form.clampingForceId = e.id;
+      this.form.clampingForce = e.name;
+      await this.getInjectionList();
+      await this.getStandardOrCombination();
+    },
     chooseInjection(item) {
       this.injection = item.name;
       this.form.injectionId = item.injectionId;
       this.showInjection = false;
       this.getScrewList();
+    },
+    async changeInjection(e) {
+      this.form.injectionId = e.id;
+      this.form.injection = e.name;
+      await this.getScrewList();
+      await this.getStandardOrCombination();
     },
     chooseScrew(item) {
       this.screw = item.name;
@@ -462,8 +491,8 @@ export default {
         }
       }
       const propertyStr = JSON.stringify(propertyList);
-       const option = JSON.stringify(this.form);
-      this.until.loSave('property',propertyStr)
+      const option = JSON.stringify(this.form);
+      this.until.loSave("property", propertyStr);
       this.until.href(`optionalList.html?option=${option}`);
     },
     chooseBigMenu(item, i) {
@@ -521,6 +550,7 @@ export default {
       });
       this.clampingForce = this.clampingForceList[0].name;
       this.form.clampingForceId = this.clampingForceList[0].clampForceId;
+      this.form.clampingForce = this.clampingForceList[0].name;
     },
     async getInjectionList() {
       if (this.form.modelID && this.form.clampingForceId) {
@@ -531,6 +561,7 @@ export default {
         this.injectionList = await this.api.sysGetInjectionList(param);
         this.injection = this.injectionList[0].name;
         this.form.injectionId = this.injectionList[0].injectionId;
+        this.form.injection = this.injectionList[0].name;
       }
     },
     async getScrewList() {
@@ -542,6 +573,7 @@ export default {
         this.screwModelList = await this.api.sysGetScrewList(param);
         this.screw = this.screwModelList[0].name;
         this.form.screwId = this.screwModelList[0].screwTypeId;
+        this.form.screw = this.screwModelList[0].name;
       }
     },
     async getBigMenuList() {

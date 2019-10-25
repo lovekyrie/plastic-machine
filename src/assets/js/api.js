@@ -449,6 +449,18 @@ class api {
       });
     });
   }
+  //购物车列表
+  sysGetCartList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/cart/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
 }
 
 export { api };

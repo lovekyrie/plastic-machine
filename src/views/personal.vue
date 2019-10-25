@@ -31,11 +31,14 @@
         <!-- 高级设置 -->
         <div class="right" v-show="showSetting">
           <div class="title">
-            <div class="active introduce">
-              <span>内贸</span>
-            </div>
-            <div class="standard">
-              <span>外销</span>
+            <div
+              class="introduce"
+              :class="{ active: selectType === index }"
+              v-for="(item, index) in typeList"
+              :key="index"
+              @click="selectType = index"
+            >
+              <span>{{ item }}</span>
             </div>
           </div>
           <div class="set-content">
@@ -91,19 +94,19 @@
                 <span>{{ item.customerNm }}</span>
               </div>
               <div class="multi-row">
-                <span v-for="(itemC, index) in item.machineList" :key="index">
-                  {{ itemC }}
-                </span>
+                <span v-for="(itemC, index) in item.machineList" :key="index">{{
+                  itemC
+                }}</span>
               </div>
               <div class="multi-row">
-                <span v-for="(itemC1, index) in item.priceList" :key="index">
-                  {{ itemC1 }}
-                </span>
+                <span v-for="(itemC1, index) in item.priceList" :key="index">{{
+                  itemC1
+                }}</span>
               </div>
               <div class="multi-row">
-                <span v-for="(itemC2, index) in item.numList" :key="index">
-                  {{ itemC2 }}
-                </span>
+                <span v-for="(itemC2, index) in item.numList" :key="index">{{
+                  itemC2
+                }}</span>
               </div>
               <div>
                 <span>{{ item.totalPrice }}</span>
@@ -340,7 +343,9 @@ export default {
           time: "2018-08-26",
           status: 1
         }
-      ]
+      ],
+      typeList: ["内贸", "外销"],
+      selectType: 0
     };
   },
   mounted() {
@@ -496,62 +501,56 @@ html,
 body {
   height: 100%;
   background-color: #f2f5f9;
-}
-
-.container {
-  width: 100%;
-}
-
-.row > .header {
-  position: relative;
-  background-color: #00338d;
-  color: #fff;
-}
-
-.row .arrow-left {
-  position: absolute;
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
-
-.row p {
-  font-size: 18px;
-  margin: 16px 0;
-}
-
-.content {
-  display: -webkit-flex;
-  display: flex;
-  height: 100%;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-
-.content .left {
-  width: 30%;
-  height: 100vh;
-  background-color: #fff;
-}
-
-.content .right,
-.content .order-content {
-  background-color: #fafbfd;
-  width: 70%;
-}
-
-.content .left .row {
-  display: -webkit-flex;
-  display: flex;
-  margin-left: 0;
-  width: 100%;
-  padding: 30px 0;
-  background: url("./images/个人中心_左侧导航.png") no-repeat top center;
-  background-size: cover;
-}
-
-.content .left > .active {
-  background-image: url("./images/个人中心_左侧导航_选中.png");
+  .container {
+    width: 100%;
+    .row {
+      > .header {
+        position: relative;
+        background-color: #00338d;
+        color: #fff;
+      }
+      .arrow-left {
+        position: absolute;
+        top: 50%;
+        left: 8%;
+        transform: translateY(-50%);
+      }
+      p {
+        font-size: 18px;
+        margin: 16px 0;
+      }
+      .content {
+        display: -webkit-flex;
+        display: flex;
+        height: 100%;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        .left {
+          width: 30%;
+          height: 100vh;
+          background-color: #fff;
+          .row {
+            display: -webkit-flex;
+            display: flex;
+            margin-left: 0;
+            width: 100%;
+            padding: 30px 0;
+            background: url("./images/个人中心_左侧导航.png") no-repeat top
+              center;
+            background-size: cover;
+          }
+          > .active {
+            background-image: url("./images/个人中心_左侧导航_选中.png");
+          }
+        }
+        .right,
+        .order-content {
+          background-color: #fafbfd;
+          width: 70%;
+        }
+      }
+    }
+  }
 }
 
 .content .order > div,
@@ -759,10 +758,9 @@ body {
   margin: 0 30px;
   padding: 15px 0;
   text-align: center;
-}
-
-.right .title .introduce {
-  margin-left: 25%;
+  &:nth-of-type(1) {
+    margin-left: 25%;
+  }
 }
 
 .right .title > .active {

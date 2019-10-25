@@ -26,7 +26,7 @@
         <div class="sel-wrap">
           <span>机型：</span>
           <el-select
-            v-model="form.model"
+            v-model="form.modelID"
             @change="changeModel"
             placeholder="请选择"
           >
@@ -34,14 +34,14 @@
               v-for="item in modelList"
               :key="item.value"
               :label="item.name"
-              :value="item"
+              :value="item.id"
             ></el-option>
           </el-select>
         </div>
         <div class="sel-wrap">
           <span>锁模力：</span>
           <el-select
-            v-model="form.clampingForce"
+            v-model="form.clampingForceId"
             @change="changeClamping"
             placeholder="请选择"
           >
@@ -49,14 +49,14 @@
               v-for="item in clampingForceList"
               :key="item.value"
               :label="item.name"
-              :value="item"
+              :value="item.clampForceId"
             ></el-option>
           </el-select>
         </div>
         <div class="sel-wrap">
           <span>注射当量：</span>
           <el-select
-            v-model="form.injection"
+            v-model="form.injectionId"
             @change="changeInjection"
             placeholder="请选择"
           >
@@ -64,7 +64,7 @@
               v-for="item in injectionList"
               :key="item.value"
               :label="item.name"
-              :value="item"
+              :value="item.injectionId"
             ></el-option>
           </el-select>
         </div>
@@ -276,12 +276,7 @@
         </div>
       </div>
       <div class="industry-set" v-show="showIndustry">
-        <img
-          class="btn-close"
-          @click="showIndustry = false"
-          :src="closeIcon"
-          alt
-        />
+        <img class="btn-close" @click="closeIndustry" :src="closeIcon" alt />
         <div v-if="showSettingOp">
           <span>注射当量：</span>
           <el-select v-model="form.injection" placeholder="请选择">
@@ -412,8 +407,10 @@ export default {
       await this.getScrewList();
     },
     async changeModel(e) {
-      this.form.modelID = e.id;
-      this.form.model = e.name;
+      const index = this.modelList.findIndex(item => item.id === e);
+      if (index>=0) {
+        this.form.model = this.modelList[index].name;
+      }
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
@@ -426,8 +423,10 @@ export default {
       this.getInjectionList();
     },
     async changeClamping(e) {
-      this.form.clampingForceId = e.id;
-      this.form.clampingForce = e.name;
+      const index = this.clampingForceList.findIndex(
+        item => item.clampForceId === e
+      );
+      if (index>=0) this.form.clampingForce = this.clampingForceList[index].name;
       await this.getInjectionList();
       await this.getStandardOrCombination();
     },
@@ -438,8 +437,10 @@ export default {
       this.getScrewList();
     },
     async changeInjection(e) {
-      this.form.injectionId = e.id;
-      this.form.injection = e.name;
+      const index = this.injectionList.findIndex(
+        item => item.injectionId === e
+      );
+      if (index>=0) this.form.injection = this.injectionList[index].name;
       await this.getScrewList();
       await this.getStandardOrCombination();
     },
@@ -467,7 +468,7 @@ export default {
       this.getStandardOrCombination();
     },
     toOptionResult() {
-      this.form.machineType=this.machineType
+      this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
       this.until.href(`optionalResult.html?option=${option}`);
     },
@@ -521,6 +522,10 @@ export default {
       if (this.settingList.length > 0) {
         this.showSettingOp = true;
       }
+    },
+    closeIndustry() {
+      this.showIndustry = false;
+      this.showDialog = false;
     },
     closeRelatedSize() {
       this.showDialog = false;
@@ -951,6 +956,7 @@ body {
 
 .basic-model {
   position: fixed;
+  z-index: 10;
   width: 100%;
   height: 100%;
   top: 0;

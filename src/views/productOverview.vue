@@ -142,7 +142,7 @@ export default {
       conceptCont: "",
       categoryList: [],
       productList: [],
-      technicalParam:{},
+      technicalParam: {},
       introduceList: [
         "机型简介",
         "性能特征",
@@ -181,8 +181,8 @@ export default {
       if (index === 4) {
         this.getTechnicalParameter();
       }
-      if(index===5){
-        this.getRelatedSize()
+      if (index === 5) {
+        this.getRelatedSize();
       }
     },
     showOption() {
@@ -191,20 +191,20 @@ export default {
     selectLeftItem(item, i) {
       this.selectIndex = i;
       this.categoryObj = item;
-      this.getTechnicalParameter()
-      this.getRelatedSize()
+      this.getTechnicalParameter();
+      this.getRelatedSize();
     },
-    chooseCategory(item) {
+    async chooseCategory(item) {
       this.showType = false;
       this.categoryObj = item;
       this.category = item.machineCh;
       this.categoryId = item.id;
       this.conceptCont = item.noticeCh;
-      this.getSmallCategoryList();
-      this.getPerformanceCharacter();
-      this.getTypicalProduct();
-      this.getStandardSetting();
-      this.getTechnicalParameter();
+      await this.getSmallCategoryList();
+      await this.getPerformanceCharacter();
+      await this.getTypicalProduct();
+      await this.getStandardSetting();
+      await this.getTechnicalParameter();
     },
     async getCategoryList() {
       this.categoryList = await this.api.sysGetProductBigModelList();
@@ -266,7 +266,7 @@ export default {
       };
 
       this.technicalParameterList = await this.api.sysGetTechnicalParameter(
-       this.technicalParam
+        this.technicalParam
       );
       //去除后两个字段
       this.technicalParameterList.forEach(item => {
@@ -274,15 +274,13 @@ export default {
         delete item.imgUrlEn;
       });
     },
-    async getRelatedSize(){
-       const list = await this.api.sysGetTechnicalParameter(
-       this.technicalParam
-      );
-      list.forEach(item=>{
-        this.relatedSizeList.push(item.imgUrl)
-      })
+    async getRelatedSize() {
+      const list = await this.api.sysGetTechnicalParameter(this.technicalParam);
+      list.forEach(item => {
+        this.relatedSizeList.push(item.imgUrl);
+      });
 
-      this.relatedSizeList=new Set(this.relatedSizeList)
+      this.relatedSizeList = new Set(this.relatedSizeList);
     }
   },
   components: {

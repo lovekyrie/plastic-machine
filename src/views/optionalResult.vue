@@ -202,11 +202,10 @@ export default {
 
         this.api.sysPosttoCart(param).then(res => {
           if (res) {
-            // this.until.href("optionalCart.html");
+             this.until.href("optionalCart.html");
           }
         });
       }
-       this.until.href("optionalCart.html");
     },
     async getParamList() {
       const param = {

@@ -7,7 +7,7 @@
         <p class="text-center" @click="showOption">
           <span>{{ category }}</span>
           <!-- 下拉图标 -->
-          <img class="arrow-side" :src="pullDown" />
+          <img class="arrow-side" :src="pullDownIcon" />
         </p>
         <div type="false" class="ul-style" v-if="showType">
           <li
@@ -268,7 +268,7 @@
             </div>
             <img :src="pullDown" alt />
           </div>
-          <p>注射重量(PS):46g</p>
+          <p>注射重量(PS):{{ screwDiameter }}g</p>
           <div>
             <span></span>
             <button class="confirmPick" @click="confirm">确认</button>
@@ -309,6 +309,7 @@
 import backArrow from "./images/返回.png";
 import searchIcon from "./images/搜索.png";
 import pullDown from "./images/选配_箭头.png";
+import pullDownIcon from "./images/标签栏下拉箭头.png";
 import infoIcon from "./images/信息.png";
 import required from "./images/必填.png";
 import uploadIcon from "./images/上传图片.png";
@@ -321,6 +322,7 @@ export default {
       backArrow,
       searchIcon,
       pullDown,
+      pullDownIcon,
       infoIcon,
       required,
       uploadIcon,
@@ -352,6 +354,7 @@ export default {
       showRelatedSize: false,
       relatedSizeImg: "",
       showMachineColor: false,
+      screwDiameter:"",
       form: {
         model: "",
         clampingForce: "",
@@ -446,6 +449,7 @@ export default {
     },
     chooseScrew(item) {
       this.screw = item.name;
+      this.screwDiameter=item.screwDiameter
       this.form.screwId = item.screwTypeId;
       this.showScrew = false;
     },
@@ -570,6 +574,7 @@ export default {
         };
         this.screwModelList = await this.api.sysGetScrewList(param);
         this.screw = this.screwModelList[0].name;
+        this.screwDiameter=this.screwModelList[0].screwDiameter
         this.form.screwId = this.screwModelList[0].screwTypeId;
         this.form.screw = this.screwModelList[0].name;
       }

@@ -186,10 +186,9 @@ export default {
       //保存购物车
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
       this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
-      this.cartList.push(this.cart);
 
-      const cartListStr=JSON.stringify(this.cartList)
-      this.until.loSave('cartList',cartListStr)
+      const cartStr=JSON.stringify(this.cart)
+      // this.until.loSave('cartList',cartListStr)
 
       let userInfoStr = this.until.loGet("userInfo");
       if (userInfoStr) {
@@ -197,7 +196,7 @@ export default {
 
         const param = {
           userId: userInfo.userId,
-          data: cartListStr
+          data: cartStr
         };
 
         this.api.sysPosttoCart(param).then(res => {
@@ -271,7 +270,7 @@ export default {
     }
     .content {
       height: 100%;
-      margin: 0 8%;
+      margin: 0 8% 40px;
       display: -webkit-flex;
       display: flex;
       flex-direction: row;
@@ -324,16 +323,16 @@ export default {
             border-bottom: 1px solid #bebebe;
             &:nth-of-type(1) {
               padding-left: 8%;
-              width: 30%;
+              width: 40%;
             }
             &:nth-of-type(2) {
               width: 10%;
             }
             &:nth-of-type(3) {
-              width: 30%;
+              width: 25%;
             }
             &:nth-last-of-type(1) {
-              width: 30%;
+              width: 25%;
             }
           }
         }
@@ -352,7 +351,7 @@ export default {
               flex: 0 0 10%;
             }
             &:nth-of-type(2) {
-              flex: 0 0 25%;
+              flex: 0 0 35%;
             }
             > div {
               padding-left: 10%;

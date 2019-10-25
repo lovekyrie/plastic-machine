@@ -64,7 +64,12 @@
               <a href>查看详情</a>
             </div>
             <div>
-              <img class="del-order" :src="deleteIcon" alt />
+              <img
+                @click="delCart(item)"
+                class="del-order"
+                :src="deleteIcon"
+                alt
+              />
             </div>
           </div>
           <!-- 差异价 -->
@@ -133,7 +138,8 @@ export default {
       closeIcon,
       pickAllMark: true,
       showDialog: false,
-      cartList: []
+      cartList: [],
+      userInfo: {}
     };
   },
   methods: {
@@ -158,10 +164,23 @@ export default {
     mins(item) {
       if (item.num >= 1) {
         item.num--;
+
+        //调用接口
+        const param = {
+          id: item.id,
+          data: JSON.stringify(item)
+        };
+        this.api.sysModifyCart(param);
       }
     },
     plus(item) {
       item.num++;
+      //调用接口
+      const param = {
+        id: item.id,
+        data: JSON.stringify(item)
+      };
+      this.api.sysModifyCart(param);
     },
     toOptional() {
       this.until.href("optional.html");
@@ -171,19 +190,46 @@ export default {
     },
     save() {
       this.showDialog = false;
+    },
+    async getCartList() {
+      const query = new this.Query();
+      query.buildWhereClause("userId", this.userInfo.userId, "EQ");
+      query.buildOrderClause("updTm", "desc");
+
+      const param = query.getParam();
+      let list = await this.api.sysGetCartList(param);
+      list.forEach(item => {
+        if (item.data) {
+          const data = JSON.parse(item.data);
+          data.id = item.id;
+          this.cartList.push(data);
+        }
+      });
+
+      this.cartList.forEach((item, index) => {
+        item.selected = true;
+        this.$set(this.cartList, index, item);
+      });
+    },
+    delCart(item) {
+      this.cartList=this.cartList.filter(itemCart=>itemCart!==item)
+      //调用接口
+      const param = {
+        id: item.id,
+        data: ""
+      };
+      this.api.sysModifyCart(param);
     }
   },
   mounted() {
     //从缓存中得到购物车，因后端接口出错，等修复后，前端统一修复
-    const cartListStr = this.until.loGet("cartList");
-    if (cartListStr) {
-      this.cartList = JSON.parse(cartListStr);
+    const userInfoStr = this.until.loGet("userInfo");
+    if (userInfoStr) {
+      this.userInfo = JSON.parse(userInfoStr);
+      this.getCartList();
     }
-    this.cartList.map((item, index) => {
-      item.selected = true;
-      this.$set(this.cartList, index, item);
-    });
   },
+
   components: {}
 };
 </script>

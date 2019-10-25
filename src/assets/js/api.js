@@ -454,7 +454,19 @@ class api {
     return new Promise((resolve, reject) => {
       untilApi.get("/suji/cart/listPC", data).then(res => {
         if (res.code === 0) {
-          resolve(res.data);
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //修改购物车
+  sysModifyCart(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.postData("/suji/cart/updPC", JSON.stringify(data)).then(res => {
+        if (res.code === 0) {
+          resolve(res);
         } else {
           reject(res);
         }

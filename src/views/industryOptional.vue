@@ -4,12 +4,120 @@
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
-        <p class="text-center" @click="showOption">
+        <p class="text-center">
           <span>行业选配</span>
         </p>
       </div>
     </div>
-
+    <div class="row">
+      <div class="content">
+        <!-- 左侧选项1 -->
+        <div class="left">
+          <!-- 一级行业 -->
+          <p>一级行业</p>
+          <div v-for="(item, index) in productList" :key="index">
+            <div
+              @click="selectLeftItem(item, index)"
+              class="row"
+              :class="{ active: index === selectIndex }"
+            >
+              <span>{{ item }}</span>
+            </div>
+            <div class="row-segment"></div>
+          </div>
+        </div>
+        <!-- 左侧选项2 子类 -->
+        <div class="middle">
+          <!-- 二级行业 -->
+          <p>二级行业</p>
+          <div v-for="(item, index) in productList" :key="index">
+            <div
+              @click="selectChildItem(item, index)"
+              class="row"
+              :class="{ active: index === selectIndex }"
+            >
+              <span>{{ item }}</span>
+            </div>
+            <div class="row-segment"></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="title">
+            <div class="machine-type">机型</div>
+            <div class="select-opt">
+              <div class="sel-wrap">
+                <el-select
+                  v-model="form.modelID"
+                  @change="changeModel"
+                  placeholder="请选择机型"
+                >
+                  <el-option
+                    v-for="item in modelList"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="sel-wrap">
+                <el-select
+                  v-model="form.clampingForceId"
+                  @change="changeClamping"
+                  placeholder="请选择锁模力"
+                >
+                  <el-option
+                    v-for="item in clampingForceList"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item.clampForceId"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="sel-wrap">
+                <el-select
+                  v-model="form.injectionId"
+                  @change="changeInjection"
+                  placeholder="请选择注射当量"
+                >
+                  <el-option
+                    v-for="item in injectionList"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item.injectionId"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="sel-wrap">
+                <el-select v-model="form.screw" placeholder="螺杆型号">
+                  <el-option
+                    v-for="item in screwModelList"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item.name"
+                  ></el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="option-list">
+            <!-- 选择列表 -->
+            <ul>
+              <!-- 选择标题 -->
+              <li>
+                <img :src="noPick" alt />
+                <span>test</span>
+                <ol>
+                  <li v-for="(item, index) in optionList" :key="index">
+                    <img :src="noPick" alt />
+                    <span>{{ item.nm }}</span>
+                  </li>
+                </ol>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="footer">
         <div class="foot-wrap">
@@ -44,11 +152,16 @@
 
 <script type="text/ecmascript-6">
 import backArrow from "./images/返回.png";
-
+import closeIcon from "./images/关闭.png";
+import pickAll from "./images/选配清单_全选.png";
+import noPick from "./images/选配清单_未选.png";
 export default {
   data: () => {
     return {
       backArrow,
+      closeIcon,
+      pickAll,
+      noPick,
       modelList: [],
       clampingForceList: [],
       injectionList: [],
@@ -61,12 +174,14 @@ export default {
       screw: "",
       bigMenuIndex: 0,
       bigMenuId: "",
-      showDialog:false,
+      showDialog: false,
       showIndustry: false,
       relatedSizeImg: "",
       screwDiameter: "",
       cartId: "",
+      selectIndex: 0,
       paramForm: {},
+      productList: ["汽车类", "物流类", "包装类", "其他行业", "IT类", "家电类"],
       form: {
         model: "",
         clampingForce: "",
@@ -81,41 +196,20 @@ export default {
       showType: false,
       machineType: "",
       settingList: [],
-      showSettingOp: false
+      showSettingOp: false,
+      optionList: [
+        { nm: "测试选项1" },
+        { nm: "测试选项2" },
+        { nm: "测试选项3" },
+        { nm: "测试选项4" },
+        { nm: "测试选项5" },
+        { nm: "测试选项6" },
+        { nm: "测试选项7" }
+      ]
     };
   },
-  async mounted() {
-
-  },
+  async mounted() {},
   methods: {
-    showModelOp() {
-      this.showModel = !this.showModel;
-    },
-    showOption() {
-      this.showType = !this.showType;
-    },
-    chooseCategory(item) {
-      this.showType = false;
-      this.category = item;
-      this.getSmallMenuList();
-    },
-    showClampingForceOp() {
-      this.showClampingForce = !this.showClampingForce;
-    },
-    showInjectionOp() {
-      this.showInjection = !this.showInjection;
-    },
-    showScrewOp() {
-      this.showScrew = !this.showScrew;
-    },
-    async chooseModel(item) {
-      this.model = item.name;
-      this.form.modelID = item.id;
-      this.showModel = false;
-      await this.getClampingForceList();
-      await this.getInjectionList();
-      await this.getScrewList();
-    },
     async changeModel(e) {
       const index = this.modelList.findIndex(item => item.id === e);
       if (index >= 0) {
@@ -126,12 +220,7 @@ export default {
       await this.getScrewList();
       await this.getStandardOrCombination();
     },
-    chooseClamping(item) {
-      this.clampingForce = item.name;
-      this.form.clampingForceId = item.clampForceId;
-      this.showClampingForce = false;
-      this.getInjectionList();
-    },
+
     async changeClamping(e) {
       const index = this.clampingForceList.findIndex(
         item => item.clampForceId === e
@@ -141,12 +230,7 @@ export default {
       await this.getInjectionList();
       await this.getStandardOrCombination();
     },
-    chooseInjection(item) {
-      this.injection = item.name;
-      this.form.injectionId = item.injectionId;
-      this.showInjection = false;
-      this.getScrewList();
-    },
+
     async changeInjection(e) {
       const index = this.injectionList.findIndex(
         item => item.injectionId === e
@@ -155,29 +239,9 @@ export default {
       await this.getScrewList();
       await this.getStandardOrCombination();
     },
-    chooseScrew(item) {
-      this.screw = item.name;
-      this.screwDiameter = item.screwDiameter;
-      this.form.screwId = item.screwTypeId;
-      this.showScrew = false;
-    },
+
     back() {
       window.history.back();
-    },
-    toIndex() {
-      this.until.href("home.html");
-    },
-    confirm() {
-      this.form.model = this.model;
-      this.form.clampingForce = this.clampingForce;
-      this.form.injection = this.injection;
-      this.form.screw = this.screw;
-
-      this.showDialog = false;
-      this.showBasic = false;
-      this.showUsual = true;
-      //根据选项得出标准机/组合机
-      this.getStandardOrCombination();
     },
     toOptionResult() {
       this.form.machineType = this.machineType;
@@ -186,31 +250,10 @@ export default {
         `optionalResult.html?option=${option}&cartId=${this.cartId}`
       );
     },
-    toOptionalList() {
-      //需要整理property里面有数据的值，传过去
-
-      const propertyStr = JSON.stringify(this.property);
-      const option = JSON.stringify(this.form);
-      this.until.loSave("property", propertyStr);
-      this.until.href(`optionalList.html?option=${option}`);
-    },
     chooseBigMenu(item, i) {
       this.bigMenuIndex = i;
       this.bigMenuId = item.id;
       this.getSmallMenuList();
-    },
-    toShowRelatedSize() {
-      this.showDialog = true;
-      this.showRelatedSize = true;
-      const param = {
-        machineModelId: this.form.modelID,
-        clampForceId: this.form.clampingForceId,
-        injectionId: this.form.injectionId
-      };
-
-      this.api.sysGetRelatedSize(param).then(res => {
-        this.relatedSizeImg = res.imgUrl;
-      });
     },
     toShowIndustry() {
       this.showDialog = true;
@@ -232,10 +275,8 @@ export default {
       this.showIndustry = false;
       this.showDialog = false;
     },
-    closeRelatedSize() {
-      this.showDialog = false;
-      this.showRelatedSize = false;
-    },
+    selectLeftItem() {},
+    selectChildItem() {},
     async getModelList() {
       let query = new this.Query();
       query.buildWhereClause("matchMenuTypeId", 21, "EQ");
@@ -375,250 +416,149 @@ body {
         width: 10%;
       }
     }
-    .arrow-side {
-      display: inline-block;
-      margin-left: 3%;
-    }
-    > .ul-style {
-      color: #00338d;
-      display: -webkit-flex;
-      display: flex;
-      display: block;
-      width: 15%;
-      z-index: 12;
-      list-style: none;
-      position: absolute;
-      top: 100%;
-      left: 43%;
-      border: 1px solid #d2d2d2;
-      background-color: #00338d;
-      box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.1);
-      > li {
-        width: 100%;
-        background-color: #fff;
-        padding: 8px 0 8px 6%;
-        &:hover {
-          background-color: #00338d;
-          color: #fff;
-        }
-      }
-    }
   }
 
-  .main-opt {
-    background-color: #f2f5f9;
-  }
   .row {
-    .select-opt {
-      height: 4.5%;
-      margin: 0 8%;
-      display: -webkit-flex;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      > div {
-        position: relative;
-        height: 4.5%;
-        width: 18%; /*中间留空隙*/
-        display: -webkit-flex;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-content: center;
-        > .ul-style {
-          display: -webkit-flex;
-          display: flex;
-          display: block;
-          width: 60%;
-          z-index: 9999;
-          list-style: none;
-          position: absolute;
-          top: 100%;
-          left: 40%;
-          border: 1px solid #d2d2d2;
-          background-color: #00338d;
-          > li {
-            width: 100%;
-            /* background-color: #00338D; */
-            background-color: #fff;
-            padding: 8px 0 8px 1%;
-            &:hover {
-              background-color: #00338d;
-              color: #fff;
-            }
-          }
-        }
-      }
-      .sel-wrap {
-        font-size: 16px;
-        display: -webkit-flex;
-        display: flex;
-        > span {
-          padding: 10px 0;
-          display: inline-block;
-          width: 40%;
-        }
-        .el-select {
-          input {
-            border: 0;
-            background-color: #f2f5f9;
-          }
-        }
-        input {
-          border: 0;
-          background-color: #f2f5f9;
-          outline: none;
-        }
-      }
-      div {
-        > img {
-          position: absolute;
-          top: 50%;
-          right: 0;
-          transform: translateY(-50%);
-        }
-      }
-    }
     .content {
-      height: 100%;
-      padding-bottom: 20%;
       font-size: 16px;
       width: 100%;
       background-color: #fff;
       overflow: hidden;
-      .sel-one,
-      .sel-three,
-      .setting-wrap {
-        display: -webkit-flex;
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: row;
-        margin: 2% 8% 0px;
-        justify-content: space-between;
-        color: #d4d4d4;
-      }
-      .setting-wrap {
-        color: #000;
-        margin-right: 80px;
-        &:nth-last-of-type(1) {
-          margin-bottom: 5%;
-        }
-        > div {
-          margin: 1% 0;
-          position: relative;
-          display: -webkit-flex;
-          display: flex;
-          flex-direction: row;
-          flex-wrap: nowrap;
-          align-items: center;
-          &:nth-of-type(1),
-          &:nth-of-type(2),
-          &:nth-of-type(3) {
-            width: 19%;
-          }
-          &:nth-of-type(4) {
-            width: 15%;
-          }
-          &:nth-of-type(5) {
-            width: 8%;
-          }
-          &:nth-of-type(6) {
-            width: 3%;
-          }
-          img {
-            position: absolute;
-            top: 50%;
-            left: -5px;
-            transform: translateY(-50%);
-            color: transparent;
-            opacity: 1;
-          }
-          > span {
-            text-align: center;
-            display: inline-block;
-            width: 30%;
-          }
-          input {
-            border: 0;
-            border-bottom: 1px solid #cdcdcd;
-            width: 70%;
-            &:focus {
-              outline: none;
-            }
-          }
-        }
-      }
-      .sel-one {
-        > div {
-          flex: 8;
-          border-bottom: 1px solid #cdcdcd;
-          padding-bottom: 8px;
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row nowrap;
+      .left,
+      .middle {
+        width: 15%;
+        background-color: #fff;
+        p {
           text-align: center;
+          margin-bottom: 20%;
+          padding: 15px 0;
         }
-        > .active {
-          color: #00338d;
-          border-bottom: 1px solid #00338d;
-        }
-      }
-      .sel-three {
-        display: flex;
-        display: -webkit-flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
-        > div {
-          position: relative;
-          display: -webkit-flex;
-          display: flex;
-          flex-flow: row nowrap;
-          align-items: center;
-          padding-top: 15px;
-          padding-bottom: 8px;
-          width: 25%;
-          border-bottom: 1px solid #dcdfe6;
-          .title {
-            flex: 0 0 auto;
-          }
-          .el-select {
-            flex: 1;
-            input {
-              border: 0;
-            }
-          }
+        .row {
+          margin-left: 0;
+          width: 100%;
+          padding: 15px 0;
+
           > span {
-            display: inline-block;
-            width: 50%;
-          }
-          > input {
-            border: 0;
-            width: 100%;
-            &:focus {
-              outline: none;
-            }
-          }
-          > img {
-            position: absolute;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
+            margin-left: 40%;
           }
         }
         .active {
-          color: #000;
-          border-bottom: 1px solid #000;
-          > div {
-            > img {
-              display: block;
+          background-color: #00338d;
+          color: #fff;
+        }
+        .row-segment {
+          height: 1px;
+          background: url("./images/个人中心_左侧线.png") center center
+            no-repeat;
+          background-size: cover;
+        }
+      }
+      .right {
+        width: 70%;
+        .title {
+          display: flex;
+          display: -webkit-flex;
+          flex-flow: row nowrap;
+          justify-content: space-around;
+          align-items: center;
+          padding: 2% 0;
+          .machine-type {
+            font-size: 20px;
+          }
+          .select-opt {
+            display: -webkit-flex;
+            display: flex;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            > div {
+              position: relative;
+              height: 4.5%;
+              width: 18%; /*中间留空隙*/
+              display: -webkit-flex;
+              display: flex;
+              flex-direction: row;
+              flex-wrap: nowrap;
+              align-content: center;
+              > .ul-style {
+                display: -webkit-flex;
+                display: flex;
+                display: block;
+                width: 60%;
+                z-index: 9999;
+                list-style: none;
+                position: absolute;
+                top: 100%;
+                left: 40%;
+                border: 1px solid #d2d2d2;
+                background-color: #00338d;
+                > li {
+                  width: 100%;
+                  /* background-color: #00338D; */
+                  background-color: #fff;
+                  padding: 8px 0 8px 1%;
+                  &:hover {
+                    background-color: #00338d;
+                    color: #fff;
+                  }
+                }
+              }
+            }
+            .sel-wrap {
+              font-size: 16px;
+              display: -webkit-flex;
+              display: flex;
+              > span {
+                padding: 10px 0;
+                display: inline-block;
+                width: 40%;
+              }
+              .el-select {
+                input {
+                  border: 0;
+                  background-color: #f2f5f9;
+                }
+              }
+              input {
+                border: 0;
+                background-color: #f2f5f9;
+                outline: none;
+              }
+            }
+            div {
+              > img {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+              }
             }
           }
         }
-      }
-      .sel-three {
-        > div {
-          &:nth-last-of-type(1) {
-            > span {
-              width: 57%;
+        .option-list {
+          margin: 4% 0 0 10%;
+          ul,
+          li {
+            list-style: none;
+          }
+          ul {
+            li {
+              span {
+                margin-left: 2%;
+              }
+              ol {
+                margin-top: 30px;
+                li {
+                  margin-bottom: 30px;
+                  span {
+                    margin-left: 4%;
+                  }
+                }
+              }
             }
           }
         }
@@ -670,10 +610,7 @@ body {
   background-color: rgba(153, 153, 153, 0.5);
 }
 
-.basic-model .dialog,
-.basic-model .industry-set,
-.basic-model .connect-size,
-.basic-model .machine-color {
+.basic-model .industry-set {
   z-index: 1999;
   position: fixed;
   width: 500px;
@@ -695,169 +632,9 @@ body {
   }
 }
 
-.basic-model .connect-size {
-  top: 10%;
-  transform: translate3d(-50%, 0, 0);
-  div {
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      vertical-align: middle;
-    }
-  }
-}
-
-.basic-model .dialog > p {
-  position: absolute;
-  top: 5%;
-  left: 5%;
-}
-
-.basic-model .industry-set > img,
-.basic-model .connect-size > img,
-.basic-model .machine-color > img {
+.basic-model .industry-set > img {
   position: absolute;
   top: 5%;
   right: 5%;
-}
-
-.basic-model .dialog h3 {
-  text-align: center;
-  margin: 40px 0;
-}
-
-.basic-model .dialog .model-sel {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0px 55px;
-}
-
-.dialog .model-sel > div {
-  position: relative;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.model-sel > div span {
-  display: inline-block;
-  width: 20%;
-}
-
-.model-sel > div input {
-  background-color: #fff;
-  padding: 8px 0 8px 30px;
-  width: 78%;
-  border: 1px solid #bebebe;
-  border-radius: 5px;
-}
-
-.model-sel > div > .ul-style {
-  display: -webkit-flex;
-  display: flex;
-  display: block;
-  width: 78%;
-  max-height: 240px;
-  overflow-y: auto;
-  z-index: 9999;
-  list-style: none;
-  position: absolute;
-  top: 100%;
-  left: 20%;
-  border: 1px solid #d2d2d2;
-  background-color: #00338d;
-}
-
-.model-sel > div > .ul-style > li {
-  width: 100%;
-  /* background-color: #00338D; */
-  background-color: #fff;
-  padding: 8px 0 8px 30px;
-}
-
-.model-sel > div > .ul-style > li:hover {
-  background-color: #00338d;
-  color: #fff;
-}
-
-.model-sel > div input:focus {
-  outline: none;
-}
-
-.model-sel > div button {
-  margin-top: 15px;
-  border: 1px solid #00338d;
-  width: 78%;
-  padding: 8px 0;
-  border-radius: 5px;
-  background-color: #00338d;
-  color: #fff;
-}
-
-.model-sel div > img {
-  position: absolute;
-  top: 50%;
-  right: 5%;
-  transform: translateY(-50%);
-}
-
-.sel-three > div > input {
-  padding: 10px 0;
-  width: 50%;
-  text-align: center;
-  text-align-last: center;
-  border: 0;
-  background-color: #fff;
-}
-
-.sel-three > div > .ul-multi-style {
-  display: -webkit-flex;
-  display: flex;
-  display: block;
-  width: 100%;
-  z-index: 9999;
-  list-style: none;
-  position: absolute;
-  top: 100%;
-  left: 0%;
-  border: 1px solid #d2d2d2;
-  background-color: #00338d;
-}
-
-.sel-three > div > .ul-multi-style > li {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-  padding: 8px 16% 8px 8%;
-}
-
-.ul-multi-style > li > img {
-  position: absolute;
-  top: 34%;
-  right: 8%;
-  transform: translateY(-50%);
-}
-
-.ul-multi-style > li > span::before {
-  margin-right: 10%;
-  content: "";
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #979798;
-  border-radius: 15%;
-  vertical-align: middle;
-  margin-right: 10px;
-  background-image: none;
-}
-
-.ul-multi-style > li > span.active::before {
-  background: url("./images/勾选.png") no-repeat center center;
 }
 </style>

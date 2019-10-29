@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="industry">
-        <div>
+        <div @click="toIndustry">
           <img :src="industryImg" alt />
         </div>
       </div>
@@ -108,6 +108,9 @@ export default {
     },
     toMsg() {
       this.until.href("msgList.html");
+    },
+    toIndustry() {
+      this.until.href("industryOptional.html");
     },
     showVideo() {
       this.showVideoFlag = true;

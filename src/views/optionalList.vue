@@ -47,34 +47,48 @@ export default {
       numIcon,
       propertyArr: [],
       propertyRightArr: [],
-      remainLeftLen: 0,
-      remainRightLen: 0
+      remainLeftLen: 13,
+      remainRightLen: 13
     };
   },
   mounted() {
     const proArr = this.until.loGet("property");
-    const arr = JSON.parse(proArr);
-    const length = arr.length;
+    if (proArr) {
+      const arr = JSON.parse(proArr);
+      const propertyList = [];
+      for (let [k, v] of Object.entries(arr)) {
+        let len = v.length;
+        if (k && len > 0) {
+          for (let index = 0; index < len; index++) {
+            const element = v[index];
+            propertyList.push({ name: element });
+          }
+        }
+      }
+      const length = propertyList.length;
 
-    arr.forEach((item, index) => {
-      item.count = 1;
-      this.$set(arr, index, item);
-    });
+      propertyList.forEach((item, index) => {
+        item.count = 1;
+        this.$set(propertyList, index, item);
+      });
 
-    if (length <= 13) {
-      this.remainRightLen = 13;
-      this.remainLeftLen = 13 - length;
-      this.propertyArr = arr;
-    } else if (length > 13 && length <= 26) {
-      this.remainLeftLen = 0;
-      this.remainRightLen = 26 - length;
+      if (length <= 13) {
+        this.remainRightLen = 13;
+        this.remainLeftLen = 13 - length;
+        this.propertyArr = propertyList;
+      } else if (length > 13 && length <= 26) {
+        this.remainLeftLen = 0;
+        this.remainRightLen = 26 - length;
 
-      this.propertyArr = arr.filter((item, index) => index < 13);
-      this.propertyRightArr = arr.filter((item, index) => index > 13);
-    } else {
-      this.remainLeftLen = 13;
-      this.remainRightLen = 13;
-      this.$message.error("选择的项目过多，无法显示");
+        this.propertyArr = propertyList.filter((item, index) => index < 13);
+        this.propertyRightArr = propertyList.filter(
+          (item, index) => index > 13
+        );
+      } else {
+        this.remainLeftLen = 13;
+        this.remainRightLen = 13;
+        this.$message.error("选择的项目过多，无法显示");
+      }
     }
   },
   methods: {

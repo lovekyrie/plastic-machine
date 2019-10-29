@@ -165,16 +165,21 @@ export default {
         createTm: "",
         num: 1
       },
-      cartList: []
+      cartList: [],
+      cartId: ""
     };
   },
   mounted() {
     const option = this.until.getQueryString("option");
+    const cartId = this.until.getQueryString("cartId");
     if (option) {
       this.form = JSON.parse(option);
       this.getParamList();
     }
 
+    if (cartId) {
+      this.cartId = cartId;
+    }
     this.time = this.until.formatDay("yyyy-MM-dd");
   },
   methods: {
@@ -186,24 +191,36 @@ export default {
       //保存购物车
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
       this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
+      this.cart.form = this.form;
 
-      const cartStr=JSON.stringify(this.cart)
-      // this.until.loSave('cartList',cartListStr)
+      const cartStr = JSON.stringify(this.cart);
 
       let userInfoStr = this.until.loGet("userInfo");
       if (userInfoStr) {
         const userInfo = JSON.parse(userInfoStr);
 
-        const param = {
-          userId: userInfo.userId,
-          data: cartStr
-        };
+        if (this.cartId) {
+          const param = {
+            id:this.cartId,
+            data: cartStr
+          };
+          this.api.sysModifyCart(param).then(res => {
+            if (res) {
+              this.until.href("optionalCart.html");
+            }
+          });
+        } else {
+          const param = {
+            userId: userInfo.userId,
+            data: cartStr
+          };
 
-        this.api.sysPosttoCart(param).then(res => {
-          if (res) {
-             this.until.href("optionalCart.html");
-          }
-        });
+          this.api.sysPosttoCart(param).then(res => {
+            if (res) {
+              this.until.href("optionalCart.html");
+            }
+          });
+        }
       }
     },
     async getParamList() {

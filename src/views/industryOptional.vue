@@ -5,276 +5,22 @@
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
         <p class="text-center" @click="showOption">
-          <span>{{ category }}</span>
-          <!-- 下拉图标 -->
-          <img class="arrow-side" :src="pullDownIcon" />
+          <span>行业选配</span>
         </p>
-        <div type="false" class="ul-style" v-if="showType">
-          <li
-            v-for="(item, index) in optionList"
-            :key="index"
-            @click="chooseCategory(item)"
-          >
-            {{ item }}
-          </li>
-        </div>
       </div>
     </div>
 
-    <div class="row main-opt">
-      <div class="select-opt">
-        <div class="sel-wrap">
-          <span>机型：</span>
-          <el-select
-            v-model="form.modelID"
-            @change="changeModel"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in modelList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="sel-wrap">
-          <span>锁模力：</span>
-          <el-select
-            v-model="form.clampingForceId"
-            @change="changeClamping"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in clampingForceList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.clampForceId"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="sel-wrap">
-          <span>注射当量：</span>
-          <el-select
-            v-model="form.injectionId"
-            @change="changeInjection"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in injectionList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.injectionId"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="sel-wrap">
-          <span>螺杆型号：</span>
-          <el-select v-model="form.screw" placeholder="请选择">
-            <el-option
-              v-for="item in screwModelList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.name"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="sel-wrap">
-          <span>类别：</span>
-          <input readonly type="text" class="text-sel" v-model="machineType" />
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="content">
-        <div class="sel-one">
-          <div
-            :class="{ active: bigMenuIndex === index }"
-            v-for="(item, index) in bigMenuList"
-            :key="item.id"
-            @click="chooseBigMenu(item, index)"
-          >
-            <span>{{ item.nameCh }}</span>
-          </div>
-        </div>
-        <!-- 常规选配 -->
-        <div class="usual-pick" v-show="showUsual">
-          <div class="sel-three">
-            <div
-              v-for="(item, index) in smallMenuList"
-              :key="index"
-              :class="{ active: item.showOption }"
-            >
-              <div class="title">{{ item.secondLevelMenuNm }}</div>
-              <el-select
-                v-model="property[item.secondLevelMenuNm]"
-                multiple
-                placeholder="请选择"
-                v-if="item.showOption"
-              >
-                <el-option
-                  v-for="item1 in item.optionList"
-                  :key="item1.matchMenuId"
-                  :label="item1.name"
-                  :value="item1.name"
-                ></el-option>
-              </el-select>
-            </div>
-            <!-- <div v-for="(item, index) in smallMenuList" :key="index">
-              <span>{{ item.secondLevelMenuNm }}</span>
-              <input type="text" class="text-nosel" />
-              <div class="ul-multi-style">
-                <li v-for="itemJ in item.optionList" :key="itemJ.matchMenuId">
-                  <div></div>
-                  <span>{{ itemJ.name }}</span>
-                  <img :src="infoIcon" alt />
-                </li>
-              </div>
-              <img :src="pullDown" alt />
-            </div>-->
-          </div>
-        </div>
-        <!-- 特殊选配(定制SO) -->
-        <div class="unique-pick" v-show="uniquePick">
-          <div class="setting-wrap">
-            <div>
-              <img :src="required" alt />
-              <span>配置：</span>
-              <input type="text" placeholder="请输入名称（必填）" />
-            </div>
-            <div>
-              <img :src="required" alt />
-              <span>单价：</span>
-              <input type="text" placeholder="请输入单价（必填）" />
-            </div>
-            <div>
-              <img :src="required" alt />
-              <span>数量：</span>
-              <input type="text" placeholder="请输入输了（必填）" />
-            </div>
-            <div>
-              <span>价格：</span>
-              <input type="text" />
-            </div>
-            <div>
-              <img class="upload" :src="uploadIcon" alt />
-              <input class="input-file" type="file" style="display:none;" />
-            </div>
-            <div class="add">
-              <img :src="addSetting" type="add" alt />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div class="footer">
         <div class="foot-wrap">
           <div @click="toShowIndustry">
             <span class="industry">行业配置</span>
           </div>
-          <div @click="toShowRelatedSize">
-            <span class="about-size">相关尺寸图</span>
-          </div>
-          <div>
-            <span class="current-order" @click="toOptionalList">当前清单</span>
-          </div>
           <div class="certain-option" @click="toOptionResult">确认</div>
         </div>
       </div>
     </div>
     <div class="basic-model" v-show="showDialog">
-      <div class="dialog" v-show="showBasic">
-        <!-- <img class="btn-close" :src="closeIcon" alt /> -->
-        <p @click="toIndex">
-          <i class="el-icon-arrow-left"></i>
-          <span>首页</span>
-        </p>
-        <h3>基础机型</h3>
-        <div class="model-sel">
-          <div>
-            <span>机型：</span>
-            <input
-              type="text"
-              v-model="model"
-              class="text-sel"
-              @click="showModelOp"
-            />
-            <div class="ul-style" v-show="showModel">
-              <li
-                v-for="(item, index) in modelList"
-                :key="index"
-                @click="chooseModel(item)"
-              >
-                {{ item.name }}
-              </li>
-            </div>
-            <img :src="pullDown" alt />
-          </div>
-          <div>
-            <span>锁模力：</span>
-            <input
-              type="text"
-              v-model="clampingForce"
-              class="text-sel"
-              @click="showClampingForceOp"
-            />
-            <div class="ul-style" v-show="showClampingForce">
-              <li
-                v-for="(item, index) in clampingForceList"
-                :key="index"
-                @click="chooseClamping(item)"
-              >
-                {{ item.name }}
-              </li>
-            </div>
-            <img :src="pullDown" alt />
-          </div>
-          <div>
-            <span>注射当量：</span>
-            <input
-              type="text"
-              v-model="injection"
-              class="text-sel"
-              @click="showInjectionOp"
-            />
-            <div class="ul-style" v-show="showInjection">
-              <li
-                v-for="(item, index) in injectionList"
-                :key="index"
-                @click="chooseInjection(item)"
-              >
-                {{ item.name }}
-              </li>
-            </div>
-            <img :src="pullDown" alt />
-          </div>
-          <div>
-            <span>螺杆型号：</span>
-            <input
-              type="text"
-              v-model="screw"
-              class="text-sel"
-              @click="showScrewOp"
-            />
-            <div class="ul-style" v-show="showScrew">
-              <li
-                v-for="(item, index) in screwModelList"
-                :key="index"
-                @click="chooseScrew(item)"
-              >
-                {{ item.name }}
-              </li>
-            </div>
-            <img :src="pullDown" alt />
-          </div>
-          <p>注射重量(PS):{{ screwDiameter }}g</p>
-          <div>
-            <span></span>
-            <button class="confirmPick" @click="confirm">确认</button>
-          </div>
-        </div>
-      </div>
       <div class="industry-set" v-show="showIndustry">
         <img class="btn-close" @click="closeIndustry" :src="closeIcon" alt />
         <div v-if="showSettingOp">
@@ -292,68 +38,32 @@
           <span>没有行业配置</span>
         </div>
       </div>
-      <div class="connect-size" v-show="showRelatedSize">
-        <img class="btn-close" @click="closeRelatedSize" :src="closeIcon" alt />
-        <div>
-          <img :src="relatedSizeImg" alt />
-        </div>
-      </div>
-      <div class="machine-color" v-show="showMachineColor">
-        <img class="btn-close" :src="closeIcon" alt />
-      </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import backArrow from "./images/返回.png";
-import searchIcon from "./images/搜索.png";
-import pullDown from "./images/选配_箭头.png";
-import pullDownIcon from "./images/标签栏下拉箭头.png";
-import infoIcon from "./images/信息.png";
-import required from "./images/必填.png";
-import uploadIcon from "./images/上传图片.png";
-import addSetting from "./images/添加配置.png";
-import closeIcon from "./images/关闭.png";
 
 export default {
   data: () => {
     return {
       backArrow,
-      searchIcon,
-      pullDown,
-      pullDownIcon,
-      infoIcon,
-      required,
-      uploadIcon,
-      addSetting,
-      closeIcon,
       modelList: [],
       clampingForceList: [],
       injectionList: [],
       screwModelList: [],
       bigMenuList: [],
       smallMenuList: [],
-      showModel: false,
-      showClampingForce: false,
-      showInjection: false,
-      showScrew: false,
-      showDialog: true,
-      showUsual: false,
       model: "",
       clampingForce: "",
       injection: "",
       screw: "",
       bigMenuIndex: 0,
       bigMenuId: "",
-      uniquePick: false,
-      category: "常规选配",
-      optionList: ["常规选配", "特殊选配(推荐)"],
-      showBasic: true,
+      showDialog:false,
       showIndustry: false,
-      showRelatedSize: false,
       relatedSizeImg: "",
-      showMachineColor: false,
       screwDiameter: "",
       cartId: "",
       paramForm: {},
@@ -375,55 +85,7 @@ export default {
     };
   },
   async mounted() {
-    const formStr = this.until.getQueryString("form");
-    const idStr = this.until.getQueryString("id");
-    if (formStr && idStr) {
-      this.paramForm = JSON.parse(formStr);
-      this.cartId = idStr;
-      this.showDialog = false;
-      this.showUsual = true;
-    }
-    let {
-      model,
-      modelID,
-      injection,
-      injectionId,
-      clampingForce,
-      clampingForceId,
-      screw,
-      screwId
-    } = this.paramForm;
-    await this.getModelList();
-    if (model && modelID) {
-      this.form.modelID = modelID;
-      this.form.model = model;
-    }
-    await this.getClampingForceList();
-    if (clampingForce && clampingForceId) {
-      this.form.clampingForceId = clampingForceId;
-      this.form.clampingForce = clampingForce;
-    }
-    await this.getInjectionList();
-    if (injection && injectionId) {
-      this.form.injection = injection;
-      this.form.injectionId = injectionId;
-    }
-    await this.getScrewList();
-    if (screw && screwId) {
-      this.form.screw = screw;
-      this.form.screwId = screwId;
-    }
-    await this.getBigMenuList();
-    await this.getSmallMenuList();
 
-    //渲染property
-    const proArr = this.until.loGet("property");
-    if (proArr) {
-      this.property = JSON.parse(proArr);
-    }
-    if (idStr) {
-      this.getStandardOrCombination();
-    }
   },
   methods: {
     showModelOp() {

@@ -58,7 +58,7 @@
               <button class="right-btn" @click="plus(item)"></button>
             </div>
             <div>
-              <img :src="editIcon" alt />
+              <img :src="editIcon" alt @click="editOrder(item.form, item.id)" />
             </div>
             <div>
               <a href>查看详情</a>
@@ -219,6 +219,10 @@ export default {
         data: ""
       };
       this.api.sysModifyCart(param);
+    },
+    editOrder(form,id){
+      const str=JSON.stringify(form)
+      this.until.href(`optional.html?form=${str}&id=${id}`)
     }
   },
   mounted() {

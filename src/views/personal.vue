@@ -137,10 +137,10 @@
               placeholder="请填写您的意见和问题......"
             ></textarea>
             <p><span class="suggest-len">0</span>/200</p>
-            <div>
-              <!-- 默认的文件上传控件是没有+符号的 -->
-              <input type="file" />
-            </div>
+            <!-- <div> -->
+            <!-- 默认的文件上传控件是没有+符号的 -->
+            <!-- <input type="file" /> -->
+            <!-- </div> -->
           </div>
           <p>联系方式：</p>
           <div class="text-linked">
@@ -300,13 +300,14 @@ export default {
           imgUrl: higherSetting,
           activeUrl: higherSettingActive,
           selected: false
-        },
-        {
-          title: "关于我们",
-          imgUrl: aboutMe,
-          activeUrl: aboutMeActive,
-          selected: false
         }
+        // ,
+        // {
+        //   title: "关于我们",
+        //   imgUrl: aboutMe,
+        //   activeUrl: aboutMeActive,
+        //   selected: false
+        // }
       ],
       orderList: [
         {
@@ -527,7 +528,7 @@ body {
         flex-wrap: nowrap;
         .left {
           width: 30%;
-          height: 100vh;
+          height: 94vh;
           background-color: #fff;
           .row {
             display: -webkit-flex;
@@ -675,7 +676,7 @@ body {
 }
 
 .suggest-content > span {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .suggest-content > div:nth-last-of-type(1) {
@@ -710,7 +711,7 @@ body {
 }
 
 .text-suggest > textarea {
-  height: 70px;
+  height: 120px;
   resize: none;
   border: 0;
   background-color: #f2f5f9;

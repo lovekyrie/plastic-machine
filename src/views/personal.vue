@@ -115,7 +115,7 @@
                 <span>{{ item.time }}</span>
               </div>
               <div>
-                <img :src="editIcon" />
+                <img v-if="item.status === 0" :src="editIcon" />
               </div>
               <div :class="{ active: item.status === 0 }">
                 <span>{{ item.status === 0 ? "生成订单" : "订单已生成" }}</span>

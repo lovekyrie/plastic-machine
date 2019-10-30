@@ -19,6 +19,7 @@
             v-model="password"
             type="password"
             placeholder="密码"
+            @keyup.enter="login"
           />
         </div>
         <div>
@@ -27,7 +28,7 @@
           </div>
         </div>
         <div @click="login">
-          <span>登录</span>
+          <button :disabled="canClick">登录</button>
         </div>
       </div>
     </div>
@@ -41,6 +42,7 @@
 import accountIcon from "./images/账号.png";
 import passwordIcon from "./images/密码.png";
 export default {
+  name: "login",
   data() {
     return {
       accountIcon,
@@ -48,41 +50,67 @@ export default {
       rememberClick: false,
       account: "",
       password: "",
-      macAddress: ""
+      macAddress: "",
+      canClick: false
     };
   },
-  mounted() {
-
+  watch: {
+    account: function(val) {
+      if (val) {
+        this.canClick = false;
+      }
+    },
+    password: function(val) {
+      if (val) {
+        this.canClick = false;
+      }
+    }
   },
+  mounted() {},
   methods: {
     login() {
-      if (!this.account) {
-        alert("请输入用户名");
-      } else if (!this.password) {
-        alert("请输入密码");
+      //调用接口
+      this.canClick = true;
+      const msg = this.rules();
+      if (msg) {
+        this.$message.error(msg);
       } else {
-        //调用接口
-        let param = {
-          username: this.account,
-          password: this.password,
-          rememberMe: this.rememberClick
-        };
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          let param = {
+            username: this.account,
+            password: this.password,
+            rememberMe: this.rememberClick
+          };
 
-        this.api.sysLoginNotCheckEquip(param).then(res => {
-          if (res) {
-            this.$message({
-              message: "登录成功",
-              type: "success"
-            });
+          this.api.sysLoginNotCheckEquip(param).then(res => {
+            if (res.code === 400) {
+              this.canClick = false;
+            } else {
+              this.$message({
+                message: "登录成功",
+                type: "success"
+              });
 
-            this.until.loSave('token',res.token)
-            this.until.loSave('userInfo',JSON.stringify(res.userInfo))
-            setTimeout(() => {
-              window.location.href = "home.html";
-            }, 1500);
-          }
-        });
+              this.until.loSave("token", res.data.token);
+              this.until.loSave("userInfo", JSON.stringify(res.data.userInfo));
+              setTimeout(() => {
+                window.location.href = "home.html";
+              }, 1000);
+            }
+          });
+        }, 1200);
       }
+    },
+    rules() {
+      let msg = "";
+      if (!this.account) {
+        msg += "请输入用户名";
+      } else if (!this.password) {
+        msg += "请输入密码";
+      }
+
+      return msg;
     }
   },
   components: {}
@@ -166,11 +194,18 @@ export default {
   background: url("./images/勾选.png") no-repeat center center;
 }
 
-.operate > div:nth-last-of-type(1) {
-  padding: 8px 0;
-  background-color: #00338d;
-  color: #fff;
-  border-radius: 5px;
+.operate > div {
+  &:nth-last-of-type(1) {
+    background-color: #00338d;
+    color: #fff;
+    border-radius: 5px;
+    > button {
+      padding: 10px 0;
+      width: 100%;
+      border: 0;
+      background-color: #00338d;
+    }
+  }
 }
 
 .operate > div:nth-last-of-type(1) > span {

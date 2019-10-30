@@ -205,7 +205,7 @@ class until {
         dataType: "json",
         success(data) {
           if (data.code !== 0) {
-            Message.error(data.msg);
+            Message({ type: "error", msg: data.msg, duration: 1000 });
           }
           resolve(data);
         },
@@ -238,6 +238,7 @@ class until {
             });
           } else if (data.code != 0) {
             Message.error(data.msg);
+            resolve(data);
           }
           resolve(data);
         },

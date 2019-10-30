@@ -100,38 +100,12 @@
         <!-- 常规选配 -->
         <div class="usual-pick" v-show="showUsual">
           <div class="sel-three">
-            <div
-              v-for="(item, index) in smallMenuList"
-              :key="index"
-              :class="{ active: item.showOption }"
-            >
-              <div class="title">{{ item.secondLevelMenuNm }}</div>
-              <el-select
-                v-model="property[item.secondLevelMenuNm]"
-                multiple
-                placeholder="请选择"
-                v-if="item.showOption"
-              >
-                <el-option
-                  v-for="item1 in item.optionList"
-                  :key="item1.matchMenuId"
-                  :label="item1.name"
-                  :value="item1.name"
-                ></el-option>
-              </el-select>
-            </div>
-            <!-- <div v-for="(item, index) in smallMenuList" :key="index">
-              <span>{{ item.secondLevelMenuNm }}</span>
-              <input type="text" class="text-nosel" />
-              <div class="ul-multi-style">
-                <li v-for="itemJ in item.optionList" :key="itemJ.matchMenuId">
-                  <div></div>
-                  <span>{{ itemJ.name }}</span>
-                  <img :src="infoIcon" alt />
-                </li>
-              </div>
-              <img :src="pullDown" alt />
-            </div>-->
+            <ul v-for="(item, index) in smallMenuList" :key="index">
+              <li v-for="item1 in item.optionList" :key="item1.matchMenuId">
+                <img :src="noPick" alt />
+                <span>{{ item1.name }}</span>
+              </li>
+            </ul>
           </div>
         </div>
         <!-- 特殊选配(定制SO) -->
@@ -315,6 +289,8 @@ import required from "./images/必填.png";
 import uploadIcon from "./images/上传图片.png";
 import addSetting from "./images/添加配置.png";
 import closeIcon from "./images/关闭.png";
+import pickAll from "./images/选配清单_全选.png";
+import noPick from "./images/选配清单_未选.png";
 
 export default {
   data: () => {
@@ -328,6 +304,8 @@ export default {
       uploadIcon,
       addSetting,
       closeIcon,
+      pickAll,
+      noPick,
       modelList: [],
       clampingForceList: [],
       injectionList: [],
@@ -821,7 +799,6 @@ body {
     }
     .content {
       height: 100%;
-      padding-bottom: 20%;
       font-size: 16px;
       width: 100%;
       background-color: #fff;
@@ -903,48 +880,21 @@ body {
       .sel-three {
         display: flex;
         display: -webkit-flex;
-        flex-flow: row wrap;
+        flex-flow: column wrap;
         justify-content: flex-start;
-        > div {
-          position: relative;
-          display: -webkit-flex;
-          display: flex;
-          flex-flow: row nowrap;
-          align-items: center;
-          padding-top: 15px;
-          padding-bottom: 8px;
-          width: 25%;
-          border-bottom: 1px solid #dcdfe6;
-          .title {
-            flex: 0 0 auto;
-          }
-          .el-select {
-            flex: 1;
-            input {
-              border: 0;
+        height: 700px;
+        ul {
+          li {
+            list-style: none;
+            color: #000;
+            margin-bottom: 20px;
+            span {
+              margin-left: 30px;
             }
-          }
-          > span {
-            display: inline-block;
-            width: 50%;
-          }
-          > input {
-            border: 0;
-            width: 100%;
-            &:focus {
-              outline: none;
-            }
-          }
-          > img {
-            position: absolute;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
           }
         }
         .active {
           color: #000;
-          border-bottom: 1px solid #000;
           > div {
             > img {
               display: block;

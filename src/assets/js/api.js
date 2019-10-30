@@ -6,8 +6,8 @@ class api {
   sysLoginNotCheckEquip(data) {
     return new Promise((resolve, reject) => {
       untilApi.get("/general/access/login", data).then(res => {
-        if (res.code === 0) {
-          resolve(res.data);
+        if (res) {
+          resolve(res);
         } else {
           reject(res);
         }

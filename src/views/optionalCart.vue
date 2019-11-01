@@ -88,11 +88,41 @@
       <div class="submit" style="display:block;">
         <img :src="closeIcon" @click="showDialog = false" alt />
         <h3>提交信息</h3>
+
         <div class="email">
+          <!--附件选择 -->
+          <div>
+            <span>附件选择：</span>
+            <div class="pick-attach">
+              <div>
+                <img :src="noPick" alt />
+                <span>技术参数</span>
+              </div>
+              <div>
+                <img :src="noPick" alt />
+                <span>售后服务</span>
+              </div>
+              <div>
+                <img :src="noPick" alt />
+                <span>资质证明</span>
+              </div>
+              <div>
+                <img :src="noPick" alt />
+                <span>营业执照</span>
+              </div>
+            </div>
+          </div>
           <div>
             <span>邮箱地址：</span>
             <div class="email-input">
               <input type="text" value="954540387@qq.com" />
+            </div>
+          </div>
+          <!-- 备注 -->
+          <div>
+            <span>备注：</span>
+            <div>
+              <textarea></textarea>
             </div>
           </div>
           <div>
@@ -212,7 +242,7 @@ export default {
       });
     },
     delCart(item) {
-      this.cartList=this.cartList.filter(itemCart=>itemCart!==item)
+      this.cartList = this.cartList.filter(itemCart => itemCart !== item);
       //调用接口
       const param = {
         id: item.id,
@@ -220,9 +250,9 @@ export default {
       };
       this.api.sysModifyCart(param);
     },
-    editOrder(form,id){
-      const str=JSON.stringify(form)
-      this.until.href(`optional.html?form=${str}&id=${id}`)
+    editOrder(form, id) {
+      const str = JSON.stringify(form);
+      this.until.href(`optional.html?form=${str}&id=${id}`);
     }
   },
   mounted() {
@@ -413,7 +443,7 @@ export default {
   top: 50%;
   left: 50%;
   width: 500px;
-  height: 330px;
+  height: 470px;
   transform: translate3d(-50%, -50%, 0);
   background-color: #fff;
   border-radius: 10px;
@@ -444,23 +474,44 @@ export default {
   width: 100%;
 }
 
-.email > div {
-  margin: 25px 0;
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-}
-
-.email > div > span {
-  display: inline-block;
-  width: 20%;
-}
-
-.email-input,
-.sumbit-btn {
-  width: 80%;
+.email {
+  > div {
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    &:not(:nth-last-of-type(1)) {
+      margin-bottom: 30px;
+    }
+    &:nth-of-type(3) {
+      textarea {
+        width: 100%;
+        height: 100px;
+      }
+    }
+    > div {
+      flex: 1;
+    }
+    .pick-attach {
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row wrap;
+      div {
+        width: 50%;
+        &:nth-of-type(n + 3) {
+          margin-top: 5px;
+        }
+        span {
+          margin-left: 5px;
+        }
+      }
+    }
+    > span {
+      display: inline-block;
+      width: 25%;
+    }
+  }
 }
 
 .sumbit-btn {

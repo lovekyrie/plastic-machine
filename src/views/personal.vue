@@ -450,7 +450,7 @@ export default {
           return;
         }
 
-        let param = {
+        const param = {
           password: this.pwd.password,
           newPassword: this.pwd.newPasswordAgain
         };

@@ -33,11 +33,9 @@
               <span>
                 {{
                   item.modelType +
-                    item.modelCode +
-                    item.propertiesLetter +
                     item.weight +
-                    "/" +
-                    item.injection
+                    item.propertiesLetter +
+                    item.modelCode
                 }}
               </span>
             </div>
@@ -213,12 +211,9 @@ export default {
       this.conceptCont = this.categoryList[0].noticeCh;
     },
     async getSmallCategoryList() {
-      const query = new this.Query();
-      query.buildWhereClause("modelType", this.category, "EQ");
-      query.buildOrderClause("sort", "asc");
-
-      const param = query.getParam();
-      this.productList = await this.api.sysGetLeftSideSmallModelList(param);
+      this.productList = await this.api.sysGetLeftSideSmallModelNewList({
+        machineCh: this.category
+      });
       this.categoryObj = this.productList[0];
       this.getTechnicalParameter();
     },

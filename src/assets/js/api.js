@@ -269,6 +269,18 @@ class api {
       });
     });
   }
+  //产品概览-左侧机型列表(博创)
+  sysGetLeftSideSmallModelNewList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/standardMachine/listPC2", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
   //产品概览-性能特征
   sysGetPerformanceCharacter(data) {
     return new Promise((resolve, reject) => {
@@ -381,6 +393,18 @@ class api {
   sysGetMatchMenu(data) {
     return new Promise((resolve, reject) => {
       untilApi.get("/suji/matchMenuPrice/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //机型选配-获取选配项(带状态)
+  sysGetMatchMenuOptional(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/matchMenuPrice/listPC2", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {

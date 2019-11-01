@@ -102,7 +102,7 @@
           <div class="sel-three">
             <ul v-for="(item, index) in smallMenuList" :key="index">
               <li v-for="item1 in item.optionList" :key="item1.matchMenuId">
-                <img :src="noPick" alt />
+                <img :src="noPick" alt @click="pickItem(item1.name)" />
                 <span>{{ item1.name }}</span>
               </li>
             </ul>
@@ -335,6 +335,9 @@ export default {
       screwDiameter: "",
       cartId: "",
       paramForm: {},
+      modelType:'',
+      modelCode:"",
+      propertiesLetter:"",
       form: {
         model: "",
         clampingForce: "",
@@ -436,6 +439,9 @@ export default {
       const index = this.modelList.findIndex(item => item.id === e);
       if (index >= 0) {
         this.form.model = this.modelList[index].name;
+        this.modelType= this.modelList[index].standModelType;
+        this.propertiesLetter=this.modelList[index].propertiesLetter;
+        this.modelCode=this.modelList[index].modelCode;
       }
       await this.getClampingForceList();
       await this.getInjectionList();
@@ -561,6 +567,9 @@ export default {
       let param = query.getParam();
       this.modelList = await this.api.sysGetModelList(param);
       this.model = this.modelList[0].name;
+      this.modelType=this.modelList[0].standModelType
+      this.modelCode=this.modelList[0].modelCode
+      this.propertiesLetter=this.modelList[0].propertiesLetter
       this.form.modelID = this.modelList[0].id;
     },
     async getClampingForceList() {
@@ -619,7 +628,7 @@ export default {
         this.smallMenuList.forEach((item, index) => {
           const param = { ...fixedParam };
           param.secondLevelMenuId = item.secondLevelMenuId;
-          this.api.sysGetMatchMenu(param).then(res => {
+          this.api.sysGetMatchMenuOptional(param).then(res => {
             item.optionList = res;
             if (res.length > 0) {
               item.showOption = true;
@@ -648,7 +657,9 @@ export default {
     },
     async getStandardOrCombination() {
       const param = {
-        modelType: this.form.model,
+        modelType: this.modelType,
+        modelCode:this.modelCode,
+        propertiesLetter:this.propertiesLetter,
         clampForce: this.form.clampingForce,
         injection: this.form.injection
       };

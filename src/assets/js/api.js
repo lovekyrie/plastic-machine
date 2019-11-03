@@ -497,6 +497,18 @@ class api {
       });
     });
   }
+  //机型选配-菜单
+  sysGetMachineTypeList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/industryCategory/listPc", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
 }
 
 export { api };

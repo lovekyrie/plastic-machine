@@ -17,11 +17,11 @@
           <p>一级行业</p>
           <div v-for="(item, index) in productList" :key="index">
             <div
-              @click="selectLeftItem(item, index)"
+              @click="selectLeftItem(item.id, index)"
               class="row"
               :class="{ active: index === selectIndex }"
             >
-              <span>{{ item }}</span>
+              <span>{{ item.name }}</span>
             </div>
             <div class="row-segment"></div>
           </div>
@@ -30,19 +30,31 @@
         <div class="middle">
           <!-- 二级行业 -->
           <p>二级行业</p>
-          <div v-for="(item, index) in productList" :key="index">
+          <div v-for="(item, index) in productChildList" :key="index">
             <div
               @click="selectChildItem(item, index)"
               class="row"
-              :class="{ active: index === selectIndex }"
+              :class="{ active: index === selectTwoIndex }"
             >
-              <span>{{ item }}</span>
+              <span>{{ item.name }}</span>
             </div>
             <div class="row-segment"></div>
           </div>
         </div>
         <div class="right">
           <div class="title">
+            <el-select
+              v-model="firstId"
+              @change="changeType"
+              placeholder="请选销售地区"
+            >
+              <el-option
+                v-for="item in typeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
             <div class="machine-type">机型</div>
             <div class="select-opt">
               <div class="sel-wrap">
@@ -180,8 +192,10 @@ export default {
       screwDiameter: "",
       cartId: "",
       selectIndex: 0,
+      selectTwoIndex: 0,
       paramForm: {},
-      productList: ["汽车类", "物流类", "包装类", "其他行业", "IT类", "家电类"],
+      productList: [],
+      productChildList: [],
       form: {
         model: "",
         clampingForce: "",
@@ -205,11 +219,33 @@ export default {
         { nm: "测试选项5" },
         { nm: "测试选项6" },
         { nm: "测试选项7" }
-      ]
+      ],
+      typeList: [],
+      firstId: 38,
+      secondId: 0,
+      thirdId: 0
     };
   },
-  async mounted() {},
+  async mounted() {
+    await this.getTypeList();
+
+    await this.changeType(this.firstId);
+  },
   methods: {
+    async getTypeList() {
+      const list = await this.api.sysGetMachineTypeList({ pId: 0 });
+      list.forEach(item => {
+        this.typeList.push(item.sujiIndustryCategoryVo);
+      });
+    },
+    async changeType(e) {
+      const list = await this.api.sysGetMachineTypeList({ pId: e });
+      list.forEach(item => {
+        this.productList.push(item.sujiIndustryCategoryVo);
+      });
+      this.secondId = this.productList[0].id;
+      this.selectLeftItem(this.secondId, 0);
+    },
     async changeModel(e) {
       const index = this.modelList.findIndex(item => item.id === e);
       if (index >= 0) {
@@ -275,7 +311,14 @@ export default {
       this.showIndustry = false;
       this.showDialog = false;
     },
-    selectLeftItem() {},
+    async selectLeftItem(id, index) {
+      this.productChildList = [];
+      this.selectIndex = index;
+      const list = await this.api.sysGetMachineTypeList({ pId: id });
+      list.forEach(item => {
+        this.productChildList.push(item.sujiIndustryCategoryVo);
+      });
+    },
     selectChildItem() {},
     async getModelList() {
       let query = new this.Query();

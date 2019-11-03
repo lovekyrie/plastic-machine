@@ -20,7 +20,7 @@
           <div v-for="(item, index) in propertyArr" :key="index">
             <p>{{ item.name }}</p>
             <img :src="numIcon" alt />
-            <span>{{ item.count }}</span>
+            <span>{{ item.num ? item.num : 1 }}</span>
             <button class="left-btn" @click="mins(item)"></button>
             <button class="right-btn" @click="plus(item)"></button>
           </div>
@@ -55,35 +55,18 @@ export default {
     const proArr = this.until.loGet("property");
     if (proArr) {
       const arr = JSON.parse(proArr);
-      const propertyList = [];
-      for (let [k, v] of Object.entries(arr)) {
-        let len = v.length;
-        if (k && len > 0) {
-          for (let index = 0; index < len; index++) {
-            const element = v[index];
-            propertyList.push({ name: element });
-          }
-        }
-      }
-      const length = propertyList.length;
 
-      propertyList.forEach((item, index) => {
-        item.count = 1;
-        this.$set(propertyList, index, item);
-      });
-
+      const length = arr.length;
       if (length <= 13) {
         this.remainRightLen = 13;
         this.remainLeftLen = 13 - length;
-        this.propertyArr = propertyList;
+        this.propertyArr = arr;
       } else if (length > 13 && length <= 26) {
         this.remainLeftLen = 0;
         this.remainRightLen = 26 - length;
 
-        this.propertyArr = propertyList.filter((item, index) => index < 13);
-        this.propertyRightArr = propertyList.filter(
-          (item, index) => index > 13
-        );
+        this.propertyArr = arr.filter((item, index) => index < 13);
+        this.propertyRightArr = arr.filter((item, index) => index > 13);
       } else {
         this.remainLeftLen = 13;
         this.remainRightLen = 13;
@@ -102,12 +85,20 @@ export default {
       }
     },
     mins(item) {
-      if (item.count >= 1) {
-        item.count--;
+      if (item.minNum && item.num <= item.minNum) {
+        this.$message.error("您所选择的项目数量已经达到下限！");
+        return;
+      }
+      if (item.count >= 2) {
+        item.count -= item.multiple ? item.multiple : 1;
       }
     },
     plus(item) {
-      item.count++;
+      if (item.maxNum && item.num >= item.maxNum) {
+        this.$message.error("您所选择的项目数量已经达到上限！");
+        return;
+      }
+      item.num += item.multiple ? item.multiple : 1;
     }
   },
   components: {}

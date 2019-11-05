@@ -497,10 +497,58 @@ class api {
       });
     });
   }
-  //机型选配-菜单
+  //行业选配-菜单
   sysGetMachineTypeList(data) {
     return new Promise((resolve, reject) => {
       untilApi.get("/suji/industryCategory/listPc", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //行业选配-机型
+  sysGetIndustryOptionalModelList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/featurePack/modelTypeListPc", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //行业选配-锁模力
+  sysGetIndustryOptionalForceList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/featurePack/clampingForceListPc", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //行业选配-注射当量
+  sysGetIndustryOptionalInjectionList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/featurePack/injectionListPc", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //行业选配-螺杆类型
+  sysGetIndustryOptionalScrewTypeList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/featurePack/screwTypeListPc", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {

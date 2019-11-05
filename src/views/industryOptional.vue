@@ -230,6 +230,11 @@ export default {
     await this.getTypeList();
 
     await this.changeType(this.firstId);
+    await this.selectLeftItem(this.secondId, 0);
+    await this.getModelList();
+    await this.getClampingForceList();
+    await this.getInjectionList();
+    await this.getScrewList();
   },
   methods: {
     async getTypeList() {
@@ -244,7 +249,6 @@ export default {
         this.productList.push(item.sujiIndustryCategoryVo);
       });
       this.secondId = this.productList[0].id;
-      this.selectLeftItem(this.secondId, 0);
     },
     async changeModel(e) {
       const index = this.modelList.findIndex(item => item.id === e);
@@ -318,46 +322,95 @@ export default {
       list.forEach(item => {
         this.productChildList.push(item.sujiIndustryCategoryVo);
       });
+      this.thirdId = this.productChildList[0].id;
+      await this.getModelList();
+      await this.getClampingForceList();
+      await this.getInjectionList();
+      await this.getScrewList();
     },
-    selectChildItem() {},
+    selectChildItem(item, index) {
+      this.selectTwoIndex = index;
+      this.thirdId = item.id;
+      this.getModelList();
+    },
     async getModelList() {
-      let query = new this.Query();
-      query.buildWhereClause("matchMenuTypeId", 21, "EQ");
-      query.buildWhereClause("status", 1, "EQ");
-      query.buildOrderClause("sort", "asc");
-
-      let param = query.getParam();
-      this.modelList = await this.api.sysGetModelList(param);
-      this.model = this.modelList[0].name;
-      this.form.modelID = this.modelList[0].id;
+      const query = new this.Query();
+      query.buildWhereClause("categoryId", this.thirdId, "EQ");
+      const param = query.getParam();
+      param.categoryId = this.thirdId;
+      this.modelList = await this.api.sysGetIndustryOptionalModelList(param);
+      if (this.modelList.length > 0) {
+        this.model = this.modelList[0].name;
+        this.form.modelID = this.modelList[0].id;
+      } else {
+        this.form.modelID = "";
+        this.form.model = "";
+      }
     },
     async getClampingForceList() {
-      this.clampingForceList = await this.api.sysGetClampingForceList({
-        modelTypeId: this.form.modelID
-      });
-      this.clampingForce = this.clampingForceList[0].name;
-      this.form.clampingForceId = this.clampingForceList[0].clampForceId;
-      this.form.clampingForce = this.clampingForceList[0].name;
+      if (this.form.modelID) {
+        const query = new this.Query();
+        query.buildWhereClause("categoryId", this.thirdId, "EQ");
+        const param = query.getParam();
+        param.categoryId = this.thirdId;
+        param.modelType = this.form.modelID;
+        this.clampingForceList = await this.api.sysGetIndustryOptionalForceList(
+          param
+        );
+
+        if (this.clampingForceList.length > 0) {
+          this.clampingForce = this.clampingForceList[0].name;
+          this.form.clampingForceId = this.clampingForceList[0].clampForceId;
+          this.form.clampingForce = this.clampingForceList[0].name;
+        } else {
+          this.clampingForce = "";
+          this.form.clampingForceId = "";
+          this.form.clampingForce = "";
+        }
+      }
     },
     async getInjectionList() {
       if (this.form.modelID && this.form.clampingForceId) {
-        const param = {
-          modelTypeId: this.form.modelID,
-          clampForceId: this.form.clampingForceId
-        };
-        this.injectionList = await this.api.sysGetInjectionList(param);
-        this.injection = this.injectionList[0].name;
-        this.form.injectionId = this.injectionList[0].injectionId;
-        this.form.injection = this.injectionList[0].name;
+        const query = new this.Query();
+        query.buildWhereClause("categoryId", this.thirdId, "EQ");
+
+        const param = query.getParam();
+        param.categoryId = this.thirdId;
+        param.modelType = this.form.modelID;
+        param.clampingForce = this.form.clampingForceId;
+
+        this.injectionList = await this.api.sysGetIndustryOptionalInjectionList(
+          param
+        );
+        if (this.injectionList.length > 0) {
+          this.injection = this.injectionList[0].name;
+          this.form.injectionId = this.injectionList[0].injectionId;
+          this.form.injection = this.injectionList[0].name;
+        } else {
+          this.injection = "";
+          this.form.injectionId = "";
+          this.form.injection = "";
+        }
       }
     },
     async getScrewList() {
-      if (this.form.modelID && this.form.injectionId) {
-        const param = {
-          modelTypeId: this.form.modelID,
-          injectionId: this.form.injectionId
-        };
-        this.screwModelList = await this.api.sysGetScrewList(param);
+      if (
+        this.form.modelID &&
+        this.form.clampingForceId &&
+        this.form.injectionId
+      ) {
+        const query = new this.Query();
+        query.buildWhereClause("categoryId", this.thirdId, "EQ");
+
+        const param = query.getParam();
+        param.categoryId = this.thirdId;
+        param.modelType = this.form.modelID;
+        param.clampingForce = this.form.clampingForceId;
+        param.injection = this.form.injectionId;
+
+        this.screwModelList = await this.api.sysGetIndustryOptionalScrewTypeList(
+          param
+        );
         this.screw = this.screwModelList[0].name;
         this.screwDiameter = this.screwModelList[0].screwDiameter;
         this.form.screwId = this.screwModelList[0].screwTypeId;

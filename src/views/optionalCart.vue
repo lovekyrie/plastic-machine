@@ -80,7 +80,10 @@
       </div>
     </div>
     <div class="row footer">
-      <div @click="saveOrder" class="create-order col-md-1 col-md-offset-10">
+      <div
+        @click="showSaveOrder"
+        class="create-order col-md-1 col-md-offset-10"
+      >
         生成订单
       </div>
     </div>
@@ -95,19 +98,37 @@
             <span>附件选择：</span>
             <div class="pick-attach">
               <div>
-                <img :src="noPick" alt />
+                <img
+                  :src="attach.technicalParameters ? pickAll : noPick"
+                  @click="
+                    attach.technicalParameters = !attach.technicalParameters
+                  "
+                  alt
+                />
                 <span>技术参数</span>
               </div>
               <div>
-                <img :src="noPick" alt />
+                <img
+                  :src="attach.afterSalesService ? pickAll : noPick"
+                  alt
+                  @click="attach.afterSalesService = !attach.afterSalesService"
+                />
                 <span>售后服务</span>
               </div>
               <div>
-                <img :src="noPick" alt />
+                <img
+                  :src="attach.credentials ? pickAll : noPick"
+                  alt
+                  @click="attach.credentials = !attch.credentials"
+                />
                 <span>资质证明</span>
               </div>
               <div>
-                <img :src="noPick" alt />
+                <img
+                  :src="attach.businessLicense ? pickAll : noPick"
+                  alt
+                  @click="attach.businessLicense = !attach.businessLicense"
+                />
                 <span>营业执照</span>
               </div>
             </div>
@@ -122,7 +143,7 @@
           <div>
             <span>备注：</span>
             <div>
-              <textarea></textarea>
+              <textarea v-model="param.remark"></textarea>
             </div>
           </div>
           <div>
@@ -166,10 +187,18 @@ export default {
       deleteIcon,
       noPick,
       closeIcon,
-      pickAllMark: true,
+      pickAllMark: false,
       showDialog: false,
       cartList: [],
-      userInfo: {}
+      userInfo: {},
+      param: {},
+      time: "",
+      attach:{
+        technicalParameters:false,
+        afterSalesService:false,
+        credentials:false,
+        businessLicense:false
+      }
     };
   },
   methods: {
@@ -215,11 +244,63 @@ export default {
     toOptional() {
       this.until.href("optional.html");
     },
-    saveOrder() {
+    showSaveOrder() {
       this.showDialog = true;
     },
     save() {
-      this.showDialog = false;
+      //提交订单
+      const checkedCart = this.cartList.find(item => item.selected);
+      if (!checkedCart) {
+        this.$message.error("请至少选择一条产品下单！");
+        return;
+      }
+
+      const checkedCartList = this.cartList.filter(item => item.selected);
+      const param1 = checkedCartList.map(item => {
+        return {
+          techAgreementMatchs: item.techAgreementMatchs,
+          techAgreement: item.techAgreement
+        };
+      });
+
+      const param2 = checkedCartList.map(item => {
+        const money = (item.proSaleInfo.price * item.num).toFixed(2);
+        const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
+        return {
+          name: item.form.model,
+          modelNumber: item.proSaleInfo.modelNumber,
+          num: item.num,
+          price: item.proSaleInfo.price,
+          salePrice: item.proSaleInfo.salePrice,
+          money,
+          saleMoney
+        };
+      });
+
+      const param3 = {
+        neederCompany: checkedCartList[0].proSaleInfo.neederCompany,
+        supplier: "博创智能装备股份有限公司",
+        appuserId: this.userInfo.userId,
+        remark: this.param.remark,
+        supplierAgenter: this.userInfo.nickname,
+        supplierTel: this.userInfo.mob,
+        signDate: this.time,
+        neederPostcode: this.userInfo.email,
+        attachment:this.attach,
+        saleAgreementProducts: JSON.stringify(param2)
+      };
+
+      const param = {
+        techAgreementJsons: JSON.stringify(param1),
+        saleAgreementJson: JSON.stringify(param3)
+      };
+
+      this.api.sysSubmitOrder(param).then(res=>{
+        if(res){
+
+          this.showDialog = false;
+        }
+      })
     },
     async getCartList() {
       const query = new this.Query();
@@ -237,7 +318,7 @@ export default {
       });
 
       this.cartList.forEach((item, index) => {
-        item.selected = true;
+        item.selected = false;
         this.$set(this.cartList, index, item);
       });
     },
@@ -262,6 +343,8 @@ export default {
       this.userInfo = JSON.parse(userInfoStr);
       this.getCartList();
     }
+
+    this.time = this.until.formatDay("yyyy-MM-dd");
   },
 
   components: {}

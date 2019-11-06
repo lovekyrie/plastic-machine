@@ -33,6 +33,30 @@
             <div>螺杆型号</div>
             <div>{{ form.screw }}</div>
           </div>
+
+          <div class="customer">
+            <p>客户信息</p>
+            <div>
+              <span>客户名称</span>
+              <input type="text" v-model="proSaleInfo.neederCompany" />
+            </div>
+          </div>
+
+          <div class="product-info">
+            <p>产品信息</p>
+            <div>
+              <span>规格型号</span>
+              <input type="text" v-model="proSaleInfo.modelNumber" />
+            </div>
+            <div>
+              <span>单价</span>
+              <input type="number" v-model="proSaleInfo.price" />
+            </div>
+            <div>
+              <span>优惠价</span>
+              <input type="number" v-model="proSaleInfo.salePrice" />
+            </div>
+          </div>
         </div>
         <div class="right-part">
           <div class="param-part">
@@ -166,7 +190,15 @@ export default {
         num: 1
       },
       cartList: [],
-      cartId: ""
+      cartId: "",
+      techAgreementMatchs: [],
+      neederCompany:'',
+      proSaleInfo:{
+        neederCompany:'',
+        modelNumber:'',
+        price:'',
+        salePrice:''
+      }
     };
   },
   mounted() {
@@ -192,7 +224,26 @@ export default {
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
       this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
       this.cart.form = this.form;
+      this.cart.techAgreement = this.list;
+      //得到当前清单值
+      const propertyStr = this.until.loGet("property");
+      if (propertyStr) {
+        const propertyArr = JSON.parse(propertyStr);
+        this.techAgreementMatchs = propertyArr.map(pro => {
+          return {
+            matchNameCH: pro.name,
+            code: pro.cd,
+            unitPrice: pro.price,
+            money: pro.price,
+            num: pro.num ? pro.num : 1
+          };
+        });
+      }
 
+      //移除property
+      this.until.loRemove("property");
+      this.cart.techAgreementMatchs = this.techAgreementMatchs;
+      this.cart.proSaleInfo=this.proSaleInfo
       const cartStr = JSON.stringify(this.cart);
 
       let userInfoStr = this.until.loGet("userInfo");
@@ -201,7 +252,7 @@ export default {
 
         if (this.cartId) {
           const param = {
-            id:this.cartId,
+            id: this.cartId,
             data: cartStr
           };
           this.api.sysModifyCart(param).then(res => {
@@ -217,7 +268,7 @@ export default {
 
           this.api.sysPosttoCart(param).then(res => {
             if (res) {
-              this.until.href("optionalCart.html");
+              this.until.href(`optionalCart.html?neederCompany=${this.neederCompany}`);
             }
           });
         }
@@ -310,6 +361,27 @@ export default {
             }
             &:nth-of-type(2) {
               color: #a5a5a5;
+            }
+          }
+        }
+        .customer,
+        .product-info {
+          > div {
+            display: flex;
+            flex-flow: row nowrap;
+            &:not(:nth-last-of-type(1)) {
+              margin-bottom: 20px;
+            }
+            span {
+              width: 100px;
+              color: #000;
+            }
+            input {
+              width: 300px;
+              border: 0;
+              outline: none;
+              border-bottom: 1px solid #e1e1e1;
+              color: #000;
             }
           }
         }

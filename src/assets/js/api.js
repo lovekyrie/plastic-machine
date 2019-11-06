@@ -557,6 +557,32 @@ class api {
       });
     });
   }
+  //订单详情
+  sysGetOrderInfoById(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get(`/suji/cart/infoPC/${data}`, "").then(res => {
+        if (res.code === 0) {
+          resolve(res.data);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+  //提交订单
+  sysSubmitOrder(data) {
+    return new Promise((resolve, reject) => {
+      untilApi
+        .postData("/suji/saleAgreement/newSaleAgreement3", JSON.stringify(data))
+        .then(res => {
+          if (res.code === 0) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        });
+    });
+  }
 }
 
 export { api };

@@ -20,9 +20,9 @@
           <div v-for="(item, index) in propertyArr" :key="index">
             <p>{{ item.name }}</p>
             <img :src="numIcon" alt />
-            <span>{{ item.num ? item.num : 1 }}</span>
+            <span>{{ item.num }}</span>
             <button class="left-btn" @click="mins(item)"></button>
-            <button class="right-btn" @click="plus(item)"></button>
+            <button class="right-btn" @click.stop="plus(item)"></button>
           </div>
           <div v-for="i in remainLeftLen" :key="i + remainLeftLen"></div>
         </div>
@@ -56,6 +56,9 @@ export default {
     if (proArr) {
       const arr = JSON.parse(proArr);
 
+      arr.forEach(item => {
+        item.num = item.num ? item.num : 1;
+      });
       const length = arr.length;
       if (length <= 13) {
         this.remainRightLen = 13;
@@ -79,6 +82,8 @@ export default {
       window.history.back();
     },
     toOptionResult() {
+      //重新保存property
+      this.until.loSave('property',JSON.stringify(this.propertyArr))
       const option = this.until.getQueryString("option");
       if (option) {
         this.until.href(`optionalResult.html?option=${option}`);
@@ -90,7 +95,7 @@ export default {
         return;
       }
       if (item.count >= 2) {
-        item.count -= item.multiple ? item.multiple : 1;
+        item.num -= item.multiple ? item.multiple : 1;
       }
     },
     plus(item) {
@@ -98,6 +103,7 @@ export default {
         this.$message.error("您所选择的项目数量已经达到上限！");
         return;
       }
+
       item.num += item.multiple ? item.multiple : 1;
     }
   },

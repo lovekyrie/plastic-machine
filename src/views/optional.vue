@@ -101,7 +101,7 @@
         <div class="usual-pick" v-show="showUsual">
           <div class="sel-three">
             <ul>
-              <li v-for="item in smallMenuList" :key="item.matchMenuId">
+              <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
                 <img
                   :src="item.checked ? pickAll : noPick"
                   alt
@@ -358,7 +358,8 @@ export default {
       showType: false,
       machineType: "",
       settingList: [],
-      showSettingOp: false
+      showSettingOp: false,
+      cartInfo: {}
     };
   },
   async mounted() {
@@ -400,12 +401,13 @@ export default {
       this.form.screw = screw;
       this.form.screwId = screwId;
     }
-    await this.getBigMenuList();
-    await this.getSmallMenuList();
-
     if (idStr) {
-      this.getStandardOrCombination();
+      await this.getStandardOrCombination();
+      await this.getOrderInfo();
     }
+
+    await this.getBigMenuList();
+    this.smallMenuList = this.bigMenuList[0].list;
   },
   methods: {
     showModelOp() {
@@ -417,7 +419,6 @@ export default {
     chooseCategory(item) {
       this.showType = false;
       this.category = item;
-      this.getSmallMenuList();
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
@@ -511,15 +512,19 @@ export default {
     },
     pickItem(item) {
       item.checked = !item.checked;
-      const index = this.smallMenuList.findIndex(k => k === item);
-      this.$set(this.smallMenuList, index, item);
+
+      const i = this.smallMenuList.findIndex(k => k === item);
+      this.$set(this.smallMenuList, i, item);
       //拼进propertyList,供我的清单中查看
       this.propertyList.push(item);
     },
     toOptionalList() {
       //需要整理property里面有数据的值，传过去
-      this.propertyList.push(...this.originalProp);
+      if (this.originalProp.length > 0) {
+        this.propertyList.push(...this.originalProp);
+      }
       const propertyStr = JSON.stringify(this.propertyList);
+      this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
       this.until.loSave("property", propertyStr);
       this.until.href(`optionalList.html?option=${option}`);
@@ -527,7 +532,7 @@ export default {
     chooseBigMenu(item, i) {
       this.bigMenuIndex = i;
       this.bigMenuId = item.id;
-      this.getSmallMenuList();
+      this.smallMenuList = this.bigMenuList[i].list;
     },
     toShowRelatedSize() {
       this.showDialog = true;
@@ -615,70 +620,93 @@ export default {
     },
     async getBigMenuList() {
       this.bigMenuList = await this.api.sysGetBigMenuList();
-      this.bigMenuId = this.bigMenuList[0].id;
-    },
-    async getSmallMenuList() {
-      const query = new this.Query();
-      query.buildWhereClause("menuNameId", this.bigMenuId, "EQ");
-      query.buildWhereClause("status", "0", "EQ");
-      query.buildOrderClause("sort", "asc");
 
-      const param = query.getParam();
-      const list = await this.api.sysGetSmallMenuList(param);
-      const fixedParam = {
-        machineId: this.form.modelID,
-        clampForceId: this.form.clampingForceId,
-        injectionId: this.form.injectionId
-      };
-      //二级菜单循环取数
+      this.bigMenuList.forEach((item, index) => {
+        const query = new this.Query();
+        query.buildWhereClause("menuNameId", item.id, "EQ");
+        query.buildWhereClause("status", "0", "EQ");
+        query.buildOrderClause("sort", "asc");
 
-      if (this.category === "常规选配") {
-        const param = { ...fixedParam };
-        param.secondLevelMenuId = list[0].secondLevelMenuId;
-        this.api.sysGetMatchMenuOptional(param).then(res => {
-          this.smallMenuList = res;
-          this.smallMenuList.forEach((item, index) => {
-            if (item.status === -1 || item.status === 0) {
-              item.checked = true;
-            } else {
-              item.checked = false;
-            }
-            this.$set(this.smallMenuList, index, item);
-          });
-          this.renderOriginalValue();
+        const param = query.getParam();
+        this.api.sysGetSmallMenuList(param).then(res => {
+          const fixedParam = {
+            machineId: this.form.modelID,
+            clampForceId: this.form.clampingForceId,
+            injectionId: this.form.injectionId
+          };
+          //二级菜单循环取数
+
+          if (this.category === "常规选配") {
+            const param = { ...fixedParam };
+            param.secondLevelMenuId = res[0].secondLevelMenuId;
+            this.api.sysGetMatchMenuOptional(param).then(res => {
+              const list = res;
+
+              list.forEach((item, index) => {
+                if (item.status === -1 || item.status === 0) {
+                  item.checked = true;
+                } else {
+                  item.checked = false;
+                }
+                this.$set(list, index, item);
+              });
+              item.list = list;
+              if (index === 0) {
+                this.smallMenuList = list;
+              }
+              this.renderOriginalValue();
+            });
+          } else {
+            const param = { ...fixedParam };
+            param.screwTypeId = this.form.screwId;
+            param.secondLevelMenuId = res[0].secondLevelMenuId;
+            this.api.sysGetUniqueMatchMenu(param).then(res => {
+              this.bigMenuList.smallMenuList = res;
+              this.smallMenuList.forEach((item, index) => {
+                if (item.status === -1 || item.status === 0) {
+                  item.checked = true;
+                } else {
+                  item.checked = false;
+                }
+                this.$set(this.smallMenuList, index, item);
+              });
+              this.renderOriginalValue();
+            });
+          }
         });
-      } else {
-        const param = { ...fixedParam };
-        param.screwTypeId = this.form.screwId;
-        param.secondLevelMenuId = list[0].secondLevelMenuId;
-        this.api.sysGetUniqueMatchMenu(param).then(res => {
-          this.smallMenuList = res;
-          this.smallMenuList.forEach((item, index) => {
-            if (item.status === -1 || item.status === 0) {
-              item.checked = true;
-            } else {
-              item.checked = false;
-            }
-            this.$set(this.smallMenuList, index, item);
-          });
-          this.renderOriginalValue();
-        });
-      }
+
+        this.$set(this.bigMenuList, index, item);
+      });
     },
     renderOriginalValue() {
       //选中之前选中的值
-      const proArr = this.until.loGet("property");
-      if (proArr) {
-        this.originalProp = JSON.parse(proArr);
-        for (let i = 0, len = this.originalProp.length; i < len; i++) {
-          const element = this.originalProp[i];
-          this.smallMenuList.forEach((item, index) => {
-            if (item.matchMenuId === element.matchMenuId) {
-              item.checked = true;
-            }
-            this.$set(this.smallMenuList, index, item);
-          });
+      if (this.cartInfo.techAgreementMatchs) {
+        this.originalProp = this.cartInfo.techAgreementMatchs;
+      } else {
+        const proArr = this.until.loGet("property");
+        if (proArr) {
+          this.originalProp = JSON.parse(proArr);
         }
+      }
+
+      for (let i = 0, len = this.originalProp.length; i < len; i++) {
+        const element = this.originalProp[i];
+        this.bigMenuList.forEach(item => {
+          if (item.list && item.list.length > 0) {
+            item.list.forEach((child, index) => {
+              if (child.cd === element.code) {
+                child.checked = true;
+              }
+              this.$set(item, index, child);
+            });
+          }
+        });
+      }
+    },
+    async getOrderInfo() {
+      const info = await this.api.sysGetOrderInfoById(this.cartId);
+      if (info) {
+        this.cartInfo = JSON.parse(info.data);
       }
     },
     async getStandardOrCombination() {

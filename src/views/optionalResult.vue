@@ -219,6 +219,24 @@ export default {
       window.history.back();
     },
     toCart() {
+
+      if(!this.proSaleInfo.neederCompany){
+        this.$message.error('客户名称必填！')
+        return
+      }
+      if(!this.proSaleInfo.modelNumber){
+        this.$message.error('规格型号必填！')
+        return
+      }
+      if(!this.proSaleInfo.price){
+        this.$message.error('单价必填！')
+        return
+      }
+      if(!this.proSaleInfo.salePrice){
+        this.$message.error('优惠价必填！')
+        return
+      }
+
       const { model, clampingForce, injection, screw, machineType } = this.form;
       //保存购物车
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
@@ -268,7 +286,7 @@ export default {
 
           this.api.sysPosttoCart(param).then(res => {
             if (res) {
-              this.until.href(`optionalCart.html?neederCompany=${this.neederCompany}`);
+              this.until.href('optionalCart.html');
             }
           });
         }

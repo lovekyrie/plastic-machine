@@ -88,40 +88,61 @@
               :key="index"
             >
               <div>
-                <span>{{ item.orderno }}</span>
+                <span>{{ item.orderno ? item.orderno : "" }}</span>
               </div>
               <div>
-                <span>{{ item.customerNm }}</span>
+                <span>
+                  {{
+                    item.proSaleInfo.neederCompany
+                      ? item.proSaleInfo.neederCompany
+                      : ""
+                  }}
+                </span>
               </div>
               <div class="multi-row">
-                <span v-for="(itemC, index) in item.machineList" :key="index">{{
-                  itemC
-                }}</span>
+                <span
+                  v-for="(itemC, index) in item.techAgreementMatchs"
+                  :key="index"
+                  >{{ itemC.matchNameCH }}</span
+                >
               </div>
               <div class="multi-row">
-                <span v-for="(itemC1, index) in item.priceList" :key="index">{{
-                  itemC1
-                }}</span>
+                <span
+                  v-for="(itemC1, index) in item.techAgreementMatchs"
+                  :key="index"
+                  >{{ itemC1.unitPrice | toFixed(2) }}</span
+                >
               </div>
               <div class="multi-row">
-                <span v-for="(itemC2, index) in item.numList" :key="index">{{
-                  itemC2
-                }}</span>
+                <span
+                  v-for="(itemC2, index) in item.techAgreementMatchs"
+                  :key="index"
+                  >{{ itemC2.num }}</span
+                >
               </div>
               <div>
-                <span>{{ item.totalPrice }}</span>
+                <span>{{ item.total | toFixed(2) }}</span>
               </div>
               <div>
-                <span>{{ item.time }}</span>
+                <span>{{ item.createTm }}</span>
               </div>
               <div>
-                <img v-if="item.status === 0" :src="editIcon" />
+                <img
+                  v-if="item.status"
+                  :src="editIcon"
+                  @click="editOrder(item.form, item.id)"
+                />
               </div>
-              <div :class="{ active: item.status === 0 }">
-                <span>{{ item.status === 0 ? "生成订单" : "订单已生成" }}</span>
+              <div :class="{ active: item.status }">
+                <span v-if="item.status" @click="save(item.id)">生成订单</span>
+                <span v-else>订单已生成</span>
               </div>
               <div>
-                <img class="del-img" :src="delOrder" />
+                <img
+                  class="del-img"
+                  :src="delOrder"
+                  @click="deleteOrder(item)"
+                />
               </div>
             </div>
           </div>
@@ -309,50 +330,22 @@ export default {
         //   selected: false
         // }
       ],
-      orderList: [
-        {
-          orderno: "HT-20180826",
-          customerNm: "赢宝机械",
-          machineList: ["MA天隆-电控系统"],
-          priceList: [18000],
-          numList: [1],
-          totalPrice: 18000,
-          time: "2018-08-26",
-          status: 1
-        },
-        {
-          orderno: "HT-20180826",
-          customerNm: "赢宝机械",
-          machineList: ["MA天隆-电控系统"],
-          priceList: [18000],
-          numList: [1],
-          totalPrice: 18000,
-          time: "2018-08-26",
-          status: 0
-        },
-        {
-          orderno: "HT-20180826",
-          customerNm: "赢宝机械",
-          machineList: [
-            "MA天隆-电控系统",
-            "MA天隆-电控系统",
-            "MA天隆-电控系统"
-          ],
-          priceList: [18000, 18000, 18000],
-          numList: [1, 2, 2],
-          totalPrice: 18000,
-          time: "2018-08-26",
-          status: 1
-        }
-      ],
       typeList: ["内贸", "外销"],
-      selectType: 0
+      selectType: 0,
+      orderList: []
     };
   },
   mounted() {
     const userInfoStr = this.until.loGet("userInfo");
     if (userInfoStr) {
       this.userInfo = JSON.parse(userInfoStr);
+    }
+    this.getCartList();
+  },
+  filters: {
+    toFixed(input, param1) {
+      //input代表的是管道符前面的内容，param1代表 过滤方法传进来的参数
+      return input.toFixed(param1);
     }
   },
   methods: {
@@ -488,6 +481,93 @@ export default {
             type: "success"
           });
           this.sug = {};
+        }
+      });
+    },
+    editOrder(form, id) {
+      const str = JSON.stringify(form);
+      this.until.href(`optional.html?form=${str}&id=${id}`);
+    },
+    deleteOrder(item) {
+      this.orderList = this.orderList.filter(itemCart => itemCart !== item);
+      //调用接口
+      const param = {
+        id: item.id,
+        data: ""
+      };
+      this.api.sysModifyCart(param);
+    },
+    async getCartList() {
+      const query = new this.Query();
+      query.buildWhereClause("userId", this.userInfo.userId, "EQ");
+      query.buildOrderClause("updTm", "desc");
+
+      const param = query.getParam();
+      let list = await this.api.sysGetCartList(param);
+      list.forEach(item => {
+        if (item.data) {
+          const data = JSON.parse(item.data);
+          data.id = item.id;
+          this.orderList.push(data);
+        }
+      });
+
+      this.orderList.forEach((item, index) => {
+        let total = 0;
+        item.techAgreementMatchs.forEach(itemChild => {
+          total += itemChild.unitPrice * itemChild.num;
+        });
+        item.status = true;
+        item.total = total;
+        this.$set(this.orderList, index, item);
+      });
+    },
+    save(id) {
+      //提交订单
+
+      const checkedOrderList = this.orderList.filter(item => item.id===id);
+      const param1 = checkedOrderList.map(item => {
+        return {
+          techAgreementMatchs: item.techAgreementMatchs,
+          techAgreement: item.techAgreement
+        };
+      });
+
+      const param2 = checkedOrderList.map(item => {
+        const money = (item.proSaleInfo.price * item.num).toFixed(2);
+        const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
+        return {
+          name: item.form.model,
+          modelNumber: item.proSaleInfo.modelNumber,
+          num: item.num,
+          price: item.proSaleInfo.price,
+          salePrice: item.proSaleInfo.salePrice,
+          money,
+          saleMoney
+        };
+      });
+
+      const param3 = {
+        neederCompany: checkedOrderList[0].proSaleInfo.neederCompany,
+        supplier: "博创智能装备股份有限公司",
+        appuserId: this.userInfo.userId,
+        remark: this.param.remark,
+        supplierAgenter: this.userInfo.nickname,
+        supplierTel: this.userInfo.mob,
+        signDate: this.time,
+        neederPostcode: this.userInfo.email,
+        attachment: this.attach,
+        saleAgreementProducts: param2
+      };
+
+      const param = {
+        techAgreementJsons: JSON.stringify(param1),
+        saleAgreementJson: JSON.stringify(param3)
+      };
+
+      this.api.sysSubmitOrder(param).then(res => {
+        if (res) {
+          this.showDialog = false;
         }
       });
     }

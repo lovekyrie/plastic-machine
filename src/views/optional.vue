@@ -523,6 +523,7 @@ export default {
       if (this.originalProp.length > 0) {
         this.propertyList.push(...this.originalProp);
       }
+      this.propertyList=[...new Set(this.propertyList)]
       const propertyStr = JSON.stringify(this.propertyList);
       this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
@@ -680,11 +681,14 @@ export default {
     },
     renderOriginalValue() {
       //选中之前选中的值
+      let originType = true;
       if (this.cartInfo.techAgreementMatchs) {
         this.originalProp = this.cartInfo.techAgreementMatchs;
+        originType = false;
       } else {
         const proArr = this.until.loGet("property");
         if (proArr) {
+          originType = true;
           this.originalProp = JSON.parse(proArr);
         }
       }
@@ -694,8 +698,14 @@ export default {
         this.bigMenuList.forEach(item => {
           if (item.list && item.list.length > 0) {
             item.list.forEach((child, index) => {
-              if (child.cd === element.code) {
-                child.checked = true;
+              if (originType) {
+                if (child.cd === element.cd) {
+                  child.checked = true;
+                }
+              } else {
+                if (child.cd === element.code) {
+                  child.checked = true;
+                }
               }
               this.$set(item, index, child);
             });

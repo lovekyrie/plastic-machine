@@ -74,7 +74,7 @@
           </div>
           <!-- 差异价 -->
           <div>
-            <span>差异价：￥120000</span>
+            <span>差异价：{{ item.diff ? item.diff * item.num : 0 }}</span>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@
                 <img
                   :src="attach.credentials ? pickAll : noPick"
                   alt
-                  @click="attach.credentials = !attch.credentials"
+                  @click="attach.credentials = !attach.credentials"
                 />
                 <span>资质证明</span>
               </div>
@@ -193,11 +193,11 @@ export default {
       userInfo: {},
       param: {},
       time: "",
-      attach:{
-        technicalParameters:false,
-        afterSalesService:false,
-        credentials:false,
-        businessLicense:false
+      attach: {
+        technicalParameters: false,
+        afterSalesService: false,
+        credentials: false,
+        businessLicense: false
       }
     };
   },
@@ -286,8 +286,8 @@ export default {
         supplierTel: this.userInfo.mob,
         signDate: this.time,
         neederPostcode: this.userInfo.email,
-        attachment:this.attach,
-        saleAgreementProducts: JSON.stringify(param2)
+        attachment: this.attach,
+        saleAgreementProducts: param2
       };
 
       const param = {
@@ -295,12 +295,11 @@ export default {
         saleAgreementJson: JSON.stringify(param3)
       };
 
-      this.api.sysSubmitOrder(param).then(res=>{
-        if(res){
-
+      this.api.sysSubmitOrder(param).then(res => {
+        if (res) {
           this.showDialog = false;
         }
-      })
+      });
     },
     async getCartList() {
       const query = new this.Query();
@@ -319,6 +318,9 @@ export default {
 
       this.cartList.forEach((item, index) => {
         item.selected = false;
+        if (item.proSaleInfo) {
+          item.diff = item.proSaleInfo.price - item.proSaleInfo.salePrice;
+        }
         this.$set(this.cartList, index, item);
       });
     },
@@ -569,6 +571,7 @@ export default {
     }
     &:nth-of-type(3) {
       textarea {
+        padding-left: 10px;
         width: 100%;
         height: 100px;
       }
@@ -606,11 +609,10 @@ export default {
   text-align: center;
 }
 .email-input > input {
-  text-indent: 10%;
   border: 1px solid #bebebe;
   border-radius: 5px;
   width: 100%;
-  padding: 10px 0;
+  padding: 10px;
 }
 
 .email-input > input:focus {

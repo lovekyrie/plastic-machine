@@ -489,13 +489,33 @@ export default {
       this.until.href(`optional.html?form=${str}&id=${id}`);
     },
     deleteOrder(item) {
-      this.orderList = this.orderList.filter(itemCart => itemCart !== item);
-      //调用接口
-      const param = {
-        id: item.id,
-        data: ""
-      };
-      this.api.sysModifyCart(param);
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.orderList = this.orderList.filter(itemCart => itemCart !== item);
+          //调用接口
+          const param = {
+            id: item.id,
+            data: ""
+          };
+          this.api.sysModifyCart(param).then(res => {
+            if (res) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     async getCartList() {
       const query = new this.Query();
@@ -525,7 +545,7 @@ export default {
     save(id) {
       //提交订单
 
-      const checkedOrderList = this.orderList.filter(item => item.id===id);
+      const checkedOrderList = this.orderList.filter(item => item.id === id);
       const param1 = checkedOrderList.map(item => {
         return {
           techAgreementMatchs: item.techAgreementMatchs,
@@ -568,6 +588,10 @@ export default {
       this.api.sysSubmitOrder(param).then(res => {
         if (res) {
           this.showDialog = false;
+          this.$message({
+            message: "生成订单成功",
+            type: "success"
+          });
         }
       });
     }

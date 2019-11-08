@@ -61,7 +61,7 @@
               <img :src="editIcon" alt @click="editOrder(item.form, item.id)" />
             </div>
             <div>
-              <a href>查看详情</a>
+              <a :href="toShowTechnology(item.id)">查看详情</a>
             </div>
             <div>
               <img
@@ -205,6 +205,9 @@ export default {
     back() {
       window.history.back();
     },
+    toShowTechnology(id){
+      return `technologyAgreement.html?id=${id}`
+    },
     pickAllOp() {
       this.pickAllMark = !this.pickAllMark;
       this.cartList.map(item => (item.selected = this.pickAllMark));
@@ -298,6 +301,10 @@ export default {
       this.api.sysSubmitOrder(param).then(res => {
         if (res) {
           this.showDialog = false;
+          this.$message({
+            message: "生成订单成功",
+            type: "success"
+          });
         }
       });
     },
@@ -325,13 +332,33 @@ export default {
       });
     },
     delCart(item) {
-      this.cartList = this.cartList.filter(itemCart => itemCart !== item);
-      //调用接口
-      const param = {
-        id: item.id,
-        data: ""
-      };
-      this.api.sysModifyCart(param);
+      this.$confirm("此操作将删除该产品, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.cartList = this.cartList.filter(itemCart => itemCart !== item);
+          //调用接口
+          const param = {
+            id: item.id,
+            data: ""
+          };
+          this.api.sysModifyCart(param).then(res => {
+            if (res) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     editOrder(form, id) {
       const str = JSON.stringify(form);

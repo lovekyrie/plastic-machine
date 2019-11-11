@@ -26,7 +26,6 @@
             </div>
             <span>{{ item.title }}</span>
           </div>
-          <div class="row-segment"></div>
         </div>
         <!-- 高级设置 -->
         <div class="right" v-show="showSetting">
@@ -44,7 +43,7 @@
           <div class="set-content">
             <div class="change-email" @click="toShowEmail">邮箱修改</div>
             <div class="change-pwd" @click="toShowPassword">密码修改</div>
-            <div class="login-out" @click="loginOut">退出登录</div>
+            <div class="login-out" @click="loginOut">退出账号</div>
           </div>
         </div>
         <!-- 我的订单 -->
@@ -602,16 +601,16 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 html,
 body {
-  height: 100%;
-  background-color: #f2f5f9;
   .container {
     width: 100%;
+    background-color: #fff;
     .row {
       > .header {
         position: relative;
-        background-color: #00338d;
+        background-color: @headerColor;
         color: #fff;
       }
       .arrow-left {
@@ -628,30 +627,31 @@ body {
         display: -webkit-flex;
         display: flex;
         height: 100%;
+        width: 90%;
+        margin: 0 auto;
         flex-direction: row;
         flex-wrap: nowrap;
         .left {
-          width: 30%;
+          width: 20%;
           height: 94vh;
-          background-color: #fff;
+          background-color: @grayColor;
           .row {
             display: -webkit-flex;
             display: flex;
             margin-left: 0;
             width: 100%;
             padding: 30px 0;
-            background: url("./images/个人中心_左侧导航.png") no-repeat top
-              center;
-            background-size: cover;
+            justify-content: center;
           }
           > .active {
-            background-image: url("./images/个人中心_左侧导航_选中.png");
+            background-color: #fff;
+            border-left: 4px solid @themeColor;
           }
         }
         .right,
         .order-content {
           background-color: #fafbfd;
-          width: 70%;
+          width: 80%;
         }
       }
     }
@@ -665,7 +665,6 @@ body {
 .content .about-me > div {
   width: 30px;
   height: 30px;
-  margin-left: 35%;
 }
 
 .content .row > span {
@@ -887,9 +886,12 @@ body {
   padding: 10px 0;
   width: 100%;
   text-align: center;
-  border: 1px solid #00338d;
+  border: 1px solid #ced2d8;
   border-radius: 5px;
   cursor: pointer;
+  &:nth-last-of-type(1) {
+    border: 0;
+  }
 }
 
 .change-email {
@@ -901,8 +903,8 @@ body {
 }
 
 .login-out {
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
 }
 
 .right .concept > p {

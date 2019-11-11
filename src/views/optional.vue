@@ -99,18 +99,16 @@
         </div>
         <!-- 常规选配 -->
         <div class="usual-pick" v-show="showUsual">
-          <div class="sel-three">
-            <ul>
-              <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
-                <img
-                  :src="item.checked ? pickAll : noPick"
-                  alt
-                  @click="pickItem(item)"
-                />
-                <span>{{ item.name }}</span>
-              </li>
-            </ul>
-          </div>
+          <ul class="sel-three">
+            <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
+              <img
+                :src="item.checked ? pickAll : noPick"
+                alt
+                @click="pickItem(item)"
+              />
+              <span>{{ item.name }}</span>
+            </li>
+          </ul>
         </div>
         <!-- 特殊选配(定制SO) -->
         <div class="unique-pick" v-show="uniquePick">
@@ -737,6 +735,7 @@ export default {
 </script>
 
 <style lang="less">
+@import url("../styles/main.less");
 html,
 body {
   background-color: #fff;
@@ -747,7 +746,7 @@ body {
   width: 100%;
   .header {
     position: relative;
-    background-color: #00338d;
+    background-color: @headerColor;
     color: #fff;
     p {
       margin: 15px 0;
@@ -797,7 +796,7 @@ body {
   }
 
   .main-opt {
-    background-color: #f2f5f9;
+    background-color: @grayColor;
   }
   .row {
     .select-opt {
@@ -854,12 +853,12 @@ body {
         .el-select {
           input {
             border: 0;
-            background-color: #f2f5f9;
+            background-color: @grayColor;
           }
         }
         input {
           border: 0;
-          background-color: #f2f5f9;
+          background-color: @grayColor;
           outline: none;
         }
       }
@@ -957,17 +956,17 @@ body {
         display: -webkit-flex;
         flex-flow: column wrap;
         justify-content: flex-start;
-        height: 700px;
-        ul {
-          li {
-            list-style: none;
-            color: #000;
-            margin-bottom: 20px;
-            span {
-              margin-left: 30px;
-            }
+        height: 600px;
+
+        li {
+          list-style: none;
+          color: #000;
+          margin-bottom: 20px;
+          span {
+            margin-left: 30px;
           }
         }
+
         .active {
           color: #000;
           > div {
@@ -989,7 +988,7 @@ body {
     }
     .footer {
       border-top: 1px solid #cdcdcd;
-      background-color: #f2f5f9;
+      background-color: #fafafa;
       width: 100%;
       position: fixed;
       height: 6.6%;
@@ -1007,14 +1006,14 @@ body {
         margin-left: 50%;
         > div {
           width: 18%;
-          color: #00338d;
+          color: #676768;
           &:nth-last-of-type(1) {
             padding: 1% 0;
             text-align: center;
             width: 30%;
-            background-color: #00338d;
-            color: #fff;
-            border: 1px solid #00338d;
+            background-color: @themeColor;
+            color: #000;
+            border: 1px solid @themeColor;
             border-radius: 5px;
           }
         }

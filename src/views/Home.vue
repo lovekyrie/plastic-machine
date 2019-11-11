@@ -4,53 +4,58 @@
       <div class="person">
         <div @click="toPersonal">
           <img :src="personImg" />
+          <p>个人中心</p>
         </div>
       </div>
       <div class="message">
         <div @click="toMsg">
           <img :src="messageImg" alt />
+          <p>消息中心</p>
         </div>
       </div>
       <div class="operation">
         <div @click="toOper">
           <img :src="operationImg" alt />
+          <p>运维指南</p>
         </div>
       </div>
       <div class="product">
         <div @click="toProduct">
           <img :src="productImg" alt />
+          <p>产品概览</p>
         </div>
       </div>
       <div class="pick">
         <div @click="toPick">
           <img :src="pickImg" alt />
+          <p>机型选配</p>
         </div>
       </div>
       <div class="industry">
         <div @click="toIndustry">
           <img :src="industryImg" alt />
-        </div>
-      </div>
-      <div class="list">
-        <div @click="toList">
-          <img :src="listImg" alt />
+          <p>行业选配</p>
         </div>
       </div>
     </div>
     <!-- 宣传视频 -->
-    <div class="propaganda" @click="showVideo">
-      <img :src="propaganda" alt />
-      <div class="video-play" v-show="showVideoFlag">
-        <video controls>
-          <source
-            type="video/mp4"
-            src="http://www.www.haitian.com/wp-content/uploads/sites/3/2018/04/HAITIAN_CULTURAL_CHINA_2016_04_15_1080.mp4"
-          />
-          <source
-            type="video/webm"
-            src="http://www.www.haitian.com/wp-content/uploads/sites/3/2018/04/HAITIAN_CULTURAL_CHINA_2016_04_15_1080.webm"
-          />
-        </video>
+    <div class="pic-operate">
+      <div>
+        <!-- 宣传视频 -->
+        <div @click="toPersonal">
+          <img :src="videoImg" />
+        </div>
+      </div>
+      <div>
+        <!-- 塑机计算 -->
+        <div @click="toMsg">
+          <img :src="calculateImg" alt />
+        </div>
+      </div>
+      <div>
+        <div @click="toList">
+          <img :src="listImg" alt />
+        </div>
       </div>
     </div>
     <div class="row line">
@@ -59,14 +64,14 @@
       </div>
     </div>
     <div class="row copy-right">
-      <span>Copyright &#169; 2018 WCJ2100</span>
+      <span>2014 &#169; boch Machinery Co., LTD Copyright</span>
     </div>
   </div>
 </template>
 
 <script>
 import personImg from "./images/个人中心.png";
-import messageImg from "./images/消息通知.png";
+import messageImg from "./images/消息中心.png";
 import operationImg from "./images/运维指南.png";
 import productImg from "./images/产品概览.png";
 import pickImg from "./images/机型选配.png";
@@ -74,6 +79,8 @@ import industryImg from "./images/行业选配.png";
 import listImg from "./images/选配清单.png";
 import propaganda from "./images/宣传视频.png";
 import indexLine from "./images/首页_线.png";
+import videoImg from "./images/宣传片.png";
+import calculateImg from "./images/换算规格.png";
 
 export default {
   data() {
@@ -87,6 +94,8 @@ export default {
       listImg,
       propaganda,
       indexLine,
+      videoImg,
+      calculateImg,
       showVideoFlag: false
     };
   },
@@ -141,22 +150,55 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
+  > div {
+    height: 100%;
+    width: 8.5%;
+    > div {
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: column wrap;
+      align-items: center;
+      margin: 0 auto;
+      > img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+      }
+      p {
+        margin-top: 30px;
+        font-size: 18px;
+      }
+    }
+  }
 }
 
-.log-operate > div {
-  height: 100%;
-  width: 8.5%;
-}
-
-.log-operate > div > div {
-  margin: 0 auto;
-}
-
-.log-operate > div > div > img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+.pic-operate {
+  position: absolute;
+  width: 30%;
+  height: 10%;
+  top: 82%;
+  transform: translateY(50%);
+  left: 35%;
+  background-color: rgba(255, 255, 255, 0);
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  > div {
+    height: 100%;
+    width: 8.5%;
+    > div {
+      margin: 0 auto;
+      > img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
 }
 
 .propaganda {

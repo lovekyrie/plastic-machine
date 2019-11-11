@@ -37,24 +37,28 @@
           <div class="customer">
             <p>客户信息</p>
             <div>
-              <span>客户名称</span>
-              <input type="text" v-model="proSaleInfo.neederCompany" />
+              <div>
+                <span>客户名称</span>
+                <input type="text" v-model="proSaleInfo.neederCompany" />
+              </div>
             </div>
           </div>
 
           <div class="product-info">
             <p>产品信息</p>
             <div>
-              <span>规格型号</span>
-              <input type="text" v-model="proSaleInfo.modelNumber" />
-            </div>
-            <div>
-              <span>单价</span>
-              <input type="number" v-model="proSaleInfo.price" />
-            </div>
-            <div>
-              <span>优惠价</span>
-              <input type="number" v-model="proSaleInfo.salePrice" />
+              <div>
+                <span>规格型号</span>
+                <input type="text" v-model="proSaleInfo.modelNumber" />
+              </div>
+              <div>
+                <span>单价</span>
+                <input type="number" v-model="proSaleInfo.price" />
+              </div>
+              <div>
+                <span>优惠价</span>
+                <input type="number" v-model="proSaleInfo.salePrice" />
+              </div>
             </div>
           </div>
         </div>
@@ -192,12 +196,12 @@ export default {
       cartList: [],
       cartId: "",
       techAgreementMatchs: [],
-      neederCompany:'',
-      proSaleInfo:{
-        neederCompany:'',
-        modelNumber:'',
-        price:'',
-        salePrice:''
+      neederCompany: "",
+      proSaleInfo: {
+        neederCompany: "",
+        modelNumber: "",
+        price: "",
+        salePrice: ""
       }
     };
   },
@@ -219,22 +223,21 @@ export default {
       window.history.back();
     },
     toCart() {
-
-      if(!this.proSaleInfo.neederCompany){
-        this.$message.error('客户名称必填！')
-        return
+      if (!this.proSaleInfo.neederCompany) {
+        this.$message.error("客户名称必填！");
+        return;
       }
-      if(!this.proSaleInfo.modelNumber){
-        this.$message.error('规格型号必填！')
-        return
+      if (!this.proSaleInfo.modelNumber) {
+        this.$message.error("规格型号必填！");
+        return;
       }
-      if(!this.proSaleInfo.price){
-        this.$message.error('单价必填！')
-        return
+      if (!this.proSaleInfo.price) {
+        this.$message.error("单价必填！");
+        return;
       }
-      if(!this.proSaleInfo.salePrice){
-        this.$message.error('优惠价必填！')
-        return
+      if (!this.proSaleInfo.salePrice) {
+        this.$message.error("优惠价必填！");
+        return;
       }
 
       const { model, clampingForce, injection, screw, machineType } = this.form;
@@ -261,7 +264,7 @@ export default {
       //移除property
       this.until.loRemove("property");
       this.cart.techAgreementMatchs = this.techAgreementMatchs;
-      this.cart.proSaleInfo=this.proSaleInfo
+      this.cart.proSaleInfo = this.proSaleInfo;
       const cartStr = JSON.stringify(this.cart);
 
       let userInfoStr = this.until.loGet("userInfo");
@@ -286,7 +289,7 @@ export default {
 
           this.api.sysPosttoCart(param).then(res => {
             if (res) {
-              this.until.href('optionalCart.html');
+              this.until.href("optionalCart.html");
             }
           });
         }
@@ -312,6 +315,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 #container {
   padding: 0 15px;
   width: 100%;
@@ -323,7 +327,7 @@ export default {
     }
     > .header {
       position: relative;
-      background-color: #00338d;
+      background-color: @headerColor;
       color: #fff;
     }
     .arrow-left {
@@ -352,7 +356,7 @@ export default {
       padding: 2% 0 10px 0;
       font-size: 16px;
       color: #00338d;
-      border-bottom: 1px solid #00338d;
+      border-bottom: 1px solid #bebebe;
     }
     .content {
       height: 100%;
@@ -372,7 +376,7 @@ export default {
         flex-wrap: wrap;
         > div {
           margin-top: 4%;
-          width: 100%;
+          width: 80%;
           > div {
             &:nth-of-type(1) {
               font-size: 16px;
@@ -384,22 +388,33 @@ export default {
         }
         .customer,
         .product-info {
+          p {
+            margin: 0 0 15px;
+          }
           > div {
             display: flex;
-            flex-flow: row nowrap;
-            &:not(:nth-last-of-type(1)) {
-              margin-bottom: 20px;
-            }
-            span {
-              width: 100px;
-              color: #000;
-            }
-            input {
-              width: 300px;
-              border: 0;
-              outline: none;
-              border-bottom: 1px solid #e1e1e1;
-              color: #000;
+            display: -webkit-flex;
+            flex-flow: column wrap;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            > div {
+              flex: 1;
+              padding: 25px 20px;
+              display: flex;
+              flex-flow: row nowrap;
+
+              span {
+                width: 100px;
+                color: #000;
+              }
+              input {
+                width: 300px;
+                border: 0;
+                outline: none;
+                border-bottom: 1px solid #ced2d8;
+                color: #000;
+                background-color: rgba(255, 255, 255, 0);
+              }
             }
           }
         }
@@ -411,7 +426,7 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        background-color: #f3f6fa;
+        background-color: #f6f6f6;
         border-left: 1px solid #bebebe;
         .param-part {
           > div {

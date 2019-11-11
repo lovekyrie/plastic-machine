@@ -126,9 +126,10 @@ export default {
 };
 </script>
 <style lang="less">
+@import url("../styles/main.less");
 .row > .header {
   position: relative;
-  background-color: #00338d;
+  background-color: @headerColor;
   color: #fff;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div id="container">
     <div class="login">
-      <h3>海天塑机销售选配系统</h3>
+      <h3>登录</h3>
       <div class="operate">
         <div>
           <img :src="accountIcon" alt />
@@ -9,7 +9,7 @@
             id="account"
             v-model="account"
             type="text"
-            placeholder="账号"
+            placeholder="请输入账号"
           />
         </div>
         <div>
@@ -18,22 +18,18 @@
             id="password"
             v-model="password"
             type="password"
-            placeholder="密码"
+            placeholder="请输入密码"
             @keyup.enter="login"
           />
         </div>
-        <div>
-          <div class="remember" @click="rememberClick = !rememberClick">
-            <span type="true" :class="{ active: rememberClick }">记住密码</span>
-          </div>
-        </div>
         <div @click="login">
-          <button :disabled="canClick">登录</button>
+          <button :disabled="canClick">确认</button>
         </div>
       </div>
     </div>
     <div class="row copy-right">
-      <span>Copyright &#169; 2018 WCJ2100</span>
+      <p>Copyright &#169; 2016 博创智能装备股份有限公司 版权所有</p>
+      <p>技术支持 - 宁波聚联科技有限公司</p>
     </div>
   </div>
 </template>
@@ -118,6 +114,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 #container {
   width: 100%;
   height: 100%;
@@ -132,36 +129,39 @@ export default {
   width: 410px;
   height: 310px;
   transform: translate3d(-50%, -50%, 0);
-  background-color: #e5f1fa;
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
 }
 
 .login h3 {
   text-align: center;
   margin: 25px 0;
-  color: #00338d;
+  color: #333;
+  letter-spacing: 5px;
 }
 
 .login .operate {
   margin: 0 30px;
   display: -webkit-flex;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: column wrap;
+  align-items: center;
 }
 
 .operate > div {
-  display: -webkit-flex;
   display: flex;
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+  align-items: center;
   position: relative;
-  margin: 10px 0;
+  margin: 10px 0 30px;
   width: 100%;
-  border: 1px solid #b3b8bc;
+  border-bottom: 1px solid #ccc;
 }
 
 .operate > div > img {
+  width: 20px;
   height: 20px;
-  margin: 5px 10px 0;
 }
 
 .operate > div > span {
@@ -169,41 +169,24 @@ export default {
   margin-right: 20px;
 }
 
-.operate > div:nth-last-of-type(2) {
-  border: 0;
-}
-
 .remember,
 .auto-login {
   flex: 2;
 }
 
-.remember > span::before {
-  content: "";
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #979798;
-  border-radius: 15%;
-  vertical-align: middle;
-  margin-right: 10px;
-  background-image: none;
-}
-
-.remember > span.active::before {
-  background: url("./images/勾选.png") no-repeat center center;
-}
-
 .operate > div {
   &:nth-last-of-type(1) {
-    background-color: #00338d;
-    color: #fff;
+    width: 80%;
+    background-color: @themeColor;
+    color: #000;
     border-radius: 5px;
+    border: 0;
     > button {
-      padding: 10px 0;
+      padding: 15px 0;
       width: 100%;
       border: 0;
-      background-color: #00338d;
+      background-color: @themeColor;
+      font-size: 16px;
     }
   }
 }
@@ -214,10 +197,11 @@ export default {
 }
 
 .operate > div > input {
-  background-color: #e5f1fa;
+  margin-left: 40px;
   flex: 1;
   border: 0;
   padding: 5px 0;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 input:focus {
@@ -226,12 +210,11 @@ input:focus {
 
 .copy-right {
   width: 100%;
-  height: 3%;
+  height: 10%;
   position: absolute;
   bottom: 0;
   text-align: center;
-  color: #a7a7a7;
+  color: #666;
   line-height: 2;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 </style>

@@ -19,6 +19,22 @@
       </div>
     </div>
     <div class="main">
+      <!-- 左侧选项 -->
+      <div class="left">
+        <p></p>
+        <div
+          class="row order"
+          :class="{ active: item.selected }"
+          v-for="(item, index) in leftNavigationList"
+          @click="pickOne(item, index)"
+          :key="index"
+        >
+          <div>
+            <img :src="item.imgUrl" alt />
+          </div>
+          <span>{{ item.title }}</span>
+        </div>
+      </div>
       <div class="right">
         <ul>
           <li v-for="item in list" :key="item.id" @click="toDetail(item.id)">
@@ -42,17 +58,33 @@
 
 <script type="text/ecmascript-6">
 import backArrow from "./images/返回.png";
+import messageIcon from "./images/系统消息.png"
+import companyIcon from "./images/公司公告.png"
 export default {
   data() {
     return {
       backArrow,
+      messageIcon,
+      companyIcon,
       showDetail:false,
       classify:[],
       list:[],
       pageNo:1,
       pageSize:10,
       total:0,
-      info:{}
+      info:{},
+      leftNavigationList:[
+        {
+          title: "系统消息",
+          imgUrl: messageIcon,
+          selected: true
+        },
+        // {
+        //   title: "公司公告",
+        //   imgUrl: companyIcon,
+        //   selected: false
+        // },
+      ]
     };
   },
   mounted(){
@@ -89,20 +121,17 @@ export default {
 </script>
 
 <style scoped lang="less">
-html,
-body {
-  height: 100%;
-  background-color: #fff;
-}
+@import url("../styles/main.less");
 
 .container {
   position: relative;
   width: 100%;
+  background-color: #fff;
 }
 
 .row > .header {
   position: relative;
-  background-color: #00338d;
+  background-color: @headerColor;
   color: #fff;
 }
 
@@ -120,12 +149,32 @@ body {
 .main {
   display: flex;
   display: -webkit-flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
   .left {
     width: 20%;
-    background: #f8f8f8;
+    height: 94vh;
+    background-color: @grayColor;
+    p {
+      height: 20px;
+    }
+    .row {
+      display: -webkit-flex;
+      display: flex;
+      justify-content: center;
+      margin-left: 0;
+      width: 100%;
+      padding: 30px 0;
+    }
+    > .active {
+      background-color: #fff;
+      border-left: 4px solid @themeColor;
+    }
   }
   .right {
-    flex: 1;
+    width: 75%;
     ul {
       padding-bottom: 20px;
     }

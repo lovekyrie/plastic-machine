@@ -39,7 +39,7 @@
                 }}
               </span>
             </div>
-            <div class="row-segment"></div>
+            <!-- <div class="row-segment"></div> -->
           </div>
         </div>
         <div class="right">
@@ -285,6 +285,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 #container {
   padding: 0 15px;
   width: 100%;
@@ -292,7 +293,7 @@ export default {
   .row {
     > .header {
       position: relative;
-      background-color: #00338d;
+      background-color: @headerColor;
       color: #fff;
       .arrow-left {
         position: absolute;
@@ -347,25 +348,17 @@ export default {
       flex-wrap: nowrap;
       .left {
         width: 25%;
-        background-color: #fff;
+        background-color: @grayColor;
         .row {
           margin-left: 0;
           width: 100%;
           padding: 15px 0;
-          background: url("./images/左侧导航.png") no-repeat top center;
-          background-size: cover;
           > span {
             margin-left: 40%;
           }
         }
         .active {
-          background-image: url("./images/左侧导航_选中.png");
-        }
-        .row-segment {
-          height: 1px;
-          background: url("./images/个人中心_左侧线.png") center center
-            no-repeat;
-          background-size: cover;
+          background-color: @themeColor;
         }
       }
       .right {
@@ -376,7 +369,7 @@ export default {
           display: flex;
           flex-direction: row;
           flex-wrap: nowrap;
-          background-color: #f2f5f9;
+          background-color: @themeColor;
           > div {
             margin: 0 30px;
             padding: 15px 0;
@@ -429,7 +422,7 @@ export default {
               > .part {
                 width: 210px;
                 height: 100%;
-                background-color: #00338d;
+                background-color: @themeColor;
                 color: #fff;
                 text-indent: 30px;
               }

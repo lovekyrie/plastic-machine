@@ -14,6 +14,7 @@
       <div class="content">
         <!-- 左侧选项 -->
         <div class="left">
+          <p></p>
           <div
             class="row order"
             :class="{ active: item.selected }"
@@ -174,7 +175,7 @@
           <span
             >选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span
           >
-          <div @click="submitSuggest">提交</div>
+          <div @click="submitSuggest">确定</div>
         </div>
       </div>
     </div>
@@ -616,7 +617,7 @@ body {
       .arrow-left {
         position: absolute;
         top: 50%;
-        left: 8%;
+        left: 12%;
         transform: translateY(-50%);
       }
       p {
@@ -627,14 +628,18 @@ body {
         display: -webkit-flex;
         display: flex;
         height: 100%;
-        width: 90%;
+        width: 80%;
         margin: 0 auto;
-        flex-direction: row;
-        flex-wrap: nowrap;
+        flex-flow: row nowrap;
+        justify-content: space-between;
         .left {
           width: 20%;
           height: 94vh;
           background-color: @grayColor;
+          p {
+            margin: 0;
+            height: 30px;
+          }
           .row {
             display: -webkit-flex;
             display: flex;
@@ -650,8 +655,7 @@ body {
         }
         .right,
         .order-content {
-          background-color: #fafbfd;
-          width: 80%;
+          width: 78%;
         }
       }
     }
@@ -682,10 +686,12 @@ body {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  padding: 10px 0;
 }
 
 .order-content .title {
-  background-color: #f2f5f9;
+  background-color: @themeColor;
+  margin-top: 30px;
 }
 .order-content .title,
 .order-wrap .concept {
@@ -694,7 +700,7 @@ body {
 
 .order-wrap .concept {
   padding: 20px 0;
-  background-color: #fafbfd;
+  background-color: #fafafa;
   border-bottom: 1px solid #f2f5f9;
 }
 
@@ -731,9 +737,9 @@ body {
 }
 
 .concept > div.active {
-  background-color: #00338d;
+  background-color: @themeColor;
   border-radius: 5px;
-  color: #fff;
+  color: #000;
 }
 
 .order-content > .title > div:nth-of-type(3),
@@ -769,8 +775,8 @@ body {
 }
 
 .suggest-content {
-  width: 70%;
-  padding: 60px 30% 0 60px;
+  width: 78%;
+  padding: 60px 0;
   background-color: #fff;
 }
 
@@ -784,11 +790,13 @@ body {
 
 .suggest-content > div:nth-last-of-type(1) {
   margin-top: 100px;
-  padding: 8px 0;
+  height: 50px;
+  line-height: 50px;
   text-align: center;
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
   border-radius: 5px;
+  font-size: 16px;
 }
 
 .text-suggest,
@@ -980,10 +988,10 @@ body {
 .changepwd .pwd-region > div:nth-last-of-type(1),
 .changeemail .email-region > div:nth-last-of-type(1) {
   padding: 10px 0;
-  border: 1px solid #00338d;
+  border: 0;
   border-radius: 8px;
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
   text-align: center;
 }
 

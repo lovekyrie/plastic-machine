@@ -102,6 +102,9 @@
         四、本技术协议作为合同的附件之一（设备的标准配置说明条款，供方拥有最终解释权；若需方对设备的标准配置有异议之处，请列入商标；未列入上表则按遵从供方设备的标准配置看待），本协议同相关合同具有相等法律效力
       </p>
     </div>
+    <div class="footer">
+      <button>确定</button>
+    </div>
   </div>
 </template>
 
@@ -238,6 +241,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 #container {
   width: 100%;
   background-color: #fff;
@@ -400,6 +404,19 @@ export default {
         flex-direction: row;
         align-items: center;
       }
+    }
+  }
+  .footer {
+    width: 100%;
+    text-align: center;
+    button {
+      border: 0;
+      width: 250px;
+      height: 50px;
+      line-height: 50px;
+      background-color: @themeColor;
+      border: 0;
+      border-radius: 6px;
     }
   }
 }

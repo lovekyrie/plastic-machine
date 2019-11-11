@@ -129,6 +129,7 @@ export default {
 </script>
 
 <style lang="less">
+@import url("../styles/main.less");
 #container {
   width: 100%;
   position: relative;

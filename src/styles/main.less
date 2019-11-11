@@ -8,6 +8,25 @@ ul {
   margin: 0;
 }
 
+.container {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  .row {
+    > .header {
+      position: relative;
+      background-color: @headerColor;
+      color: #fff;
+    }
+    .arrow-left {
+      position: absolute;
+      top: 50%;
+      left: 12%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
 @themeColor: #fff200;
 @headerColor: #575756;
 @grayColor: #e3e3e3;

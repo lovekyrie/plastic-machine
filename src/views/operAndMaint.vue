@@ -22,7 +22,7 @@
     </div>
     <div class="row">
       <maintain v-show="currentCd" ref="maintain"></maintain>
-      <debug v-show="operate === '注塑机调试'"></debug>
+      <!--<debug v-show="operate === '注塑机调试'"></debug>-->
       <factory v-show="operate === '厂房规划'"></factory>
       <water-pipe v-show="operate === '冷却水管'"></water-pipe>
     </div>
@@ -33,7 +33,7 @@
 import backArrow from "./images/返回.png";
 import pullDown from "./images/标签栏下拉箭头.png";
 import maint from "./images/maint.png";
-import debug from "../components/debugging"
+//import debug from "../components/debugging"
 import factory from "../components/factory"
 import maintain from "../components/maintain"
 //import repair from "../components/repair"
@@ -51,7 +51,7 @@ export default {
     };
   },
   components:{
-    debug,
+    // debug,
     factory,
     maintain,
     //repair,
@@ -67,8 +67,8 @@ export default {
       this.operateList = await this.api.operAndMainTopList({cd:'OPS'})
       let list = [{nm:'冷却水管',cd:''},{nm:'厂房规划',cd:''}]
       this.operateList.push(...list)
-      this.operate = this.operateList[4].nm
-      this.currentCd = this.operateList[4].cd
+      this.operate = this.operateList[0].nm
+      this.currentCd = this.operateList[0].cd
     },
     back() {
       window.history.back();

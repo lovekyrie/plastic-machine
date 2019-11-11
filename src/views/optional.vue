@@ -1149,12 +1149,12 @@ body {
 
 .model-sel > div button {
   margin-top: 15px;
-  border: 1px solid #00338d;
   width: 78%;
   padding: 8px 0;
+  border: 0;
   border-radius: 5px;
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
 }
 
 .model-sel div > img {

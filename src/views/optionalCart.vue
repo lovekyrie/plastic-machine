@@ -381,6 +381,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 #container {
   padding: 0 15px;
   width: 100%;
@@ -629,8 +630,8 @@ export default {
 
 .sumbit-btn {
   padding: 10px;
-  background-color: #00338d;
-  border: 1px solid #00338d;
+  background-color: @themeColor;
+  border: 1px solid @themeColor;
   border-radius: 5px;
   color: #fff;
   text-align: center;

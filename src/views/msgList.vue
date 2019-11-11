@@ -49,8 +49,7 @@
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -58,27 +57,27 @@
 
 <script type="text/ecmascript-6">
 import backArrow from "./images/返回.png";
-import messageIcon from "./images/系统消息.png"
-import companyIcon from "./images/公司公告.png"
+import messageIcon from "./images/系统消息.png";
+import companyIcon from "./images/公司公告.png";
 export default {
   data() {
     return {
       backArrow,
       messageIcon,
       companyIcon,
-      showDetail:false,
-      classify:[],
-      list:[],
-      pageNo:1,
-      pageSize:10,
-      total:0,
-      info:{},
-      leftNavigationList:[
+      showDetail: false,
+      classify: [],
+      list: [],
+      pageNo: 1,
+      pageSize: 10,
+      total: 0,
+      info: {},
+      leftNavigationList: [
         {
           title: "系统消息",
           imgUrl: messageIcon,
           selected: true
-        },
+        }
         // {
         //   title: "公司公告",
         //   imgUrl: companyIcon,
@@ -87,33 +86,35 @@ export default {
       ]
     };
   },
-  mounted(){
-    this.getList()
+  mounted() {
+    this.getList();
   },
   methods: {
     back() {
-      window.history.back()
+      window.history.back();
     },
-    getList(){
+    getList() {
       let qry = new this.Query();
       qry.buildPageClause(this.pageNo, this.pageSize);
-      this.api.msgList(qry.getParam()).then(res=>{
-        this.list = res.data.list
-        this.list.forEach(item=>{
-          item.publishDate = item.publishDate ? item.publishDate.split(' ')[0] : ''
-        })
-        this.total = res.page.total
-      })
+      this.api.msgList(qry.getParam()).then(res => {
+        this.list = res.data.list;
+        this.list.forEach(item => {
+          item.publishDate = item.publishDate
+            ? item.publishDate.split(" ")[0]
+            : "";
+        });
+        this.total = res.page.total;
+      });
     },
-    toDetail(id){
-      this.api.msgDetail(id).then(res=>{
-        this.info = res
-        this.showDetail = true
-      })
+    toDetail(id) {
+      this.api.msgDetail(id).then(res => {
+        this.info = res;
+        this.showDetail = true;
+      });
     },
-    handleCurrentChange(e){
-      this.pageNo = e
-      this.getList()
+    handleCurrentChange(e) {
+      this.pageNo = e;
+      this.getList();
     }
   },
   components: {}
@@ -122,25 +123,6 @@ export default {
 
 <style scoped lang="less">
 @import url("../styles/main.less");
-
-.container {
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-}
-
-.row > .header {
-  position: relative;
-  background-color: @headerColor;
-  color: #fff;
-}
-
-.row .arrow-left {
-  position: absolute;
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
 
 .row p {
   font-size: 18px;
@@ -151,7 +133,7 @@ export default {
   display: -webkit-flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   .left {
     width: 20%;

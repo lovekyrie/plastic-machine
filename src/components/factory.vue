@@ -257,10 +257,23 @@ export default {
           this.total = [];
           data.forEach(item => {
             total.qty += item.qty;
-            total.transformerPower += parseInt(item.transformerPower);
-            total.totalWater += parseInt(item.totalWater);
-            total.powerConsumer += parseInt(item.powerConsumer);
+            total.transformerPower +=
+              parseFloat(item.transformerPower) * item.qty;
+            total.totalWater += parseFloat(item.totalWater) * item.qty;
+            total.powerConsumer += parseFloat(item.powerConsumer) * item.qty;
+            total.gas +=
+              (parseFloat(item.gasConsumption) +
+                parseFloat(item.moldGas) +
+                parseFloat(item.doorGas) +
+                parseFloat(item.manipulatorGas)) *
+              item.qty;
           });
+          total.coolingTower = Math.ceil((total.totalWater * 60) / 1000);
+          total.waterStorage = Math.ceil(total.coolingTower / 6.0);
+          total.diameter = Math.ceil(
+            Math.sqrt(total.powerConsumer * 10.61571125)
+          );
+
           this.total.push(total);
         }
       }

@@ -24,6 +24,7 @@
       <div class="content">
         <!-- 左侧选项 -->
         <div class="left">
+          <p></p>
           <div v-for="(item, index) in productList" :key="index">
             <div
               @click="selectLeftItem(item, index)"
@@ -344,11 +345,17 @@ export default {
       display: -webkit-flex;
       display: flex;
       height: 100%;
-      flex-direction: row;
-      flex-wrap: nowrap;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      width: 80%;
+      margin: 0 auto;
       .left {
-        width: 25%;
+        width: 20%;
         background-color: @grayColor;
+        p {
+          margin: 0;
+          height: 20px;
+        }
         .row {
           margin-left: 0;
           width: 100%;
@@ -362,7 +369,8 @@ export default {
         }
       }
       .right {
-        width: 75%;
+        margin-top: 20px;
+        width: 78%;
         .title {
           width: 100%;
           display: -webkit-flex;
@@ -377,8 +385,8 @@ export default {
             text-align: center;
           }
           > .active {
-            border-bottom: 1px solid #4e72b0;
-            color: #4e72b0;
+            border-bottom: 3px solid #575756;
+            color: #575756;
           }
         }
         .concept,

@@ -148,7 +148,7 @@
           </div>
           <div>
             <span></span>
-            <div class="sumbit-btn" @click="save">提交</div>
+            <div class="sumbit-btn" @click="save">预览合同</div>
           </div>
         </div>
       </div>
@@ -273,8 +273,8 @@ export default {
           name: item.form.model,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
-          price: item.proSaleInfo.price,
-          salePrice: item.proSaleInfo.salePrice,
+          price: item.proSaleInfo.price.toFixed(2),
+          salePrice: item.proSaleInfo.salePrice.toFixed(2),
           money,
           saleMoney
         };
@@ -293,20 +293,24 @@ export default {
         saleAgreementProducts: param2
       };
 
+      const carts=checkedCartList.map(item=>item.id)
       const param = {
         techAgreementJsons: JSON.stringify(param1),
-        saleAgreementJson: JSON.stringify(param3)
+        saleAgreementJson: JSON.stringify(param3),
+        cartIds:JSON.stringify(carts),
       };
 
-      this.api.sysSubmitOrder(param).then(res => {
-        if (res) {
-          this.showDialog = false;
-          this.$message({
-            message: "生成订单成功",
-            type: "success"
-          });
-        }
-      });
+      // this.api.sysSubmitOrder(param).then(res => {
+      //   if (res) {
+      //     this.showDialog = false;
+      //     this.$message({
+      //       message: "生成订单成功",
+      //       type: "success"
+      //     });
+      //   }
+      // });
+      this.until.loSave('orderParam',JSON.stringify(param))
+      this.until.href('technologyPreview.html')
     },
     async getCartList() {
       const query = new this.Query();
@@ -633,7 +637,7 @@ export default {
   background-color: @themeColor;
   border: 1px solid @themeColor;
   border-radius: 5px;
-  color: #fff;
+  color: #000;
   text-align: center;
 }
 .email-input > input {

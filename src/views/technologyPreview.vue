@@ -11,7 +11,7 @@
       <img :src="logLetter" alt />
     </div>
     <div class="title">
-      <h2>聚联科技有限公司</h2>
+      <h2>{{ saleAgreementJson.neederCompany }}</h2>
       <h1>方案报价</h1>
     </div>
     <div class="company-logo">
@@ -24,11 +24,14 @@
       </div>
       <div>
         <p>联 系 人：</p>
-        <p>开发测试 113359268462</p>
+        <p>
+          {{ saleAgreementJson.supplierAgenter }}
+          {{ saleAgreementJson.supplierTel }}
+        </p>
       </div>
       <div>
         <p>邮 箱：</p>
-        <p>13566039628@163.com</p>
+        <p>{{ saleAgreementJson.neederPostcode }}</p>
       </div>
     </div>
     <!-- 报价单 -->
@@ -160,17 +163,20 @@
     <!-- 技术参数及配置 -->
     <div class="technology-setting">
       <h3>二 技术参数及配置</h3>
-      <div class="item">
+      <div class="item" v-for="(item, index) in technologyList" :key="index">
         <div class="title">2-1 技术参数表</div>
         <p>113技术参数表</p>
         <div class="param">
-          <div v-for="(item, index) in technologyList" :key="index">
-            <div>{{ item.nm }}</div>
-            <div>{{ item.unit }}</div>
-            <div>{{ item.val }}</div>
+          <div v-for="(itemChild, index) in item" :key="index">
+            <div>{{ itemChild.nm }}</div>
+            <div>{{ itemChild.unit }}</div>
+            <div>{{ itemChild.val }}</div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="footer">
+      <button @click="save">确定</button>
     </div>
   </div>
 </template>
@@ -202,55 +208,55 @@ export default {
         },
         {
           nm: "螺杆直径",
-          enNm: "",
+          enNm: "screwDiameter",
           unit: "mm",
           val: "D30"
         },
         {
           nm: "注射容积",
-          enNm: "",
+          enNm: "shotSize",
           unit: "cm3",
           val: "120"
         },
         {
           nm: "注射量（PS）",
-          enNm: "",
+          enNm: "injectionWeight",
           unit: "g",
           val: "113"
         },
         {
           nm: "理论注射压力",
+          enNm: "injectionPressure",
           unit: "MPa",
-          val: "209",
-          enNm: ""
+          val: "209"
         },
         {
           nm: "螺杆长径比",
-          enNm: "",
+          enNm: "screwRatioLD",
           unit: "L/D",
           val: "24"
         },
         {
           nm: "注射行程",
-          enNm: "",
+          enNm: "injectionStroke",
           unit: "mm",
           val: "500"
         },
         {
           nm: "最大螺杆转速",
-          enNm: "",
+          enNm: "screwSpeed",
           unit: "rpm",
           val: "250"
         },
         {
           nm: "射嘴接触力",
-          enNm: "",
+          enNm: "nozzleContactForce",
           unit: "KN",
           val: "12"
         },
         {
           nm: "射移行程",
-          enNm: "",
+          enNm: "shootMoveStroke",
           unit: "mm",
           val: "320"
         },
@@ -262,55 +268,55 @@ export default {
         },
         {
           nm: "锁模力",
-          enNm: "",
+          enNm: "clampTonnage",
           unit: "KN",
           val: "800"
         },
         {
           nm: "开模行程",
-          enNm: "",
+          enNm: "toggle_stroke",
           unit: "mm",
           val: "200"
         },
         {
           nm: "模板尺寸",
-          enNm: "",
+          enNm: "moldPlatenDimension",
           unit: "mm×mm",
           val: "540×540"
         },
         {
           nm: "拉杆间距",
-          enNm: "",
+          enNm: "spaceBetweenTieBars",
           unit: "mm×mm",
           val: "360×360"
         },
         {
           nm: "模板最大距离",
-          enNm: "",
+          enNm: "maxMoldOpeningStroke",
           unit: "mm",
           val: "680"
         },
         {
           nm: "容模厚度",
-          enNm: "",
+          enNm: "moldHeight",
           unit: "mm",
           val: "1.2"
         },
         {
           nm: "顶针行程",
-          enNm: "",
+          enNm: "ejectorStroke",
           unit: "mm",
           val: "100"
         },
         {
           nm: "理论顶出力",
-          enNm: "",
+          enNm: "ejectorTonnage",
           unit: "KN",
           val: "28.5"
         },
         {
           nm: "顶针数",
-          enNm: "",
+          enNm: "ejectorNum",
           unit: "unit",
           val: "56"
         },
@@ -322,25 +328,25 @@ export default {
         },
         {
           nm: "液压系统压力",
-          enNm: "",
+          enNm: "hydraulicSystemPressure",
           unit: "MPa",
           val: "84"
         },
         {
           nm: "油泵电机功率",
-          enNm: "",
+          enNm: "pumpMotorPower",
           unit: "KW",
           val: "11"
         },
         {
           nm: "电热功率",
-          enNm: "",
+          enNm: "heaterPower",
           unit: "KW",
           val: "6.5"
         },
         {
           nm: "温控区数",
-          enNm: "",
+          enNm: "temperatureControlNum",
           unit: "unit",
           val: "2"
         },
@@ -352,19 +358,19 @@ export default {
         },
         {
           nm: "理论油箱容量",
-          enNm: "",
+          enNm: "oilTankCapacity",
           unit: "L",
           val: "175"
         },
         {
           nm: "外形尺寸",
-          enNm: "",
+          enNm: "machineDimension",
           unit: "m×m×m",
           val: "230×200"
         },
         {
           nm: "理论机重",
-          enNm: "",
+          enNm: "machineWeight",
           unit: "KG",
           val: "3"
         }
@@ -392,7 +398,7 @@ export default {
   },
 
   mounted() {
-    this.technologyList = this.TECH_LIST;
+
     //根据
     let orderParamStr = this.until.loGet("orderParam");
     if (orderParamStr) {
@@ -402,6 +408,7 @@ export default {
       this.calculateMoney()
       this.calculateSaleMoney()
       this.calculateOptionMoney()
+      this.getTechnologyList()
     }
   },
   filters: {
@@ -414,6 +421,14 @@ export default {
     }
   },
   methods: {
+    getTechnologyList(){
+      this.techAgreementJson.forEach(item=>{
+        this.TECH_LIST.forEach(pro=>{
+          pro.val=item.techAgreement[0][pro.enNm]
+        })
+        this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
+      })
+    },
     calculateMoney() {
       this.moneyTotal = this.saleAgreementJson.saleAgreementProducts.reduce(
         (curr, next) => {
@@ -445,7 +460,20 @@ export default {
         0
       );
        this.optionMoneyB=nzhcn.encodeB(this.optionMoney);
+    },
+    save(){
+        this.api.sysSubmitOrder(this.orderParam).then(res => {
+        if (res) {
+          this.showDialog = false;
+          this.$message({
+            message: "生成订单成功",
+            type: "success"
+          });
+          this.until.loRemove('orderParam')
+        }
+      });
     }
+
   },
   components: {}
 };
@@ -665,6 +693,20 @@ export default {
           }
         }
       }
+    }
+  }
+  .footer {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+    button {
+      border: 0;
+      width: 250px;
+      height: 50px;
+      line-height: 50px;
+      background-color: @themeColor;
+      border: 0;
+      border-radius: 6px;
     }
   }
 }

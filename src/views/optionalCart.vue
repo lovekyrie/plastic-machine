@@ -300,15 +300,6 @@ export default {
         cartIds:JSON.stringify(carts),
       };
 
-      // this.api.sysSubmitOrder(param).then(res => {
-      //   if (res) {
-      //     this.showDialog = false;
-      //     this.$message({
-      //       message: "生成订单成功",
-      //       type: "success"
-      //     });
-      //   }
-      // });
       this.until.loSave('orderParam',JSON.stringify(param))
       this.until.href('technologyPreview.html')
     },

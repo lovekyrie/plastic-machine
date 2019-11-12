@@ -205,8 +205,8 @@ export default {
     back() {
       window.history.back();
     },
-    toShowTechnology(id){
-      return `technologyAgreement.html?id=${id}`
+    toShowTechnology(id) {
+      return `technologyAgreement.html?id=${id}`;
     },
     pickAllOp() {
       this.pickAllMark = !this.pickAllMark;
@@ -267,14 +267,16 @@ export default {
       });
 
       const param2 = checkedCartList.map(item => {
+        const price = parseInt(item.proSaleInfo.price).toFixed(2);
+        const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
         const money = (item.proSaleInfo.price * item.num).toFixed(2);
         const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
         return {
           name: item.form.model,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
-          price: item.proSaleInfo.price.toFixed(2),
-          salePrice: item.proSaleInfo.salePrice.toFixed(2),
+          price,
+          salePrice,
           money,
           saleMoney
         };
@@ -293,15 +295,15 @@ export default {
         saleAgreementProducts: param2
       };
 
-      const carts=checkedCartList.map(item=>item.id)
+      const carts = checkedCartList.map(item => item.id);
       const param = {
         techAgreementJsons: JSON.stringify(param1),
         saleAgreementJson: JSON.stringify(param3),
-        cartIds:JSON.stringify(carts),
+        cartIds: JSON.stringify(carts)
       };
 
-      this.until.loSave('orderParam',JSON.stringify(param))
-      this.until.href('technologyPreview.html')
+      this.until.loSave("orderParam", JSON.stringify(param));
+      this.until.href("technologyPreview.html");
     },
     async getCartList() {
       const query = new this.Query();

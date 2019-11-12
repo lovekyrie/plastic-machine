@@ -306,6 +306,8 @@ export default {
       const data = await this.api.sysGetOptionResultParamList(param);
       delete data.imgUrl;
       delete data.imgUrlEn;
+      const { injection } = this.form;
+      data.injection = injection;
 
       this.list.push(data);
     }

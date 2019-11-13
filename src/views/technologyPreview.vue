@@ -473,6 +473,8 @@ export default {
             type: "success"
           });
           this.until.loRemove('orderParam')
+          //返回首页
+          this.until.href('personal.html')
         }
       });
     }

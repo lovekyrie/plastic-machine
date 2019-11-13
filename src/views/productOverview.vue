@@ -187,11 +187,11 @@ export default {
     showOption() {
       this.showType = !this.showType;
     },
-    selectLeftItem(item, i) {
+   async selectLeftItem(item, i) {
       this.selectIndex = i;
       this.categoryObj = item;
-      this.getTechnicalParameter();
-      this.getRelatedSize();
+      await this.getTechnicalParameter();
+      await this.getRelatedSize();
     },
     async chooseCategory(item) {
       this.showType = false;

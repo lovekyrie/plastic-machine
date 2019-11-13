@@ -161,10 +161,10 @@ class until {
         cache: false,
         dataType: "json",
         success(data) {
-          resolve(data);
           if (data.code != 0) {
             Message.error(data.msg);
           }
+          resolve(data);
         },
         error(data) {
           reject(data);

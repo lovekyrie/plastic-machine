@@ -66,8 +66,8 @@
                   <el-option
                     v-for="item in modelList"
                     :key="item.value"
-                    :label="item.name"
-                    :value="item.id"
+                    :label="item.modelTypeNm"
+                    :value="item.modelType"
                   ></el-option>
                 </el-select>
               </div>
@@ -80,8 +80,8 @@
                   <el-option
                     v-for="item in clampingForceList"
                     :key="item.value"
-                    :label="item.name"
-                    :value="item.clampForceId"
+                    :label="item.clampingForceNm"
+                    :value="item.clampingForce"
                   ></el-option>
                 </el-select>
               </div>
@@ -341,7 +341,7 @@ export default {
       this.modelList = await this.api.sysGetIndustryOptionalModelList(param);
       if (this.modelList.length > 0) {
         this.model = this.modelList[0].name;
-        this.form.modelID = this.modelList[0].id;
+        this.form.modelID = this.modelList[0].modelType;
       } else {
         this.form.modelID = "";
         this.form.model = "";
@@ -360,8 +360,8 @@ export default {
 
         if (this.clampingForceList.length > 0) {
           this.clampingForce = this.clampingForceList[0].name;
-          this.form.clampingForceId = this.clampingForceList[0].clampForceId;
-          this.form.clampingForce = this.clampingForceList[0].name;
+          this.form.clampingForceId = this.clampingForceList[0].clampingForce;
+          this.form.clampingForce = this.clampingForceList[0].clampingForceNm;
         } else {
           this.clampingForce = "";
           this.form.clampingForceId = "";

@@ -110,7 +110,7 @@
                 <span
                   v-for="(itemC1, index) in item.techAgreementMatchs"
                   :key="index"
-                  >{{ itemC1.unitPrice | toFixed(2) }}</span
+                  >{{ itemC1.unitPrice }}</span
                 >
               </div>
               <div class="multi-row">
@@ -121,21 +121,26 @@
                 >
               </div>
               <div>
-                <span>{{ item.total | toFixed(2) }}</span>
+                <span>{{ item.total }}</span>
               </div>
               <div>
                 <span>{{ item.createTm }}</span>
               </div>
               <div>
                 <img
-                  v-if="item.status"
+                  v-if="item.status === 0"
                   :src="editIcon"
                   @click="editOrder(item.form, item.id)"
                 />
               </div>
-              <div :class="{ active: item.status }">
-                <span v-if="item.status" @click="save(item.id)">生成订单</span>
-                <span v-else>订单已生成</span>
+              <div
+                :class="{ active: item.status === 0 }"
+                v-if="item.status === 0"
+              >
+                <span @click="save(item.id)">生成订单</span>
+              </div>
+              <div v-else>
+                <span>订单已生成</span>
               </div>
               <div>
                 <img
@@ -528,6 +533,7 @@ export default {
         if (item.data) {
           const data = JSON.parse(item.data);
           data.id = item.id;
+          data.status = item.status;
           this.orderList.push(data);
         }
       });
@@ -537,7 +543,6 @@ export default {
         item.techAgreementMatchs.forEach(itemChild => {
           total += itemChild.unitPrice * itemChild.num;
         });
-        item.status = true;
         item.total = total;
         this.$set(this.orderList, index, item);
       });

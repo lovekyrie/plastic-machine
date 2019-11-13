@@ -405,7 +405,6 @@ export default {
     }
 
     await this.getBigMenuList();
-    this.smallMenuList = this.bigMenuList[0].list;
   },
   methods: {
     showModelOp() {
@@ -503,8 +502,10 @@ export default {
       this.getStandardOrCombination();
     },
     toOptionResult() {
+
       this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
+      this.dealWithProperty()
       this.until.href(
         `optionalResult.html?option=${option}&cartId=${this.cartId}`
       );
@@ -518,16 +519,24 @@ export default {
       this.propertyList.push(item);
     },
     toOptionalList() {
-      //需要整理property里面有数据的值，传过去
+
+      this.form.machineType = this.machineType;
+      const option = JSON.stringify(this.form);
+      this.dealWithProperty()
+      this.until.href(`optionalList.html?option=${option}`);
+    },
+    dealWithProperty(){
+    //需要整理property里面有数据的值，传过去
       if (this.originalProp.length > 0) {
         this.propertyList.push(...this.originalProp);
       }
       this.propertyList=[...new Set(this.propertyList)]
       const propertyStr = JSON.stringify(this.propertyList);
-      this.form.machineType = this.machineType;
-      const option = JSON.stringify(this.form);
-      this.until.loSave("property", propertyStr);
-      this.until.href(`optionalList.html?option=${option}`);
+        this.until.loSave("property", propertyStr);
+        if(this.propertyList.length===0){
+        this.$message.error('您当前未选择任何选配项，请选择再前往查看！')
+        return
+      }
     },
     chooseBigMenu(item, i) {
       this.bigMenuIndex = i;
@@ -646,6 +655,7 @@ export default {
               list.forEach((item, index) => {
                 if (item.status === -1 || item.status === 0) {
                   item.checked = true;
+                  this.propertyList.push(item);
                 } else {
                   item.checked = false;
                 }

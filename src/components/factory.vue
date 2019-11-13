@@ -315,9 +315,20 @@ export default {
     },
     async toAdd(type) {
       let info = await this.getInfo();
+      if (info) {
+        this.$message({
+          message: "添加成功",
+          type: "success"
+        });
+      } else {
+        this.$message.error("添加失败，请重新选择！");
+        return;
+      }
+
       info.qty = this.currentChoose.qty;
       this.addInfoList.push(info);
       // console.log(this.addInfoList);
+
       this.ifAdd = true;
       if (type === "confirm") {
         this.dataList.push(...this.addInfoList);
@@ -344,6 +355,7 @@ tr.warning-row {
 }
 </style>
 <style scoped lang="less">
+@import url("../styles/main.less");
 p {
   margin: 0;
 }
@@ -407,8 +419,8 @@ p {
         text-align: center;
         height: 40px;
         line-height: 40px;
-        background: #00338d;
-        color: #ffffff;
+        background: @themeColor;
+        color: #000;
         border: 0;
         border-radius: 5px;
         margin-left: 40px;
@@ -433,8 +445,8 @@ p {
     border-radius: 10px;
     padding: 30px;
     > p {
-      background: #00338d;
-      color: #ffffff;
+      background: @themeColor;
+      color: #000;
       height: 40px;
       line-height: 40px;
       width: 100%;

@@ -136,7 +136,7 @@
           <div>
             <span>邮箱地址：</span>
             <div class="email-input">
-              <input type="text" value="954540387@qq.com" />
+              <input type="text" v-model="param.email" />
             </div>
           </div>
           <!-- 备注 -->
@@ -191,7 +191,9 @@ export default {
       showDialog: false,
       cartList: [],
       userInfo: {},
-      param: {},
+      param: {
+        email: "954540387@qq.com"
+      },
       time: "",
       attach: {
         technicalParameters: false,
@@ -258,6 +260,12 @@ export default {
         return;
       }
 
+      const msg = this.reg.checkMail(this.param.email);
+      if (msg !== "ok") {
+        this.$message.error("请输入正确的邮箱格式！");
+        return;
+      }
+
       const checkedCartList = this.cartList.filter(item => item.selected);
       const param1 = checkedCartList.map(item => {
         return {
@@ -290,7 +298,7 @@ export default {
         supplierAgenter: this.userInfo.nickname,
         supplierTel: this.userInfo.mob,
         signDate: this.time,
-        neederPostcode: this.userInfo.email,
+        neederPostcode: this.param.email,
         attachment: this.attach,
         saleAgreementProducts: param2
       };
@@ -313,13 +321,11 @@ export default {
       const param = query.getParam();
       let list = await this.api.sysGetCartList(param);
       list.forEach(item => {
-        if (item.data ) {
+        if (item.data && item.status === 0) {
           const data = JSON.parse(item.data);
-          if(data.status===0){
 
-            data.id = item.id;
-            this.cartList.push(data);
-          }
+          data.id = item.id;
+          this.cartList.push(data);
         }
       });
 
@@ -391,7 +397,7 @@ export default {
 
 .row > .header {
   position: relative;
-  background-color: #00338d;
+  background-color: @headerColor;
   color: #fff;
 }
 
@@ -535,8 +541,8 @@ export default {
 .create-order {
   margin-top: 1.6%;
   transform: translateY(-50%);
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
   text-align: center;
   padding: 0.5% 0;
   border-radius: 5px;
@@ -692,9 +698,9 @@ export default {
 .del-certain,
 .del-cancel {
   padding: 10px 0;
-  border: 1px solid #00338d;
+  border: 1px solid @themeColor;
   border-radius: 5px;
-  background-color: #00338d;
+  background-color: @themeColor;
   color: #fff;
   text-align: center;
   width: 45%;

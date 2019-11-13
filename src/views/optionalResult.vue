@@ -245,7 +245,11 @@ export default {
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
       this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
       this.cart.form = this.form;
-      this.cart.techAgreement = this.list;
+      const arr = JSON.parse(JSON.stringify(this.list));
+      arr.forEach(item => {
+        item.injection = injection;
+      });
+      this.cart.techAgreement = this.arr;
       //得到当前清单值
       const propertyStr = this.until.loGet("property");
       if (propertyStr) {
@@ -306,9 +310,6 @@ export default {
       const data = await this.api.sysGetOptionResultParamList(param);
       delete data.imgUrl;
       delete data.imgUrlEn;
-      const { injection } = this.form;
-      data.injection = injection;
-
       this.list.push(data);
     }
   },

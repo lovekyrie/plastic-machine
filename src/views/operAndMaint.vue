@@ -45,8 +45,8 @@ export default {
       pullDown,
       maint,
       showType: false,
-      operateList: ["注塑机调试", "注塑机维护", "注塑机维修","厂房规划","冷却水管"],
-      operate: "注塑机调试",
+      operateList: [],
+      operate: "厂房规划",
       currentCd:''
     };
   },
@@ -64,8 +64,8 @@ export default {
   },
   methods: {
     async getOperateList(){
-      this.operateList = await this.api.operAndMainTopList({cd:'OPS'})
-      let list = [{nm:'冷却水管',cd:''},{nm:'厂房规划',cd:''}]
+      this.operateList = [{nm:'厂房规划',cd:''},{nm:'冷却水管',cd:''}]
+      const list = await this.api.operAndMainTopList({cd:'OPS'})
       this.operateList.push(...list)
       this.operate = this.operateList[0].nm
       this.currentCd = this.operateList[0].cd

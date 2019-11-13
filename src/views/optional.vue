@@ -406,6 +406,11 @@ export default {
 
     await this.getBigMenuList();
   },
+  watch: {
+    'form.screwId':function(){
+      this.getBigMenuList()
+    }
+  },
   methods: {
     showModelOp() {
       this.showModel = !this.showModel;
@@ -434,6 +439,7 @@ export default {
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
+      await this.getBigMenuList()
     },
     async changeModel(e) {
       const index = this.modelList.findIndex(item => item.id === e);
@@ -447,12 +453,14 @@ export default {
       await this.getInjectionList();
       await this.getScrewList();
       await this.getStandardOrCombination();
+      await this.getBigMenuList()
     },
-    chooseClamping(item) {
+  async  chooseClamping(item) {
       this.clampingForce = item.name;
       this.form.clampingForceId = item.clampForceId;
       this.showClampingForce = false;
-      this.getInjectionList();
+     await this.getInjectionList();
+     await this.getBigMenuList()
     },
     async changeClamping(e) {
       const index = this.clampingForceList.findIndex(
@@ -462,12 +470,14 @@ export default {
         this.form.clampingForce = this.clampingForceList[index].name;
       await this.getInjectionList();
       await this.getStandardOrCombination();
+      await this.getBigMenuList()
     },
-    chooseInjection(item) {
+   async chooseInjection(item) {
       this.injection = item.name;
       this.form.injectionId = item.injectionId;
       this.showInjection = false;
-      this.getScrewList();
+      await this.getScrewList();
+      await this.getBigMenuList()
     },
     async changeInjection(e) {
       const index = this.injectionList.findIndex(
@@ -476,8 +486,9 @@ export default {
       if (index >= 0) this.form.injection = this.injectionList[index].name;
       await this.getScrewList();
       await this.getStandardOrCombination();
+      await this.getBigMenuList()
     },
-    chooseScrew(item) {
+    async  chooseScrew(item) {
       this.screw = item.name;
       this.screwDiameter = item.screwDiameter;
       this.form.screwId = item.screwTypeId;
@@ -530,7 +541,7 @@ export default {
       if (this.originalProp.length > 0) {
         this.propertyList.push(...this.originalProp);
       }
-      this.propertyList=[...new Set(this.propertyList)]
+      this.propertyList=new Set(this.propertyList)
       const propertyStr = JSON.stringify(this.propertyList);
         this.until.loSave("property", propertyStr);
         if(this.propertyList.length===0){

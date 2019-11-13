@@ -4,6 +4,16 @@ import { MessageBox } from "element-ui";
 import { Message } from "element-ui";
 
 class until {
+  //对象数组方法去重
+  arrayDeduplication(arr) {
+    const obj = {};
+    arr.reduce((curr, next) => {
+      obj[next.matchMenuId]
+        ? ""
+        : (obj[next.matchMenuId] = true && curr.push(next));
+    }, []);
+    return arr;
+  }
   //判断是否登录
   ifLogin() {
     // console.log(localStorage.getItem('user'))

@@ -113,8 +113,9 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 @import url("../styles/main.less");
+
 #container {
   width: 100%;
   height: 100%;

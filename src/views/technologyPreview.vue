@@ -185,7 +185,7 @@
 import logNoLetter from "./images/log-no-letter.png";
 import logLetter from "./images/log-letter.png";
 import borcheLogo from "./images/borche-logo.png";
-var nzhcn = require("nzh/cn"); //直接使用简体中文
+var Nzh = require("nzh");
 export default {
   data() {
     return {
@@ -436,6 +436,7 @@ export default {
         },
         0
       );
+      var nzhcn=Nzh.cn
       this.moneyTotalB=nzhcn.encodeB(this.moneyTotal);
     },
     calculateSaleMoney() {
@@ -445,6 +446,7 @@ export default {
         },
         0
       );
+      var nzhcn=Nzh.cn
         this.saleMoneyTotalB=nzhcn.encodeB(this.saleMoneyTotal);
     },
     calculateOptionMoney(){
@@ -459,6 +461,7 @@ export default {
         },
         0
       );
+      var nzhcn=Nzh.cn
        this.optionMoneyB=nzhcn.encodeB(this.optionMoney);
     },
     save(){

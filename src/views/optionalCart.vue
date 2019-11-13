@@ -313,10 +313,13 @@ export default {
       const param = query.getParam();
       let list = await this.api.sysGetCartList(param);
       list.forEach(item => {
-        if (item.data) {
+        if (item.data ) {
           const data = JSON.parse(item.data);
-          data.id = item.id;
-          this.cartList.push(data);
+          if(data.status===0){
+
+            data.id = item.id;
+            this.cartList.push(data);
+          }
         }
       });
 

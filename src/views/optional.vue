@@ -417,6 +417,7 @@ export default {
     chooseCategory(item) {
       this.showType = false;
       this.category = item;
+      this.getBigMenuList()
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
@@ -631,7 +632,8 @@ export default {
           const fixedParam = {
             machineId: this.form.modelID,
             clampForceId: this.form.clampingForceId,
-            injectionId: this.form.injectionId
+            injectionId: this.form.injectionId,
+            screwType:this.form.screwId
           };
           //二级菜单循环取数
 
@@ -657,18 +659,22 @@ export default {
             });
           } else {
             const param = { ...fixedParam };
-            param.screwTypeId = this.form.screwId;
             param.secondLevelMenuId = res[0].secondLevelMenuId;
             this.api.sysGetUniqueMatchMenu(param).then(res => {
-              this.bigMenuList.smallMenuList = res;
-              this.smallMenuList.forEach((item, index) => {
+              const list = res;
+
+              list.forEach((item, index) => {
                 if (item.status === -1 || item.status === 0) {
                   item.checked = true;
                 } else {
                   item.checked = false;
                 }
-                this.$set(this.smallMenuList, index, item);
+                this.$set(list, index, item);
               });
+              item.list = list;
+              if (index === 0) {
+                this.smallMenuList = list;
+              }
               this.renderOriginalValue();
             });
           }

@@ -483,6 +483,7 @@ export default {
 </script>
 
 <style lang="less">
+@import url("../styles/main.less");
 html,
 body {
   background-color: #fff;
@@ -493,7 +494,7 @@ body {
   width: 100%;
   .header {
     position: relative;
-    background-color: #00338d;
+    background-color: @headerColor;
     color: #fff;
     p {
       margin: 15px 0;
@@ -542,8 +543,8 @@ body {
           }
         }
         .active {
-          background-color: #00338d;
-          color: #fff;
+          background-color: @themeColor;
+          color: #000;
         }
         .row-segment {
           height: 1px;
@@ -685,9 +686,9 @@ body {
             padding: 1% 0;
             text-align: center;
             width: 30%;
-            background-color: #00338d;
-            color: #fff;
-            border: 1px solid #00338d;
+            background-color: @themeColor;
+            color: #000;
+            border: 0;
             border-radius: 5px;
           }
         }

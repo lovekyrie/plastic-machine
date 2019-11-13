@@ -1,18 +1,23 @@
 // const hostUrl = 'http://192.165.2.195'
 import $ from "jquery";
-import { MessageBox } from "element-ui";
-import { Message } from "element-ui";
+import {
+  MessageBox
+} from "element-ui";
+import {
+  Message
+} from "element-ui";
 
 class until {
   //对象数组方法去重
   arrayDeduplication(arr) {
     const obj = {};
-    arr.reduce((curr, next) => {
-      obj[next.matchMenuId]
-        ? ""
-        : (obj[next.matchMenuId] = true && curr.push(next));
+    return arr.reduce((curr, next) => {
+      obj[next.matchMenuId] ?
+        "" :
+        (obj[next.matchMenuId] = true && curr.push(next));
+      return curr
     }, []);
-    return arr;
+
   }
   //判断是否登录
   ifLogin() {
@@ -192,7 +197,9 @@ class until {
         async: true,
         cache: false,
         dataType: "json",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         success(data) {
           resolve(data);
         },
@@ -215,7 +222,11 @@ class until {
         dataType: "json",
         success(data) {
           if (data.code !== 0) {
-            Message({ type: "error", msg: data.msg, duration: 1000 });
+            Message({
+              type: "error",
+              msg: data.msg,
+              duration: 1000
+            });
           }
           resolve(data);
         },
@@ -298,7 +309,9 @@ class until {
   isLogin(self) {
     let state = this.loGet("JS_token") ? true : false;
     if (!state) {
-      self.$hero.msg.show({ text: "未登录" });
+      self.$hero.msg.show({
+        text: "未登录"
+      });
       setTimeout(() => {
         location.href = "../system/register.html";
       }, 1000);
@@ -404,7 +417,15 @@ class until {
     let second =
       str.getSeconds() < 10 ? "0" + str.getSeconds() : str.getSeconds();
     week = week[str.getDay()];
-    return { year, month, day, hour, minite, second, week };
+    return {
+      year,
+      month,
+      day,
+      hour,
+      minite,
+      second,
+      week
+    };
   }
   formatDay(fmt, tm = "") {
     let times = tm ? new Date(tm.replace(/(-)/g, "/")) : new Date();
@@ -427,9 +448,9 @@ class until {
       if (new RegExp("(" + k + ")").test(fmt)) {
         fmt = fmt.replace(
           RegExp.$1,
-          RegExp.$1.length == 1
-            ? o[k]
-            : ("00" + o[k]).substr(("" + o[k]).length)
+          RegExp.$1.length == 1 ?
+          o[k] :
+          ("00" + o[k]).substr(("" + o[k]).length)
         );
       }
     }
@@ -440,7 +461,11 @@ class until {
     let end = new Date();
     //Date类型的valueOf(),返回当前日期毫秒数,可以直接比较
     if (count < end) {
-      return { h: "00", m: "00", s: "00" };
+      return {
+        h: "00",
+        m: "00",
+        s: "00"
+      };
     }
     let total = (count - end.getTime()) / 1000;
     let h = parseInt((total / (60 * 60)) % 24);
@@ -450,7 +475,11 @@ class until {
     m = m < 10 ? "0" + m : m;
     s = s < 10 ? "0" + s : s;
 
-    return { h, m, s };
+    return {
+      h,
+      m,
+      s
+    };
   }
   TimeStep(times) {
     let start = new Date(times);
@@ -636,4 +665,8 @@ class reg {
   }
 }
 
-export { until, reg, judge };
+export {
+  until,
+  reg,
+  judge
+};

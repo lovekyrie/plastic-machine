@@ -88,9 +88,10 @@
               <div v-for="(item, index) in unList" :key="index">{{ item }}</div>
             </div>
             <div v-for="(item, index) in list" :key="index">
-              <div v-for="(itemJ, index1) in Object.values(item)" :key="index1">
-                {{ itemJ ? itemJ : "--" }}
-              </div>
+              <div
+                v-for="(itemJ, index1) in Object.values(item)"
+                :key="index1"
+              >{{ itemJ ? itemJ : "--" }}</div>
             </div>
             <!-- 空白 -->
             <div>

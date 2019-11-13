@@ -14,9 +14,7 @@
             v-for="(item, index) in optionList"
             :key="index"
             @click="chooseCategory(item)"
-          >
-            {{ item }}
-          </li>
+          >{{ item }}</li>
         </div>
       </div>
     </div>
@@ -25,11 +23,7 @@
       <div class="select-opt">
         <div class="sel-wrap">
           <span>机型：</span>
-          <el-select
-            v-model="form.modelID"
-            @change="changeModel"
-            placeholder="请选择"
-          >
+          <el-select v-model="form.modelID" @change="changeModel" placeholder="请选择">
             <el-option
               v-for="item in modelList"
               :key="item.value"
@@ -40,11 +34,7 @@
         </div>
         <div class="sel-wrap">
           <span>锁模力：</span>
-          <el-select
-            v-model="form.clampingForceId"
-            @change="changeClamping"
-            placeholder="请选择"
-          >
+          <el-select v-model="form.clampingForceId" @change="changeClamping" placeholder="请选择">
             <el-option
               v-for="item in clampingForceList"
               :key="item.value"
@@ -55,11 +45,7 @@
         </div>
         <div class="sel-wrap">
           <span>注射当量：</span>
-          <el-select
-            v-model="form.injectionId"
-            @change="changeInjection"
-            placeholder="请选择"
-          >
+          <el-select v-model="form.injectionId" @change="changeInjection" placeholder="请选择">
             <el-option
               v-for="item in injectionList"
               :key="item.value"
@@ -101,11 +87,7 @@
         <div class="usual-pick" v-show="showUsual">
           <ul class="sel-three">
             <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
-              <img
-                :src="item.checked ? pickAll : noPick"
-                alt
-                @click="pickItem(item)"
-              />
+              <img :src="item.checked ? pickAll : noPick" alt @click="pickItem(item)" />
               <span>{{ item.name }}</span>
             </li>
           </ul>
@@ -170,20 +152,13 @@
         <div class="model-sel">
           <div>
             <span>机型：</span>
-            <input
-              type="text"
-              v-model="model"
-              class="text-sel"
-              @click="showModelOp"
-            />
+            <input type="text" v-model="model" class="text-sel" @click="showModelOp" />
             <div class="ul-style" v-show="showModel">
               <li
                 v-for="(item, index) in modelList"
                 :key="index"
                 @click="chooseModel(item)"
-              >
-                {{ item.name }}
-              </li>
+              >{{ item.name }}</li>
             </div>
             <img :src="pullDown" alt />
           </div>
@@ -200,47 +175,31 @@
                 v-for="(item, index) in clampingForceList"
                 :key="index"
                 @click="chooseClamping(item)"
-              >
-                {{ item.name }}
-              </li>
+              >{{ item.name }}</li>
             </div>
             <img :src="pullDown" alt />
           </div>
           <div>
             <span>注射当量：</span>
-            <input
-              type="text"
-              v-model="injection"
-              class="text-sel"
-              @click="showInjectionOp"
-            />
+            <input type="text" v-model="injection" class="text-sel" @click="showInjectionOp" />
             <div class="ul-style" v-show="showInjection">
               <li
                 v-for="(item, index) in injectionList"
                 :key="index"
                 @click="chooseInjection(item)"
-              >
-                {{ item.name }}
-              </li>
+              >{{ item.name }}</li>
             </div>
             <img :src="pullDown" alt />
           </div>
           <div>
             <span>螺杆型号：</span>
-            <input
-              type="text"
-              v-model="screw"
-              class="text-sel"
-              @click="showScrewOp"
-            />
+            <input type="text" v-model="screw" class="text-sel" @click="showScrewOp" />
             <div class="ul-style" v-show="showScrew">
               <li
                 v-for="(item, index) in screwModelList"
                 :key="index"
                 @click="chooseScrew(item)"
-              >
-                {{ item.name }}
-              </li>
+              >{{ item.name }}</li>
             </div>
             <img :src="pullDown" alt />
           </div>
@@ -407,8 +366,8 @@ export default {
     await this.getBigMenuList();
   },
   watch: {
-    'form.screwId':function(){
-      this.getBigMenuList()
+    "form.screwId": function() {
+      this.getBigMenuList();
     }
   },
   methods: {
@@ -421,7 +380,7 @@ export default {
     chooseCategory(item) {
       this.showType = false;
       this.category = item;
-      this.getBigMenuList()
+      this.getBigMenuList();
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
@@ -439,7 +398,7 @@ export default {
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     },
     async changeModel(e) {
       const index = this.modelList.findIndex(item => item.id === e);
@@ -453,14 +412,14 @@ export default {
       await this.getInjectionList();
       await this.getScrewList();
       await this.getStandardOrCombination();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     },
-  async  chooseClamping(item) {
+    async chooseClamping(item) {
       this.clampingForce = item.name;
       this.form.clampingForceId = item.clampForceId;
       this.showClampingForce = false;
-     await this.getInjectionList();
-     await this.getBigMenuList()
+      await this.getInjectionList();
+      await this.getBigMenuList();
     },
     async changeClamping(e) {
       const index = this.clampingForceList.findIndex(
@@ -470,14 +429,14 @@ export default {
         this.form.clampingForce = this.clampingForceList[index].name;
       await this.getInjectionList();
       await this.getStandardOrCombination();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     },
-   async chooseInjection(item) {
+    async chooseInjection(item) {
       this.injection = item.name;
       this.form.injectionId = item.injectionId;
       this.showInjection = false;
       await this.getScrewList();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     },
     async changeInjection(e) {
       const index = this.injectionList.findIndex(
@@ -486,9 +445,9 @@ export default {
       if (index >= 0) this.form.injection = this.injectionList[index].name;
       await this.getScrewList();
       await this.getStandardOrCombination();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     },
-    async  chooseScrew(item) {
+    async chooseScrew(item) {
       this.screw = item.name;
       this.screwDiameter = item.screwDiameter;
       this.form.screwId = item.screwTypeId;
@@ -513,10 +472,9 @@ export default {
       this.getStandardOrCombination();
     },
     toOptionResult() {
-
       this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
-      this.dealWithProperty()
+      this.dealWithProperty();
       this.until.href(
         `optionalResult.html?option=${option}&cartId=${this.cartId}`
       );
@@ -530,23 +488,22 @@ export default {
       this.propertyList.push(item);
     },
     toOptionalList() {
-
       this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
-      this.dealWithProperty()
+      this.dealWithProperty();
       this.until.href(`optionalList.html?option=${option}`);
     },
-    dealWithProperty(){
-    //需要整理property里面有数据的值，传过去
+    dealWithProperty() {
+      //需要整理property里面有数据的值，传过去
       if (this.originalProp.length > 0) {
         this.propertyList.push(...this.originalProp);
       }
-      this.propertyList=new Set(this.propertyList)
+      this.propertyList = this.until.arrayDeduplication(this.propertyList);
       const propertyStr = JSON.stringify(this.propertyList);
-        this.until.loSave("property", propertyStr);
-        if(this.propertyList.length===0){
-        this.$message.error('您当前未选择任何选配项，请选择再前往查看！')
-        return
+      this.until.loSave("property", propertyStr);
+      if (this.propertyList.length === 0) {
+        this.$message.error("您当前未选择任何选配项，请选择再前往查看！");
+        return;
       }
     },
     chooseBigMenu(item, i) {
@@ -653,7 +610,7 @@ export default {
             machineId: this.form.modelID,
             clampForceId: this.form.clampingForceId,
             injectionId: this.form.injectionId,
-            screwType:this.form.screwId
+            screwType: this.form.screwId
           };
           //二级菜单循环取数
 

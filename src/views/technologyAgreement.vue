@@ -103,7 +103,7 @@
       </p>
     </div>
     <div class="footer">
-      <button>确定</button>
+      <button @click="toBack">确定</button>
     </div>
   </div>
 </template>
@@ -208,6 +208,9 @@ export default {
     }
   },
   methods: {
+    toBack(){
+      window.history.back()
+    },
     async getOrderInfo() {
       const info = await this.api.sysGetOrderInfoById(this.id);
       if (info) {

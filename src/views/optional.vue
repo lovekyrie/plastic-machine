@@ -476,7 +476,7 @@ export default {
       const option = JSON.stringify(this.form);
       this.dealWithProperty();
       this.until.href(
-        `optionalResult.html?option=${option}&cartId=${this.cartId}`
+        `optionalResult.html?option=${option}&cartId=${this.cartId}&type=usual`
       );
     },
     pickItem(item) {
@@ -485,7 +485,9 @@ export default {
       const i = this.smallMenuList.findIndex(k => k === item);
       this.$set(this.smallMenuList, i, item);
       //拼进propertyList,供我的清单中查看
-      this.propertyList.push(item);
+      if (item.checked) {
+        this.propertyList.push(item);
+      }
     },
     toOptionalList() {
       this.form.machineType = this.machineType;
@@ -495,9 +497,7 @@ export default {
     },
     dealWithProperty() {
       //需要整理property里面有数据的值，传过去
-      if (this.originalProp.length > 0) {
-        this.propertyList.push(...this.originalProp);
-      }
+
       this.propertyList = this.until.arrayDeduplication(this.propertyList);
       const propertyStr = JSON.stringify(this.propertyList);
       this.until.loSave("property", propertyStr);
@@ -664,15 +664,15 @@ export default {
     renderOriginalValue() {
       //选中之前选中的值
       let originType = true;
-      if (this.cartInfo.techAgreementMatchs) {
-        this.originalProp = this.cartInfo.techAgreementMatchs;
-        originType = false;
+      const proArr = this.until.loGet("property");
+      if (proArr) {
+        originType = true;
+        this.originalProp = JSON.parse(proArr);
       } else {
-        const proArr = this.until.loGet("property");
-        if (proArr) {
-          originType = true;
-          this.originalProp = JSON.parse(proArr);
-        }
+        this.originalProp = this.cartInfo.techAgreementMatchs
+          ? this.cartInfo.techAgreementMatchs
+          : [];
+        originType = false;
       }
 
       for (let i = 0, len = this.originalProp.length; i < len; i++) {
@@ -683,10 +683,12 @@ export default {
               if (originType) {
                 if (child.cd === element.cd) {
                   child.checked = true;
+                  this.propertyList.push(child);
                 }
               } else {
                 if (child.cd === element.code) {
                   child.checked = true;
+                  this.propertyList.push(child);
                 }
               }
               this.$set(item, index, child);

@@ -99,6 +99,9 @@ export default {
       showVideoFlag: false
     };
   },
+  mounted() {
+    this.until.loRemove('property')
+  },
   methods: {
     toPersonal() {
       this.until.href("personal.html");

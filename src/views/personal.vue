@@ -110,7 +110,7 @@
                 <span
                   v-for="(itemC1, index) in item.techAgreementMatchs"
                   :key="index"
-                  >{{ itemC1.unitPrice }}</span
+                  >{{ itemC1.unitPrice | toFixed(2) }}</span
                 >
               </div>
               <div class="multi-row">
@@ -121,7 +121,7 @@
                 >
               </div>
               <div>
-                <span>{{ item.total }}</span>
+                <span>{{ item.total | toFixed(2) }}</span>
               </div>
               <div>
                 <span>{{ item.createTm }}</span>

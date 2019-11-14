@@ -196,6 +196,7 @@ export default {
       },
       cartList: [],
       cartId: "",
+      type: "",
       techAgreementMatchs: [],
       neederCompany: "",
       proSaleInfo: {
@@ -209,11 +210,13 @@ export default {
   mounted() {
     const option = this.until.getQueryString("option");
     const cartId = this.until.getQueryString("cartId");
+    const type = this.until.getQueryString("type");
     if (option) {
       this.form = JSON.parse(option);
       this.getParamList();
     }
 
+    this.type = type ? type : "";
     if (cartId) {
       this.cartId = cartId;
     }
@@ -241,16 +244,18 @@ export default {
         return;
       }
 
+      //cart增加一个type用来区分是行业选配还是常规选配
       const { model, clampingForce, injection, screw, machineType } = this.form;
       //保存购物车
       this.cart.proNm = `${model}${clampingForce} / ${injection} / ${screw}(${machineType})`;
       this.cart.createTm = this.until.formatDay("yyyy-MM-dd hh:mm");
       this.cart.form = this.form;
+      this.cart.type = this.type;
       const arr = JSON.parse(JSON.stringify(this.list));
       arr.forEach(item => {
         item.injection = injection;
       });
-      this.cart.techAgreement = this.arr;
+      this.cart.techAgreement = arr;
       //得到当前清单值
       const propertyStr = this.until.loGet("property");
       if (propertyStr) {

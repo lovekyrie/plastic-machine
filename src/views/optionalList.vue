@@ -86,7 +86,7 @@ export default {
       this.until.loSave('property',JSON.stringify(this.propertyArr))
       const option = this.until.getQueryString("option");
       if (option) {
-        this.until.href(`optionalResult.html?option=${option}`);
+        this.until.href(`optionalResult.html?option=${option}&type=usual`);
       }
     },
     mins(item) {

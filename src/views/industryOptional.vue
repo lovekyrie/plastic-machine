@@ -43,11 +43,7 @@
         </div>
         <div class="right">
           <div class="title">
-            <el-select
-              v-model="firstId"
-              @change="changeType"
-              placeholder="请选销售地区"
-            >
+            <el-select v-model="firstId" @change="changeType" placeholder="请选销售地区">
               <el-option
                 v-for="item in typeList"
                 :key="item.id"
@@ -58,14 +54,10 @@
             <div class="machine-type">机型</div>
             <div class="select-opt">
               <div class="sel-wrap">
-                <el-select
-                  v-model="form.modelID"
-                  @change="changeModel"
-                  placeholder="请选择机型"
-                >
+                <el-select v-model="form.modelID" @change="changeModel" placeholder="请选择机型">
                   <el-option
                     v-for="item in modelList"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.modelTypeNm"
                     :value="item.modelType"
                   ></el-option>
@@ -79,7 +71,7 @@
                 >
                   <el-option
                     v-for="item in clampingForceList"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.clampingForceNm"
                     :value="item.clampingForce"
                   ></el-option>
@@ -93,9 +85,9 @@
                 >
                   <el-option
                     v-for="item in injectionList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.injectionId"
+                    :key="item.id"
+                    :label="item.injectionNm"
+                    :value="item.injection"
                   ></el-option>
                 </el-select>
               </div>
@@ -103,9 +95,9 @@
                 <el-select v-model="form.screw" placeholder="螺杆型号">
                   <el-option
                     v-for="item in screwModelList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.name"
+                    :key="item.id"
+                    :label="item.screwTypeNm"
+                    :value="item.screwType"
                   ></el-option>
                 </el-select>
               </div>
@@ -117,11 +109,11 @@
               <!-- 选择标题 -->
               <li>
                 <img :src="noPick" alt />
-                <span>test</span>
+                <span>{{ packageNm }}</span>
                 <ol>
                   <li v-for="(item, index) in optionList" :key="index">
-                    <img :src="noPick" alt />
-                    <span>{{ item.nm }}</span>
+                    <img :src="item.checked?pickAll:noPick" alt />
+                    <span>{{ item.sname }}</span>
                   </li>
                 </ol>
               </li>
@@ -180,10 +172,7 @@ export default {
       screwModelList: [],
       bigMenuList: [],
       smallMenuList: [],
-      model: "",
-      clampingForce: "",
-      injection: "",
-      screw: "",
+      packageNm: "",
       bigMenuIndex: 0,
       bigMenuId: "",
       showDialog: false,
@@ -211,19 +200,12 @@ export default {
       machineType: "",
       settingList: [],
       showSettingOp: false,
-      optionList: [
-        { nm: "测试选项1" },
-        { nm: "测试选项2" },
-        { nm: "测试选项3" },
-        { nm: "测试选项4" },
-        { nm: "测试选项5" },
-        { nm: "测试选项6" },
-        { nm: "测试选项7" }
-      ],
+      optionList: [],
       typeList: [],
       firstId: 38,
       secondId: 0,
-      thirdId: 0
+      thirdId: 0,
+      propertyList: []
     };
   },
   async mounted() {
@@ -235,6 +217,7 @@ export default {
     await this.getClampingForceList();
     await this.getInjectionList();
     await this.getScrewList();
+    await this.getIndustryOptionalList();
   },
   methods: {
     async getTypeList() {
@@ -311,6 +294,25 @@ export default {
         this.showSettingOp = true;
       }
     },
+    async getIndustryOptionalList() {
+      const param = {
+        modelType: this.form.modelID,
+        clampingForce: this.form.clampingForceId,
+        injection: this.form.injectionId,
+        screwType: this.form.screwId
+      };
+
+      this.optionList = await this.api.sysGetIndustrySettingList(param);
+      this.optionList.forEach((item, index) => {
+        if (item.status === -1 || item.status === 0) {
+          item.checked = true;
+          this.propertyList.push(item);
+        } else {
+          item.checked = false;
+        }
+        this.$set(this.optionList, index, item);
+      });
+    },
     closeIndustry() {
       this.showIndustry = false;
       this.showDialog = false;
@@ -340,7 +342,8 @@ export default {
       param.categoryId = this.thirdId;
       this.modelList = await this.api.sysGetIndustryOptionalModelList(param);
       if (this.modelList.length > 0) {
-        this.model = this.modelList[0].name;
+        this.packageNm = this.modelList[0].name;
+        this.model = this.modelList[0].modelTypeNm;
         this.form.modelID = this.modelList[0].modelType;
       } else {
         this.form.modelID = "";
@@ -359,11 +362,9 @@ export default {
         );
 
         if (this.clampingForceList.length > 0) {
-          this.clampingForce = this.clampingForceList[0].name;
           this.form.clampingForceId = this.clampingForceList[0].clampingForce;
           this.form.clampingForce = this.clampingForceList[0].clampingForceNm;
         } else {
-          this.clampingForce = "";
           this.form.clampingForceId = "";
           this.form.clampingForce = "";
         }
@@ -383,11 +384,9 @@ export default {
           param
         );
         if (this.injectionList.length > 0) {
-          this.injection = this.injectionList[0].name;
-          this.form.injectionId = this.injectionList[0].injectionId;
-          this.form.injection = this.injectionList[0].name;
+          this.form.injectionId = this.injectionList[0].injection;
+          this.form.injection = this.injectionList[0].injectionNm;
         } else {
-          this.injection = "";
           this.form.injectionId = "";
           this.form.injection = "";
         }
@@ -411,62 +410,17 @@ export default {
         this.screwModelList = await this.api.sysGetIndustryOptionalScrewTypeList(
           param
         );
-        this.screw = this.screwModelList[0].name;
+
         this.screwDiameter = this.screwModelList[0].screwDiameter;
-        this.form.screwId = this.screwModelList[0].screwTypeId;
-        this.form.screw = this.screwModelList[0].name;
+        this.form.screwId = this.screwModelList[0].screwType;
+        this.form.screw = this.screwModelList[0].screwTypeNm;
       }
     },
     async getBigMenuList() {
       this.bigMenuList = await this.api.sysGetBigMenuList();
       this.bigMenuId = this.bigMenuList[0].id;
     },
-    async getSmallMenuList() {
-      const query = new this.Query();
-      query.buildWhereClause("menuNameId", this.bigMenuId, "EQ");
-      query.buildWhereClause("status", "0", "EQ");
-      query.buildOrderClause("sort", "asc");
 
-      const param = query.getParam();
-      this.smallMenuList = await this.api.sysGetSmallMenuList(param);
-      const fixedParam = {
-        machineId: this.form.modelID,
-        clampForceId: this.form.clampingForceId,
-        injectionId: this.form.injectionId
-      };
-      //二级菜单循环取数
-
-      if (this.category === "常规选配") {
-        this.smallMenuList.forEach((item, index) => {
-          const param = { ...fixedParam };
-          param.secondLevelMenuId = item.secondLevelMenuId;
-          this.api.sysGetMatchMenu(param).then(res => {
-            item.optionList = res;
-            if (res.length > 0) {
-              item.showOption = true;
-            } else {
-              item.showOption = false;
-            }
-            this.$set(this.smallMenuList, index, item);
-          });
-        });
-      } else {
-        this.smallMenuList.forEach((item, index) => {
-          const param = { ...fixedParam };
-          param.screwTypeId = this.form.screwId;
-          param.secondLevelMenuId = item.secondLevelMenuId;
-          this.api.sysGetUniqueMatchMenu(param).then(res => {
-            item.optionList = res;
-            if (res.length > 0) {
-              item.showOption = true;
-            } else {
-              item.showOption = false;
-            }
-            this.$set(this.smallMenuList, index, item);
-          });
-        });
-      }
-    },
     async getStandardOrCombination() {
       const param = {
         modelType: this.form.model,

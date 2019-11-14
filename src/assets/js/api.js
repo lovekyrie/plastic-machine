@@ -5,7 +5,7 @@ class api {
   //不检查设备id
   sysLoginNotCheckEquip(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/general/access/login", data).then(res => {
+      untilApi.get("/general/access/webLogin", data).then(res => {
         if (res) {
           resolve(res);
         } else {

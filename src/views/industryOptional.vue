@@ -209,6 +209,8 @@ export default {
     };
   },
   async mounted() {
+    const idStr = this.until.getQueryString("id");
+    this.cartId = idStr ? idStr : "";
     await this.getTypeList();
 
     await this.changeType(this.firstId);
@@ -266,11 +268,23 @@ export default {
     back() {
       window.history.back();
     },
+    dealWithProperty() {
+      //需要整理property里面有数据的值，传过去
+
+      this.propertyList = this.until.arrayDeduplication(this.propertyList);
+      const propertyStr = JSON.stringify(this.propertyList);
+      this.until.loSave("property", propertyStr);
+      if (this.propertyList.length === 0) {
+        this.$message.error("您当前未选择任何选配项，请选择再前往查看！");
+        return;
+      }
+    },
     toOptionResult() {
+      this.dealWithProperty();
       this.form.machineType = this.machineType;
       const option = JSON.stringify(this.form);
       this.until.href(
-        `optionalResult.html?option=${option}&cartId=${this.cartId}`
+        `optionalResult.html?option=${option}&cartId=${this.cartId}&type=industry`
       );
     },
     chooseBigMenu(item, i) {
@@ -416,11 +430,6 @@ export default {
         this.form.screw = this.screwModelList[0].screwTypeNm;
       }
     },
-    async getBigMenuList() {
-      this.bigMenuList = await this.api.sysGetBigMenuList();
-      this.bigMenuId = this.bigMenuList[0].id;
-    },
-
     async getStandardOrCombination() {
       const param = {
         modelType: this.form.model,
@@ -485,7 +494,7 @@ body {
         p {
           text-align: center;
           margin-bottom: 20%;
-          padding: 15px 0;
+          padding: 30px 0;
         }
         .row {
           margin-left: 0;

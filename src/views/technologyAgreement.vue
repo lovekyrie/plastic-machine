@@ -12,9 +12,7 @@
           <input type="text" />
         </div>
       </div>
-      <p>
-        经过双方友好协商除对采购设备的标准配置和参数确定以外，另外达成以下技术协议进行补充，若本协议中还有未涉及的条款双方友好协商解决：
-      </p>
+      <p>经过双方友好协商除对采购设备的标准配置和参数确定以外，另外达成以下技术协议进行补充，若本协议中还有未涉及的条款双方友好协商解决：</p>
     </div>
     <div class="paragraph">
       <p>一、设备技术要求（下标为标准机参数）：</p>
@@ -44,9 +42,10 @@
             <div v-for="(item, index) in unList" :key="index">{{ item }}</div>
           </div>
           <div v-for="(item, index) in list" :key="index">
-            <div v-for="(itemJ, index1) in Object.values(item)" :key="index1">
-              {{ itemJ ? itemJ : "--" }}
-            </div>
+            <div
+              v-for="(itemJ, index1) in Object.values(item)"
+              :key="index1"
+            >{{ itemJ ? itemJ : "--" }}</div>
           </div>
           <!-- 空白 -->
           <div>
@@ -88,19 +87,13 @@
       </div>
     </div>
     <div class="paragraph">
-      <p>
-        二、安全要求：按塑料机械国家标准G8/T2S156-2010要求执行，同时符合国家工作健康和安全法规。
-      </p>
+      <p>二、安全要求：按塑料机械国家标准G8/T2S156-2010要求执行，同时符合国家工作健康和安全法规。</p>
     </div>
     <div class="paragraph">
-      <p>
-        三、设备的验收：按塑料机械国家标准G8/T2S156-2010进行测试验收，若有异议设备到需方十五天内必须通知供货方。
-      </p>
+      <p>三、设备的验收：按塑料机械国家标准G8/T2S156-2010进行测试验收，若有异议设备到需方十五天内必须通知供货方。</p>
     </div>
     <div class="paragraph">
-      <p>
-        四、本技术协议作为合同的附件之一（设备的标准配置说明条款，供方拥有最终解释权；若需方对设备的标准配置有异议之处，请列入商标；未列入上表则按遵从供方设备的标准配置看待），本协议同相关合同具有相等法律效力
-      </p>
+      <p>四、本技术协议作为合同的附件之一（设备的标准配置说明条款，供方拥有最终解释权；若需方对设备的标准配置有异议之处，请列入商标；未列入上表则按遵从供方设备的标准配置看待），本协议同相关合同具有相等法律效力</p>
     </div>
     <div class="footer">
       <button @click="toBack">确定</button>
@@ -208,8 +201,8 @@ export default {
     }
   },
   methods: {
-    toBack(){
-      window.history.back()
+    toBack() {
+      window.history.back();
     },
     async getOrderInfo() {
       const info = await this.api.sysGetOrderInfoById(this.id);
@@ -235,6 +228,8 @@ export default {
       const data = await this.api.sysGetOptionResultParamList(param);
       delete data.imgUrl;
       delete data.imgUrlEn;
+      delete data.priceIn;
+      delete data.priceOut;
 
       this.list.push(data);
     }

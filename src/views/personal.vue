@@ -399,7 +399,7 @@ export default {
       });
     },
     back() {
-      window.history.back();
+     this.until.href('home.html')
     },
     modifyEmail() {
       //校验邮箱格式

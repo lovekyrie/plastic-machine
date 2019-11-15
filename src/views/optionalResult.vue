@@ -53,7 +53,7 @@
               </div>
               <div>
                 <span>单价</span>
-                <input type="number" v-model="proSaleInfo.price" />
+                <input type="number" v-model="proSaleInfo.price" disabled />
               </div>
               <div>
                 <span>优惠价</span>
@@ -314,8 +314,12 @@ export default {
       };
 
       const data = await this.api.sysGetOptionResultParamList(param);
+
       delete data.imgUrl;
       delete data.imgUrlEn;
+      this.proSaleInfo.price=data.priceIn?data.priceIn:0
+      delete data.priceIn
+      delete data.priceOut
       this.list.push(data);
     }
   },

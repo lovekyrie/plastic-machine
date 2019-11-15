@@ -56,12 +56,12 @@
         </div>
         <div class="sel-wrap">
           <span>螺杆型号：</span>
-          <el-select v-model="form.screw" placeholder="请选择">
+          <el-select v-model="form.screwId" @change="changeScrew" placeholder="请选择">
             <el-option
               v-for="item in screwModelList"
               :key="item.value"
               :label="item.name"
-              :value="item.name"
+              :value="item.screwTypeId"
             ></el-option>
           </el-select>
         </div>
@@ -365,11 +365,7 @@ export default {
 
     await this.getBigMenuList();
   },
-  watch: {
-    "form.screwId": function() {
-      this.getBigMenuList();
-    }
-  },
+  watch: {},
   methods: {
     showModelOp() {
       this.showModel = !this.showModel;
@@ -452,6 +448,14 @@ export default {
       this.screwDiameter = item.screwDiameter;
       this.form.screwId = item.screwTypeId;
       this.showScrew = false;
+    },
+    async changeScrew(e) {
+      const index = this.screwModelList.findIndex(
+        item => item.screwTypeId === e
+      );
+      if (index >= 0) this.form.screw = this.screwModelList[index].name;
+      await this.getStandardOrCombination();
+      await this.getBigMenuList();
     },
     back() {
       window.history.back();
@@ -599,6 +603,7 @@ export default {
       this.bigMenuList = await this.api.sysGetBigMenuList();
 
       this.bigMenuList.forEach((item, index) => {
+        item.list=[]
         const query = new this.Query();
         query.buildWhereClause("menuNameId", item.id, "EQ");
         query.buildWhereClause("status", "0", "EQ");
@@ -606,55 +611,65 @@ export default {
 
         const param = query.getParam();
         this.api.sysGetSmallMenuList(param).then(res => {
-          const fixedParam = {
-            machineId: this.form.modelID,
-            clampForceId: this.form.clampingForceId,
-            injectionId: this.form.injectionId,
-            screwType: this.form.screwId
-          };
-          //二级菜单循环取数
+          const secondMenuList = res;
 
-          if (this.category === "常规选配") {
-            const param = { ...fixedParam };
-            param.secondLevelMenuId = res[0].secondLevelMenuId;
-            this.api.sysGetMatchMenuOptional(param).then(res => {
-              const list = res;
+          for (
+            let i = 0, len = secondMenuList.length;
+            i < len;
+            i++
+          ) {
+            const element = secondMenuList[i];
 
-              list.forEach((item, index) => {
-                if (item.status === -1 || item.status === 0) {
-                  item.checked = true;
-                  this.propertyList.push(item);
-                } else {
-                  item.checked = false;
+            const fixedParam = {
+              machineId: this.form.modelID,
+              clampForceId: this.form.clampingForceId,
+              injectionId: this.form.injectionId,
+              screwType: this.form.screwId
+            };
+            //二级菜单循环取数
+
+            if (this.category === "常规选配") {
+              const param = { ...fixedParam };
+              param.secondLevelMenuId = element.secondLevelMenuId;
+              this.api.sysGetMatchMenuOptional(param).then(res => {
+                const list = res;
+
+                list.forEach((itemChild, index) => {
+                  if (itemChild.status === -1 || itemChild.status === 0) {
+                    itemChild.checked = true;
+                    this.propertyList.push(itemChild);
+                  } else {
+                    itemChild.checked = false;
+                  }
+                  this.$set(list, index, itemChild);
+                });
+                item.list.push(...list);
+                if (index === 0) {
+                  this.smallMenuList = list;
                 }
-                this.$set(list, index, item);
+                this.renderOriginalValue();
               });
-              item.list = list;
-              if (index === 0) {
-                this.smallMenuList = list;
-              }
-              this.renderOriginalValue();
-            });
-          } else {
-            const param = { ...fixedParam };
-            param.secondLevelMenuId = res[0].secondLevelMenuId;
-            this.api.sysGetUniqueMatchMenu(param).then(res => {
-              const list = res;
+            } else {
+              const param = { ...fixedParam };
+              param.secondLevelMenuId = res[0].secondLevelMenuId;
+              this.api.sysGetUniqueMatchMenu(param).then(res => {
+                const list = res;
 
-              list.forEach((item, index) => {
-                if (item.status === -1 || item.status === 0) {
-                  item.checked = true;
-                } else {
-                  item.checked = false;
+                list.forEach((item, index) => {
+                  if (item.status === -1 || item.status === 0) {
+                    item.checked = true;
+                  } else {
+                    item.checked = false;
+                  }
+                  this.$set(list, index, item);
+                });
+                item.list = list;
+                if (index === 0) {
+                  this.smallMenuList = list;
                 }
-                this.$set(list, index, item);
+                this.renderOriginalValue();
               });
-              item.list = list;
-              if (index === 0) {
-                this.smallMenuList = list;
-              }
-              this.renderOriginalValue();
-            });
+            }
           }
         });
 

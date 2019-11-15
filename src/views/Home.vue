@@ -1,5 +1,6 @@
 <template>
   <div id="container">
+    <div class="top-bg"></div>
     <div class="log-operate">
       <div class="person">
         <div @click="toPersonal">
@@ -42,13 +43,13 @@
     <div class="pic-operate">
       <div>
         <!-- 宣传视频 -->
-        <div @click="toPersonal">
+        <div >
           <img :src="videoImg" />
         </div>
       </div>
       <div>
         <!-- 塑机计算 -->
-        <div @click="toMsg">
+        <div >
           <img :src="calculateImg" alt />
         </div>
       </div>
@@ -100,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    this.until.loRemove('property')
+    this.until.loRemove("property");
   },
   methods: {
     toPersonal() {
@@ -137,8 +138,12 @@ export default {
   width: 100%;
   position: relative;
   height: 100%;
-  background: url("./images/首页背景.png") no-repeat top center;
-  background-size: cover;
+  background-color: #fff;
+  .top-bg {
+    height: 64%;
+    background: url("./images/首页背景.png") no-repeat top center;
+    background-size: cover;
+  }
 }
 
 .log-operate {

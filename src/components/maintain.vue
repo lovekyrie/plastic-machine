@@ -3,12 +3,20 @@
     <div class="content">
       <!-- 左侧选项 -->
       <div class="left">
-        <div class="img">
-          <img :src="maint" alt />
-        </div>
+        <el-select v-model="proId" placeholder="请选择" @change="choosePro" class="proList">
+          <el-option
+                  v-for="item in proList"
+                  :key="item.id"
+                  :label="item.modelName"
+                  :value="item.id">
+          </el-option>
+        </el-select>
+        <!--<div class="img">-->
+          <!--<img :src="maint" alt />-->
+        <!--</div>-->
         <!-- 注塑机维护 -->
         <div class="maintain">
-          <p>5个要点维护、5个定期检查</p>
+          <!--<p>5个要点维护、5个定期检查</p>-->
           <div
             class="inspect-type"
             v-for="(item, index) in typeList"
@@ -50,6 +58,8 @@ export default {
       typeList: ["定期检查", "要点维护"],
       id: "",
       contentId: "",
+      proList:[],
+      proId:'',
       info: {}
     };
   },
@@ -60,6 +70,9 @@ export default {
     contentId: function() {
       this.getInfo();
     }
+  },
+  mounted(){
+    this.getProList()
   },
   methods: {
     async getTypeList(cd) {
@@ -78,8 +91,22 @@ export default {
       );
       this.contentId = this.introduceList[0].id;
     },
+    async getProList(){
+      this.proList = await this.api.operAndMainLeftProList();
+      this.proId = this.proList[0].id
+    },
+    chooseTab(id){
+      this.contentId = id
+      // this.getInfo()
+    },
     async getInfo() {
-      // this.info = await this.api.operAndMainDetail({trainTypeTwoId:this.contentId})
+      this.info = await this.api.operAndMainDetail({
+        trainTypeTwoId:this.contentId,
+        mtMachineTypeId:this.proId
+      })
+    },
+    choosePro(){
+      this.getInfo()
     }
   }
 };
@@ -100,6 +127,10 @@ export default {
   width: 260px;
   background-color: #fff;
   text-align: center;
+  .proList{
+    padding-bottom: 20px;
+    width: 100%;
+  }
   .img {
     border: 1px solid #ccc;
   }

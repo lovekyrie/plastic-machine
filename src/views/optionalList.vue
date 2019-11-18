@@ -17,7 +17,7 @@
           <div>
             <input type="text" value="常规选配" />
           </div>
-          <div v-for="(item, index) in propertyArr" :key="index">
+          <div v-for="(item, index) in leftPropertyArr" :key="index">
             <p>{{ item.name }}</p>
             <img :src="numIcon" alt />
             <span>{{ item.num }}</span>
@@ -30,7 +30,14 @@
           <div>
             <input type="text" value="特殊选配" />
           </div>
-          <div v-for="i in remainRightLen" :key="i"></div>
+           <div v-for="(item, index) in rightPropertyArr" :key="index">
+            <p>{{ item.name }}</p>
+            <img :src="numIcon" alt />
+            <span>{{ item.num }}</span>
+            <button class="left-btn" @click="mins(item)"></button>
+            <button class="right-btn" @click.stop="plus(item)"></button>
+          </div>
+          <div v-for="i in remainRightLen" :key="i + remainRightLen"></div>
         </div>
       </div>
     </div>
@@ -45,36 +52,42 @@ export default {
     return {
       backArrow,
       numIcon,
-      propertyArr: [],
+      leftPropertyArr: [],
+      rightPropertyArr: [],
       propertyRightArr: [],
-      remainLeftLen: 13,
-      remainRightLen: 13
+      storagePro:''
     };
   },
-  mounted() {
-    const proArr = this.until.loGet("property");
-    if (proArr) {
-      const arr = JSON.parse(proArr);
-
-      arr.forEach(item => {
-        item.num = item.num ? item.num : 1;
-      });
-      const length = arr.length;
-      if (length <= 13) {
-        this.remainRightLen = 13;
-        this.remainLeftLen = 13 - length;
-        this.propertyArr = arr;
-      } else if (length > 13 && length <= 26) {
-        this.remainLeftLen = 0;
-        this.remainRightLen = 26 - length;
-
-        this.propertyArr = arr.filter((item, index) => index < 13);
-        this.propertyRightArr = arr.filter((item, index) => index > 13);
+  computed: {
+    remainLeftLen() {
+      const len = this.leftPropertyArr.length;
+      if (len < 13) {
+        return 13 - len;
       } else {
-        this.remainLeftLen = 13;
-        this.remainRightLen = 13;
-        this.$message.error("选择的项目过多，无法显示");
+        return 0;
       }
+    },
+     remainRightLen() {
+      const len = this.rightPropertyArr.length;
+      if (len < 13) {
+        return 13 - len;
+      } else {
+        return 0;
+      }
+    },
+  },
+  mounted() {
+    //常规选配展示在左边，特殊选配展示在右边
+   this.storagePro = this.until.loGet("property");
+    if (this.storagePro) {
+      const arr = JSON.parse(this.storagePro);
+      arr.forEach(item => {
+        if (item.type === 0) {
+          this.leftPropertyArr.push(item);
+        } else {
+          this.rightPropertyArr.push(item);
+        }
+      });
     }
   },
   methods: {
@@ -83,7 +96,7 @@ export default {
     },
     toOptionResult() {
       //重新保存property
-      this.until.loSave('property',JSON.stringify(this.propertyArr))
+      this.until.loSave("property", this.storagePro);
       const option = this.until.getQueryString("option");
       if (option) {
         this.until.href(`optionalResult.html?option=${option}&type=usual`);

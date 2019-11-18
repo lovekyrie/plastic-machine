@@ -82,46 +82,30 @@
             </div>
           </div>
           <div class="order-wrap">
-            <div
-              class="concept"
-              v-for="(item, index) in orderList"
-              :key="index"
-            >
+            <div class="concept" v-for="(item, index) in orderList" :key="index">
               <div>
                 <span>{{ item.orderno ? item.orderno : "" }}</span>
               </div>
               <div>
                 <span>
                   {{
-                    item.proSaleInfo.neederCompany
-                      ? item.proSaleInfo.neederCompany
-                      : ""
+                  item.proSaleInfo.neederCompany
+                  ? item.proSaleInfo.neederCompany
+                  : ""
                   }}
                 </span>
               </div>
               <div class="multi-row">
-                <span
-                  v-for="(itemC, index) in item.techAgreementMatchs"
-                  :key="index"
-                  >{{ itemC.matchNameCH }}</span
-                >
+                <span>{{item.proNm}}</span>
               </div>
               <div class="multi-row">
-                <span
-                  v-for="(itemC1, index) in item.techAgreementMatchs"
-                  :key="index"
-                  >{{ itemC1.unitPrice | toFixed(2) }}</span
-                >
+                <span>{{ item.proSaleInfo.price | toFixed(2) }}</span>
               </div>
               <div class="multi-row">
-                <span
-                  v-for="(itemC2, index) in item.techAgreementMatchs"
-                  :key="index"
-                  >{{ itemC2.num }}</span
-                >
+                <span>{{ item.num }}</span>
               </div>
               <div>
-                <span>{{ item.total | toFixed(2) }}</span>
+                <span>{{ item.proSaleInfo.price*item.num | toFixed(2) }}</span>
               </div>
               <div>
                 <span>{{ item.createTm }}</span>
@@ -133,21 +117,14 @@
                   @click="editOrder(item.form, item.id)"
                 />
               </div>
-              <div
-                :class="{ active: item.status === 0 }"
-                v-if="item.status === 0"
-              >
-                <span @click="save(item.id)">生成订单</span>
+              <div :class="{ active: item.status === 0 }" v-if="item.status === 0">
+                <span @click="showSaveOrder(index)">生成订单</span>
               </div>
               <div v-else>
                 <span>订单已生成</span>
               </div>
               <div>
-                <img
-                  class="del-img"
-                  :src="delOrder"
-                  @click="deleteOrder(item)"
-                />
+                <img class="del-img" :src="delOrder" @click="deleteOrder(item)" />
               </div>
             </div>
           </div>
@@ -157,12 +134,10 @@
           <!-- 不要title，因为没有内容，也撑不开 -->
           <p>请详细写下您的意见和问题，我们会尽快解决您的反馈：</p>
           <div class="text-suggest">
-            <textarea
-              v-model="sug.content"
-              class="textarea-sugg"
-              placeholder="请填写您的意见和问题......"
-            ></textarea>
-            <p><span class="suggest-len">0</span>/200</p>
+            <textarea v-model="sug.content" class="textarea-sugg" placeholder="请填写您的意见和问题......"></textarea>
+            <p>
+              <span class="suggest-len">0</span>/200
+            </p>
             <!-- <div> -->
             <!-- 默认的文件上传控件是没有+符号的 -->
             <!-- <input type="file" /> -->
@@ -171,15 +146,9 @@
           <p>联系方式：</p>
           <div class="text-linked">
             <!--可输入 -->
-            <input
-              v-model="sug.contact"
-              type="text"
-              placeholder="请填写您的手机、QQ、邮箱"
-            />
+            <input v-model="sug.contact" type="text" placeholder="请填写您的手机、QQ、邮箱" />
           </div>
-          <span
-            >选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span
-          >
+          <span>选填，您的联系方式有助于我们沟通和解决问题，仅工作人员可见</span>
           <div @click="submitSuggest">确定</div>
         </div>
       </div>
@@ -190,25 +159,13 @@
         <h3>密码修改</h3>
         <div class="pwd-region">
           <div>
-            <input
-              type="password"
-              v-model="pwd.password"
-              placeholder="请输入原始密码"
-            />
+            <input type="password" v-model="pwd.password" placeholder="请输入原始密码" />
           </div>
           <div>
-            <input
-              type="password"
-              v-model="pwd.newPassword"
-              placeholder="请输入新密码"
-            />
+            <input type="password" v-model="pwd.newPassword" placeholder="请输入新密码" />
           </div>
           <div>
-            <input
-              type="password"
-              v-model="pwd.newPasswordAgain"
-              placeholder="请输入新密码"
-            />
+            <input type="password" v-model="pwd.newPasswordAgain" placeholder="请输入新密码" />
           </div>
           <div class="comfirmBtn" @click="modifyPassword">确认</div>
         </div>
@@ -220,18 +177,10 @@
         <h3>邮箱修改</h3>
         <div class="email-region">
           <div>
-            <input
-              type="text"
-              v-model="email.superiorMail"
-              placeholder="请输入原始邮箱"
-            />
+            <input type="text" v-model="email.superiorMail" placeholder="请输入原始邮箱" />
           </div>
           <div>
-            <input
-              type="text"
-              v-model="email.newSuperiorMail"
-              placeholder="请输入新邮箱"
-            />
+            <input type="text" v-model="email.newSuperiorMail" placeholder="请输入新邮箱" />
           </div>
           <div class="comfirmEmail" @click="modifyEmail">确认</div>
         </div>
@@ -244,6 +193,83 @@
     <div class="del-wrap" style="display:none;">
       <div class="del">
         <img :src="close" alt />
+        <h3>删除确认</h3>
+        <div class="del-confirm">
+          <div>确定删除该选配订单吗？</div>
+          <div>
+            <div class="del-certain">确认</div>
+            <div class="del-cancel">取消</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="submit-wrap" v-show="showDialog">
+      <div class="submit" style="display:block;">
+        <img :src="closeIcon" @click="showDialog = false" alt />
+        <h3>提交信息</h3>
+
+        <div class="email">
+          <!--附件选择 -->
+          <div>
+            <span>附件选择：</span>
+            <div class="pick-attach">
+              <div>
+                <img
+                  :src="attach.technicalParameters ? pickAll : noPick"
+                  @click="
+                    attach.technicalParameters = !attach.technicalParameters
+                  "
+                  alt
+                />
+                <span>技术参数</span>
+              </div>
+              <div>
+                <img
+                  :src="attach.afterSalesService ? pickAll : noPick"
+                  alt
+                  @click="attach.afterSalesService = !attach.afterSalesService"
+                />
+                <span>售后服务</span>
+              </div>
+              <div>
+                <img
+                  :src="attach.credentials ? pickAll : noPick"
+                  alt
+                  @click="attach.credentials = !attach.credentials"
+                />
+                <span>资质证明</span>
+              </div>
+              <div>
+                <img
+                  :src="attach.businessLicense ? pickAll : noPick"
+                  alt
+                  @click="attach.businessLicense = !attach.businessLicense"
+                />
+                <span>营业执照</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span>邮箱地址：</span>
+            <div class="email-input">
+              <input type="text" v-model="param.email" />
+            </div>
+          </div>
+          <!-- 备注 -->
+          <div>
+            <span>备注：</span>
+            <div>
+              <textarea v-model="param.remark"></textarea>
+            </div>
+          </div>
+          <div>
+            <span></span>
+            <div class="sumbit-btn" @click="save">预览合同</div>
+          </div>
+        </div>
+      </div>
+      <div class="del" style="display:none;">
+        <img :src="closeIcon" alt />
         <h3>删除确认</h3>
         <div class="del-confirm">
           <div>确定删除该选配订单吗？</div>
@@ -271,6 +297,9 @@ import aboutMe from "./images/个人中心_关于我们.png";
 import aboutMeActive from "./images/个人中心_关于我们_选中.png";
 import editIcon from "./images/编辑.png";
 import delOrder from "./images/我的订单_删除.png";
+import closeIcon from "./images/关闭.png";
+import pickAll from "./images/选配清单_全选.png";
+import noPick from "./images/选配清单_未选.png";
 
 export default {
   data() {
@@ -288,6 +317,9 @@ export default {
       higherSettingActive,
       aboutMe,
       aboutMeActive,
+      closeIcon,
+      pickAll,
+      noPick,
       showSetting: false,
       showSuggest: false,
       showOrder: true,
@@ -338,10 +370,18 @@ export default {
       typeList: ["内贸", "外销"],
       selectType: 0,
       orderList: [],
-       param: {
+      showDialog: false,
+      param: {
         email: "954540387@qq.com",
-        remark:''
+        remark: ""
       },
+      attach: {
+        technicalParameters: false,
+        afterSalesService: false,
+        credentials: false,
+        businessLicense: false
+      },
+      selectIndex: 0
     };
   },
   mounted() {
@@ -354,7 +394,7 @@ export default {
   filters: {
     toFixed(input, param1) {
       //input代表的是管道符前面的内容，param1代表 过滤方法传进来的参数
-      return input.toFixed(param1);
+      return parseInt(input).toFixed(param1);
     }
   },
   methods: {
@@ -376,6 +416,10 @@ export default {
         this.showOrder = false;
         this.showSetting = false;
       }
+    },
+    showSaveOrder(index) {
+      this.selectIndex = index;
+      this.showDialog = true;
     },
     toShowEmail() {
       this.showEmail = true;
@@ -403,7 +447,7 @@ export default {
       });
     },
     back() {
-     this.until.href('home.html')
+      this.until.href("home.html");
     },
     modifyEmail() {
       //校验邮箱格式
@@ -551,58 +595,62 @@ export default {
         this.$set(this.orderList, index, item);
       });
     },
-    save(id) {
+    save() {
       //提交订单
+      const msg = this.reg.checkMail(this.param.email);
+      if (msg !== "ok") {
+        this.$message.error("请输入正确的邮箱格式！");
+        return;
+      }
 
-      const checkedOrderList = this.orderList.filter(item => item.id === id);
-      const param1 = checkedOrderList.map(item => {
+      const checkedCartList = this.cartList.filter(
+        (item, index) => index === this.selectIndex
+      );
+      const param1 = checkedCartList.map(item => {
         return {
           techAgreementMatchs: item.techAgreementMatchs,
           techAgreement: item.techAgreement
         };
       });
 
-      const param2 = checkedOrderList.map(item => {
+      const param2 = checkedCartList.map(item => {
+        const price = parseInt(item.proSaleInfo.price).toFixed(2);
+        const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
         const money = (item.proSaleInfo.price * item.num).toFixed(2);
         const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
         return {
           name: item.form.model,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
-          price: item.proSaleInfo.price,
-          salePrice: item.proSaleInfo.salePrice,
+          price,
+          salePrice,
           money,
           saleMoney
         };
       });
 
       const param3 = {
-        neederCompany: checkedOrderList[0].proSaleInfo.neederCompany,
+        neederCompany: checkedCartList[0].proSaleInfo.neederCompany,
         supplier: "博创智能装备股份有限公司",
         appuserId: this.userInfo.userId,
         remark: this.param.remark,
         supplierAgenter: this.userInfo.nickname,
         supplierTel: this.userInfo.mob,
         signDate: this.time,
-        neederPostcode: this.userInfo.email,
+        neederPostcode: this.param.email,
         attachment: this.attach,
         saleAgreementProducts: param2
       };
 
+      const carts = checkedCartList.map(item => item.id);
       const param = {
         techAgreementJsons: JSON.stringify(param1),
-        saleAgreementJson: JSON.stringify(param3)
+        saleAgreementJson: JSON.stringify(param3),
+        cartIds: JSON.stringify(carts)
       };
 
-      this.api.sysSubmitOrder(param).then(res => {
-        if (res) {
-          this.showDialog = false;
-          this.$message({
-            message: "生成订单成功",
-            type: "success"
-          });
-        }
-      });
+      this.until.loSave("orderParam", JSON.stringify(param));
+      this.until.href("technologyPreview.html");
     }
   },
 
@@ -1105,5 +1153,110 @@ body {
 .del-cancel {
   border: 1px solid #b5b5b5;
   background-color: #b5b5b5;
+}
+
+.submit-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(153, 153, 153, 0.5);
+}
+
+.submit {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 470px;
+  transform: translate3d(-50%, -50%, 0);
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.submit > img,
+.del > img {
+  position: absolute;
+  top: 7%;
+  right: 5%;
+}
+
+.submit h3 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.submit > div {
+  margin: 0 55px;
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.submit > div > div {
+  width: 100%;
+}
+
+.email {
+  > div {
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    &:not(:nth-last-of-type(1)) {
+      margin-bottom: 30px;
+    }
+    &:nth-of-type(3) {
+      textarea {
+        padding-left: 10px;
+        width: 100%;
+        height: 100px;
+      }
+    }
+    > div {
+      flex: 1;
+    }
+    .pick-attach {
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row wrap;
+      div {
+        width: 50%;
+        &:nth-of-type(n + 3) {
+          margin-top: 5px;
+        }
+        span {
+          margin-left: 5px;
+        }
+      }
+    }
+    > span {
+      display: inline-block;
+      width: 25%;
+    }
+  }
+}
+
+.sumbit-btn {
+  padding: 10px;
+  background-color: @themeColor;
+  border: 1px solid @themeColor;
+  border-radius: 5px;
+  color: #000;
+  text-align: center;
+}
+.email-input > input {
+  border: 1px solid #bebebe;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+}
+
+.email-input > input:focus {
+  outline: none;
 }
 </style>

@@ -13,7 +13,7 @@
           <li
             v-for="(item, index) in optionList"
             :key="index"
-            @click="chooseCategory(item)"
+            @click="chooseCategory(item,index)"
           >{{ item }}</li>
         </div>
       </div>
@@ -94,32 +94,32 @@
         </div>
         <!-- 特殊选配(定制SO) -->
         <div class="unique-pick" v-show="uniquePick">
-          <div class="setting-wrap">
+          <div class="setting-wrap" v-for="(item, index) in specialList" :key="index">
             <div>
               <img :src="required" alt />
               <span>配置：</span>
-              <input type="text" placeholder="请输入名称（必填）" />
+              <input type="text" v-model="item.name" placeholder="请输入名称（必填）" />
+            </div>
+            <div>
+              <img :src="required" alt />
+              <span>编码：</span>
+              <input type="text" v-model="item.cd" placeholder="请输入编码（必填）" />
             </div>
             <div>
               <img :src="required" alt />
               <span>单价：</span>
-              <input type="text" placeholder="请输入单价（必填）" />
+              <input type="number" v-model="item.price" placeholder="请输入单价（必填）" />
             </div>
             <div>
-              <img :src="required" alt />
               <span>数量：</span>
-              <input type="text" placeholder="请输入输了（必填）" />
+              <input type="number" v-model="item.num" />
             </div>
-            <div>
-              <span>价格：</span>
-              <input type="text" />
-            </div>
-            <div>
+            <!-- <div>
               <img class="upload" :src="uploadIcon" alt />
               <input class="input-file" type="file" style="display:none;" />
-            </div>
-            <div class="add">
-              <img :src="addSetting" type="add" alt />
+            </div>-->
+            <div class="add" @click="operateItem(item,index)">
+              <img :src="item.btnType==='add'?addSetting:delSetting" alt />
             </div>
           </div>
         </div>
@@ -249,6 +249,7 @@ import infoIcon from "./images/信息.png";
 import required from "./images/必填.png";
 import uploadIcon from "./images/上传图片.png";
 import addSetting from "./images/添加配置.png";
+import delSetting from "./images/删除配置.png";
 import closeIcon from "./images/关闭.png";
 import pickAll from "./images/选配清单_全选.png";
 import noPick from "./images/选配清单_未选.png";
@@ -264,6 +265,7 @@ export default {
       required,
       uploadIcon,
       addSetting,
+      delSetting,
       closeIcon,
       pickAll,
       noPick,
@@ -287,7 +289,7 @@ export default {
       bigMenuId: "",
       uniquePick: false,
       category: "常规选配",
-      optionList: ["常规选配", "特殊选配(推荐)"],
+      optionList: ["常规选配", "特殊选配(推荐)", "特殊选配(定制SO)"],
       showBasic: true,
       showIndustry: false,
       showRelatedSize: false,
@@ -316,10 +318,20 @@ export default {
       machineType: "",
       settingList: [],
       showSettingOp: false,
-      cartInfo: {}
+      cartInfo: {},
+      specialList: [],
+      special: {
+        name: "",
+        cd: "",
+        price: "",
+        num: 1,
+        btnType: "add",
+        type: 1 //特殊定制，用于区分常规
+      }
     };
   },
   async mounted() {
+    this.specialList.push(JSON.parse(JSON.stringify(this.special)));
     const formStr = this.until.getQueryString("form");
     const idStr = this.until.getQueryString("id");
     if (formStr && idStr) {
@@ -367,16 +379,31 @@ export default {
   },
   watch: {},
   methods: {
+    operateItem(item, i) {
+      if (item.btnType === "add") {
+        item.btnType = "del";
+        this.specialList.push(JSON.parse(JSON.stringify(this.special)));
+      } else {
+        this.specialList.splice(i, 1);
+      }
+    },
     showModelOp() {
       this.showModel = !this.showModel;
     },
     showOption() {
       this.showType = !this.showType;
     },
-    chooseCategory(item) {
+    chooseCategory(item, index) {
       this.showType = false;
       this.category = item;
       this.getBigMenuList();
+      if (index === 2) {
+        this.uniquePick = true;
+        this.showUsual = false;
+      } else {
+        this.uniquePick = false;
+        this.showUsual = true;
+      }
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
@@ -409,6 +436,7 @@ export default {
       await this.getScrewList();
       await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.propertyList = [];
     },
     async chooseClamping(item) {
       this.clampingForce = item.name;
@@ -426,6 +454,7 @@ export default {
       await this.getInjectionList();
       await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.propertyList = [];
     },
     async chooseInjection(item) {
       this.injection = item.name;
@@ -442,6 +471,7 @@ export default {
       await this.getScrewList();
       await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.propertyList = [];
     },
     async chooseScrew(item) {
       this.screw = item.name;
@@ -456,6 +486,7 @@ export default {
       if (index >= 0) this.form.screw = this.screwModelList[index].name;
       await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.propertyList = [];
     },
     back() {
       window.history.back();
@@ -485,7 +516,7 @@ export default {
     },
     pickItem(item) {
       item.checked = !item.checked;
-
+      item.type = this.category === "常规选配" ? 0 : 1;
       const i = this.smallMenuList.findIndex(k => k === item);
       this.$set(this.smallMenuList, i, item);
       //拼进propertyList,供我的清单中查看
@@ -501,8 +532,12 @@ export default {
     },
     dealWithProperty() {
       //需要整理property里面有数据的值，传过去
-
       this.propertyList = this.until.arrayDeduplication(this.propertyList);
+      this.specialList.forEach(item => {
+        if (item.name) {
+          this.propertyList.push(item);
+        }
+      });
       const propertyStr = JSON.stringify(this.propertyList);
       this.until.loSave("property", propertyStr);
       if (this.propertyList.length === 0) {
@@ -603,7 +638,7 @@ export default {
       this.bigMenuList = await this.api.sysGetBigMenuList();
 
       this.bigMenuList.forEach((item, index) => {
-        item.list=[]
+        item.list = [];
         const query = new this.Query();
         query.buildWhereClause("menuNameId", item.id, "EQ");
         query.buildWhereClause("status", "0", "EQ");
@@ -613,23 +648,19 @@ export default {
         this.api.sysGetSmallMenuList(param).then(res => {
           const secondMenuList = res;
 
-          for (
-            let i = 0, len = secondMenuList.length;
-            i < len;
-            i++
-          ) {
+          for (let i = 0, len = secondMenuList.length; i < len; i++) {
             const element = secondMenuList[i];
 
             const fixedParam = {
               machineId: this.form.modelID,
               clampForceId: this.form.clampingForceId,
-              injectionId: this.form.injectionId,
-              screwType: this.form.screwId
+              injectionId: this.form.injectionId
             };
             //二级菜单循环取数
 
             if (this.category === "常规选配") {
               const param = { ...fixedParam };
+              param.screwType = this.form.screwId;
               param.secondLevelMenuId = element.secondLevelMenuId;
               this.api.sysGetMatchMenuOptional(param).then(res => {
                 const list = res;
@@ -637,6 +668,7 @@ export default {
                 list.forEach((itemChild, index) => {
                   if (itemChild.status === -1 || itemChild.status === 0) {
                     itemChild.checked = true;
+                    itemChild.type = 0;
                     this.propertyList.push(itemChild);
                   } else {
                     itemChild.checked = false;
@@ -651,18 +683,19 @@ export default {
               });
             } else {
               const param = { ...fixedParam };
+              param.screwTypeId = this.form.screwId;
               param.secondLevelMenuId = res[0].secondLevelMenuId;
               this.api.sysGetUniqueMatchMenu(param).then(res => {
                 const list = res;
 
-                list.forEach((item, index) => {
+                /*    list.forEach((item, index) => {
                   if (item.status === -1 || item.status === 0) {
                     item.checked = true;
                   } else {
                     item.checked = false;
                   }
                   this.$set(list, index, item);
-                });
+                }); */
                 item.list = list;
                 if (index === 0) {
                   this.smallMenuList = list;
@@ -692,24 +725,28 @@ export default {
 
       for (let i = 0, len = this.originalProp.length; i < len; i++) {
         const element = this.originalProp[i];
-        this.bigMenuList.forEach(item => {
-          if (item.list && item.list.length > 0) {
-            item.list.forEach((child, index) => {
-              if (originType) {
-                if (child.cd === element.cd) {
-                  child.checked = true;
-                  this.propertyList.push(child);
+        if (element.hasOwnProperty("btnType")) {
+          this.specialList.push(element);
+        } else {
+          this.bigMenuList.forEach(item => {
+            if (item.list && item.list.length > 0) {
+              item.list.forEach((child, index) => {
+                if (originType) {
+                  if (child.cd === element.cd) {
+                    child.checked = true;
+                    this.propertyList.push(child);
+                  }
+                } else {
+                  if (child.cd === element.code) {
+                    child.checked = true;
+                    this.propertyList.push(child);
+                  }
                 }
-              } else {
-                if (child.cd === element.code) {
-                  child.checked = true;
-                  this.propertyList.push(child);
-                }
-              }
-              this.$set(item, index, child);
-            });
-          }
-        });
+                this.$set(item, index, child);
+              });
+            }
+          });
+        }
       }
     },
     async getOrderInfo() {
@@ -771,7 +808,7 @@ body {
       margin-left: 3%;
     }
     > .ul-style {
-      color: #00338d;
+      color: #000;
       display: -webkit-flex;
       display: flex;
       display: block;
@@ -782,15 +819,15 @@ body {
       top: 100%;
       left: 43%;
       border: 1px solid #d2d2d2;
-      background-color: #00338d;
+      background-color: @themeColor;
       box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.1);
       > li {
         width: 100%;
         background-color: #fff;
         padding: 8px 0 8px 6%;
         &:hover {
-          background-color: #00338d;
-          color: #fff;
+          background-color: @themeColor;
+          color: #000;
         }
       }
     }

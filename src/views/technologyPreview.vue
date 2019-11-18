@@ -48,14 +48,9 @@
           <!-- 货物信息（可以多个） -->
           <div class="product-info">
             <div>
-              <div v-for="(item, index) in PRODUCT_TITLE" :key="index">
-                {{ item }}
-              </div>
+              <div v-for="(item, index) in PRODUCT_TITLE" :key="index">{{ item }}</div>
             </div>
-            <div
-              v-for="(item, index) in saleAgreementJson.saleAgreementProducts"
-              :key="index"
-            >
+            <div v-for="(item, index) in saleAgreementJson.saleAgreementProducts" :key="index">
               <div>{{ item.name }}</div>
               <div>{{ item.modelNumber }}</div>
               <div>{{ item.num }}</div>
@@ -70,13 +65,13 @@
             <div>
               <p>
                 面价总计：人民币 {{ moneyTotalB }}元整（{{
-                  moneyTotal | toFixedCn(2)
+                moneyTotal | toFixedCn(2)
                 }}
                 元）
               </p>
               <p>
                 优惠价总计：人民币 {{ saleMoneyTotalB }}元整 （{{
-                  saleMoneyTotal | toFixedCn(2)
+                saleMoneyTotal | toFixedCn(2)
                 }}
                 元）
               </p>
@@ -94,20 +89,11 @@
           </div>
           <div class="optional-list">
             <div>
-              <div v-for="(item, index) in OPTIONAL_TITLE" :key="index">
-                {{ item }}
-              </div>
+              <div v-for="(item, index) in OPTIONAL_TITLE" :key="index">{{ item }}</div>
             </div>
           </div>
-          <div
-            class="optional-list"
-            v-for="(item, index) in techAgreementJson"
-            :key="index"
-          >
-            <div
-              v-for="(itemChild, index1) in item.techAgreementMatchs"
-              :key="index1"
-            >
+          <div class="optional-list" v-for="(item, index) in techAgreementJson" :key="index">
+            <div v-for="(itemChild, index1) in item.techAgreementMatchs" :key="index1">
               <div>{{ index1 + 1 }}</div>
               <div>{{ itemChild.matchNameCH }}</div>
               <div>{{ itemChild.num }}</div>
@@ -392,42 +378,43 @@ export default {
       moneyTotalB: "",
       saleMoneyTotal: 0,
       saleMoneyTotalB: "",
-      optionMoney:0,
-      optionMoneyB:""
+      optionMoney: 0,
+      optionMoneyB: ""
     };
   },
 
   mounted() {
-
     //根据
     let orderParamStr = this.until.loGet("orderParam");
     if (orderParamStr) {
       this.orderParam = JSON.parse(orderParamStr);
       this.saleAgreementJson = JSON.parse(this.orderParam.saleAgreementJson);
       this.techAgreementJson = JSON.parse(this.orderParam.techAgreementJsons);
-      this.calculateMoney()
-      this.calculateSaleMoney()
-      this.calculateOptionMoney()
-      this.getTechnologyList()
+      this.calculateMoney();
+      this.calculateSaleMoney();
+      this.calculateOptionMoney();
+      this.getTechnologyList();
     }
   },
   filters: {
     toFixed(input, param1) {
       //input代表的是管道符前面的内容，param1代表 过滤方法传进来的参数
-      return input.toFixed(param1);
+      return parseInt(input).toFixed(param1);
     },
-    toFixedCn(input,param1){
-      return `￥${input.toFixed(param1)}`
+    toFixedCn(input, param1) {
+      return `￥${input.toFixed(param1)}`;
     }
   },
   methods: {
-    getTechnologyList(){
-      this.techAgreementJson.forEach(item=>{
-        this.TECH_LIST.forEach(pro=>{
-          pro.val=item.techAgreement[0][pro.enNm]
-        })
+    getTechnologyList() {
+      this.techAgreementJson.forEach(item => {
+        this.TECH_LIST.forEach(pro => {
+          if (item.techAgreement.length > 0) {
+            pro.val = item.techAgreement[0][pro.enNm];
+          }
+        });
         this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
-      })
+      });
     },
     calculateMoney() {
       this.moneyTotal = this.saleAgreementJson.saleAgreementProducts.reduce(
@@ -436,49 +423,45 @@ export default {
         },
         0
       );
-      var nzhcn=Nzh.cn
-      this.moneyTotalB=nzhcn.encodeB(this.moneyTotal);
+      var nzhcn = Nzh.cn;
+      this.moneyTotalB = nzhcn.encodeB(this.moneyTotal);
     },
     calculateSaleMoney() {
-       this.saleMoneyTotal = this.saleAgreementJson.saleAgreementProducts.reduce(
+      this.saleMoneyTotal = this.saleAgreementJson.saleAgreementProducts.reduce(
         (curr, next) => {
           return curr + parseInt(next.saleMoney);
         },
         0
       );
-      var nzhcn=Nzh.cn
-        this.saleMoneyTotalB=nzhcn.encodeB(this.saleMoneyTotal);
+      var nzhcn = Nzh.cn;
+      this.saleMoneyTotalB = nzhcn.encodeB(this.saleMoneyTotal);
     },
-    calculateOptionMoney(){
-      let arr=[];
-      this.techAgreementJson.forEach(item=>{
-        arr.push(...item.techAgreementMatchs)
-      })
+    calculateOptionMoney() {
+      let arr = [];
+      this.techAgreementJson.forEach(item => {
+        arr.push(...item.techAgreementMatchs);
+      });
 
-       this.optionMoney = arr.reduce(
-        (curr, next) => {
-          return curr + parseInt(next.money);
-        },
-        0
-      );
-      var nzhcn=Nzh.cn
-       this.optionMoneyB=nzhcn.encodeB(this.optionMoney);
+      this.optionMoney = arr.reduce((curr, next) => {
+        return curr + parseInt(next.money);
+      }, 0);
+      var nzhcn = Nzh.cn;
+      this.optionMoneyB = nzhcn.encodeB(this.optionMoney);
     },
-    save(){
-        this.api.sysSubmitOrder(this.orderParam).then(res => {
+    save() {
+      this.api.sysSubmitOrder(this.orderParam).then(res => {
         if (res) {
           this.showDialog = false;
           this.$message({
             message: "生成订单成功",
             type: "success"
           });
-          this.until.loRemove('orderParam')
+          this.until.loRemove("orderParam");
           //返回首页
-          this.until.href('personal.html')
+          this.until.href("personal.html");
         }
       });
     }
-
   },
   components: {}
 };

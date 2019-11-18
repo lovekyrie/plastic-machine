@@ -196,7 +196,18 @@ class api {
       });
     });
   }
-
+//运维指南左侧顶部机型
+  operAndMainLeftProList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/suji/mtMachineType/listPC", data).then(res => {
+        if (res.code === 0) {
+          resolve(res.data.list);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
   //运维指南顶部左边列表
   operAndMainLeftList(data) {
     return new Promise((resolve, reject) => {

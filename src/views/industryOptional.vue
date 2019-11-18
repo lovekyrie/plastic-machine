@@ -92,7 +92,7 @@
                 </el-select>
               </div>
               <div class="sel-wrap">
-                <el-select v-model="form.screw" placeholder="螺杆型号">
+                <el-select v-model="form.screw" @change="changeScrew" placeholder="螺杆型号">
                   <el-option
                     v-for="item in screwModelList"
                     :key="item.id"
@@ -112,7 +112,7 @@
                 <span>{{ packageNm }}</span>
                 <ol>
                   <li v-for="(item, index) in optionList" :key="index">
-                    <img :src="item.checked?pickAll:noPick" alt />
+                    <img :src="item.checked?pickAll:noPick" @click="pickItem(item)" alt />
                     <span>{{ item.sname }}</span>
                   </li>
                 </ol>
@@ -205,23 +205,97 @@ export default {
       firstId: 38,
       secondId: 0,
       thirdId: 0,
-      propertyList: []
+      propertyList: [],
+      cartInfo: {}
     };
   },
   async mounted() {
+    const formStr = this.until.getQueryString("form");
     const idStr = this.until.getQueryString("id");
+    if (formStr) {
+      this.paramForm = JSON.parse(formStr);
+    }
+    const {
+      model,
+      modelID,
+      injection,
+      injectionId,
+      clampingForce,
+      clampingForceId,
+      screw,
+      screwId
+    } = this.paramForm;
     this.cartId = idStr ? idStr : "";
     await this.getTypeList();
 
     await this.changeType(this.firstId);
     await this.selectLeftItem(this.secondId, 0);
     await this.getModelList();
+    if (model && modelID) {
+      this.form.modelID = modelID;
+      this.form.model = model;
+    }
     await this.getClampingForceList();
+    if (clampingForce && clampingForceId) {
+      this.form.clampingForceId = clampingForceId;
+      this.form.clampingForce = clampingForce;
+    }
     await this.getInjectionList();
+    if (injection && injectionId) {
+      this.form.injection = injection;
+      this.form.injectionId = injectionId;
+    }
     await this.getScrewList();
+    if (screw && screwId) {
+      this.form.screw = screw;
+      this.form.screwId = screwId;
+    }
+
+    if (this.cartId) {
+      await this.getOrderInfo();
+    }
+
     await this.getIndustryOptionalList();
   },
   methods: {
+    async getOrderInfo() {
+      const info = await this.api.sysGetOrderInfoById(this.cartId);
+      if (info) {
+        this.cartInfo = JSON.parse(info.data);
+      }
+    },
+    renderOriginalValue() {
+      //选中之前选中的值
+      let originType = true;
+      const proArr = this.until.loGet("property");
+      if (proArr) {
+        originType = true;
+        this.originalProp = JSON.parse(proArr);
+      } else {
+        this.originalProp = this.cartInfo.techAgreementMatchs
+          ? this.cartInfo.techAgreementMatchs
+          : [];
+        originType = false;
+      }
+
+      for (let i = 0, len = this.originalProp.length; i < len; i++) {
+        const element = this.originalProp[i];
+        this.optionList.forEach((child, index) => {
+          if (originType) {
+            if (child.cd === element.cd) {
+              child.checked = true;
+              this.propertyList.push(child);
+            }
+          } else {
+            if (child.cd === element.code) {
+              child.checked = true;
+              this.propertyList.push(child);
+            }
+          }
+          this.$set(this.optionList, index, child);
+        });
+      }
+    },
     async getTypeList() {
       const list = await this.api.sysGetMachineTypeList({ pId: 0 });
       list.forEach(item => {
@@ -236,37 +310,51 @@ export default {
       this.secondId = this.productList[0].id;
     },
     async changeModel(e) {
-      const index = this.modelList.findIndex(item => item.id === e);
+      const index = this.modelList.findIndex(item => item.modelType === e);
       if (index >= 0) {
-        this.form.model = this.modelList[index].name;
+        this.form.model = this.modelList[index].modelTypeNm;
       }
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
-      await this.getStandardOrCombination();
+      await this.getIndustryOptionalList();
     },
 
     async changeClamping(e) {
       const index = this.clampingForceList.findIndex(
-        item => item.clampForceId === e
+        item => item.clampingForce === e
       );
       if (index >= 0)
-        this.form.clampingForce = this.clampingForceList[index].name;
+        this.form.clampingForce = this.clampingForceList[index].clampingForceNm;
       await this.getInjectionList();
-      await this.getStandardOrCombination();
+      await this.getScrewList();
+      await this.getIndustryOptionalList();
     },
 
     async changeInjection(e) {
-      const index = this.injectionList.findIndex(
-        item => item.injectionId === e
-      );
-      if (index >= 0) this.form.injection = this.injectionList[index].name;
+      const index = this.injectionList.findIndex(item => item.injection === e);
+      if (index >= 0)
+        this.form.injection = this.injectionList[index].injectionNm;
       await this.getScrewList();
-      await this.getStandardOrCombination();
+      await this.getIndustryOptionalList();
     },
-
+    async changeScrew(e) {
+      const index = this.screwModelList.findIndex(item => item.screwType === e);
+      if (index >= 0) this.form.screw = this.screwModelList[index].screwTypeNm;
+      await this.getIndustryOptionalList();
+    },
     back() {
       window.history.back();
+    },
+    pickItem(item) {
+      item.checked = !item.checked;
+
+      const i = this.optionList.findIndex(k => k === item);
+      this.$set(this.optionList, i, item);
+      //拼进propertyList,供我的清单中查看
+      if (item.checked) {
+        this.propertyList.push(item);
+      }
     },
     dealWithProperty() {
       //需要整理property里面有数据的值，传过去
@@ -326,6 +414,7 @@ export default {
         }
         this.$set(this.optionList, index, item);
       });
+      this.renderOriginalValue();
     },
     closeIndustry() {
       this.showIndustry = false;
@@ -357,8 +446,10 @@ export default {
       this.modelList = await this.api.sysGetIndustryOptionalModelList(param);
       if (this.modelList.length > 0) {
         this.packageNm = this.modelList[0].name;
-        this.model = this.modelList[0].modelTypeNm;
+        this.form.model = this.modelList[0].modelTypeNm;
         this.form.modelID = this.modelList[0].modelType;
+        this.modelCode = this.modelList[0].modelCode;
+        this.propertiesLetter = this.modelList[0].propertiesLetter;
       } else {
         this.form.modelID = "";
         this.form.model = "";
@@ -429,16 +520,6 @@ export default {
         this.form.screwId = this.screwModelList[0].screwType;
         this.form.screw = this.screwModelList[0].screwTypeNm;
       }
-    },
-    async getStandardOrCombination() {
-      const param = {
-        modelType: this.form.model,
-        clampForce: this.form.clampingForce,
-        injection: this.form.injection
-      };
-
-      const machine = await this.api.sysGetStandardOrCombination(param);
-      this.machineType = machine.machineType === 1 ? "标准机" : "组合机";
     }
   },
   components: {}

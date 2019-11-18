@@ -337,7 +337,11 @@ export default {
       ],
       typeList: ["内贸", "外销"],
       selectType: 0,
-      orderList: []
+      orderList: [],
+       param: {
+        email: "954540387@qq.com",
+        remark:''
+      },
     };
   },
   mounted() {

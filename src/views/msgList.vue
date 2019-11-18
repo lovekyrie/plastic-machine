@@ -149,6 +149,9 @@ export default {
       margin-left: 0;
       width: 100%;
       padding: 30px 0;
+      span{
+        margin-left: 10px;
+      }
     }
     > .active {
       background-color: #fff;

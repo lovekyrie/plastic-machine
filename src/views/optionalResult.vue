@@ -199,6 +199,7 @@ export default {
       type: "",
       techAgreementMatchs: [],
       neederCompany: "",
+      cartInfo:{},
       proSaleInfo: {
         neederCompany: "",
         modelNumber: "",
@@ -219,12 +220,20 @@ export default {
     this.type = type ? type : "";
     if (cartId) {
       this.cartId = cartId;
+      this.getOrderInfo()
     }
     this.time = this.until.formatDay("yyyy-MM-dd");
   },
   methods: {
     back() {
       window.history.back();
+    },
+     async getOrderInfo() {
+      const info = await this.api.sysGetOrderInfoById(this.cartId);
+      if (info) {
+        this.cartInfo = JSON.parse(info.data);
+        this.proSaleInfo=this.cartInfo.proSaleInfo
+      }
     },
     toCart() {
       if (!this.proSaleInfo.neederCompany) {

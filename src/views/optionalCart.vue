@@ -17,23 +17,14 @@
     </div>
     <div class="row">
       <p class="select-all">
-        <img
-          id="pickAll"
-          :src="pickAllMark ? pickAll : noPick"
-          @click="pickAllOp"
-          alt
-        />
+        <img id="pickAll" :src="pickAllMark ? pickAll : noPick" @click="pickAllOp" alt />
         <span>全选</span>
       </p>
     </div>
     <div class="row">
       <div class="content">
         <!-- 每一条商品信息 -->
-        <div
-          class="product-info"
-          v-for="(item, index) in cartList"
-          :key="index"
-        >
+        <div class="product-info" v-for="(item, index) in cartList" :key="index">
           <!-- 产品名称 -->
           <img
             class="pick"
@@ -58,18 +49,13 @@
               <button class="right-btn" @click="plus(item)"></button>
             </div>
             <div>
-              <img :src="editIcon" alt @click="editOrder(item.form, item.id)" />
+              <img :src="editIcon" alt @click="editOrder(item.form, item.id,item.type)" />
             </div>
             <div>
               <a :href="toShowTechnology(item.id)">查看详情</a>
             </div>
             <div>
-              <img
-                @click="delCart(item)"
-                class="del-order"
-                :src="deleteIcon"
-                alt
-              />
+              <img @click="delCart(item)" class="del-order" :src="deleteIcon" alt />
             </div>
           </div>
           <!-- 差异价 -->
@@ -80,12 +66,7 @@
       </div>
     </div>
     <div class="row footer">
-      <div
-        @click="showSaveOrder"
-        class="create-order col-md-1 col-md-offset-10"
-      >
-        生成订单
-      </div>
+      <div @click="showSaveOrder" class="create-order col-md-1 col-md-offset-10">生成订单</div>
     </div>
     <div class="submit-wrap" v-show="showDialog">
       <div class="submit" style="display:block;">
@@ -192,7 +173,8 @@ export default {
       cartList: [],
       userInfo: {},
       param: {
-        email: "954540387@qq.com"
+        email: "954540387@qq.com",
+         remark:''
       },
       time: "",
       attach: {
@@ -366,9 +348,13 @@ export default {
           });
         });
     },
-    editOrder(form, id) {
+    editOrder(form, id, type) {
       const str = JSON.stringify(form);
-      this.until.href(`optional.html?form=${str}&id=${id}`);
+      if (type === "usual") {
+        this.until.href(`optional.html?form=${str}&id=${id}`);
+      } else {
+        this.until.href(`industryOptional.html?form=${str}&id=${id}`);
+      }
     }
   },
   mounted() {

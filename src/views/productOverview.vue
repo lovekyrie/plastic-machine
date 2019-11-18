@@ -14,9 +14,7 @@
             v-for="(item, index) in categoryList"
             :key="index"
             @click="chooseCategory(item)"
-          >
-            {{ item.machineCh }}
-          </li>
+          >{{ item.machineCh }}</li>
         </div>
       </div>
     </div>
@@ -33,10 +31,10 @@
             >
               <span>
                 {{
-                  item.modelType +
-                    item.weight +
-                    item.propertiesLetter +
-                    item.modelCode
+                item.modelType +
+                item.weight +
+                item.propertiesLetter +
+                item.modelCode+' '+item.injection
                 }}
               </span>
             </div>
@@ -55,42 +53,24 @@
             </div>
           </div>
           <!-- 机型简介 -->
-          <div
-            class="concept"
-            v-show="selectTab === 0"
-            v-html="conceptCont"
-          ></div>
+          <div class="concept" v-show="selectTab === 0" v-html="conceptCont"></div>
           <!-- 性能特征 -->
           <div class="performance" v-show="selectTab === 1">
             <div v-for="(item, index) in performanceList" :key="index">
               <p>{{ item.noticeCh }}</p>
-              <img
-                v-for="item in item.imgList"
-                :key="item"
-                :src="item"
-                alt="图片"
-              />
+              <img v-for="item in item.imgList" :key="item" :src="item" alt="图片" />
             </div>
           </div>
           <!-- 典型制品 -->
           <div class="typical" v-show="selectTab === 2">
             <div v-for="(item, index) in typicalProductList" :key="index">
               <p>{{ item.nameCh }}</p>
-              <img
-                v-for="item in item.imgList"
-                :key="item"
-                :src="item"
-                alt="图片"
-              />
+              <img v-for="item in item.imgList" :key="item" :src="item" alt="图片" />
             </div>
           </div>
           <!-- 标准配置 -->
           <div class="standard-set" v-show="selectTab === 3">
-            <div
-              class="wrap"
-              v-for="(item, index) in standardSettingList"
-              :key="index"
-            >
+            <div class="wrap" v-for="(item, index) in standardSettingList" :key="index">
               <div class="injection">
                 <div class="part">{{ item.titleCh }}</div>
                 <div class="triangle"></div>
@@ -103,18 +83,10 @@
             </div>
           </div>
           <!-- 技术参数 -->
-          <technical-param
-            v-show="selectTab === 4"
-            :list="technicalParameterList"
-          ></technical-param>
+          <technical-param v-show="selectTab === 4" :list="technicalParameterList"></technical-param>
           <!-- 相关尺寸 -->
           <div class="related-size" v-show="selectTab === 5">
-            <img
-              v-for="(item, index) in relatedSizeList"
-              :key="index"
-              :src="item"
-              alt="图片"
-            />
+            <img v-for="(item, index) in relatedSizeList" :key="index" :src="item" alt="图片" />
           </div>
         </div>
       </div>
@@ -187,7 +159,7 @@ export default {
     showOption() {
       this.showType = !this.showType;
     },
-   async selectLeftItem(item, i) {
+    async selectLeftItem(item, i) {
       this.selectIndex = i;
       this.categoryObj = item;
       await this.getTechnicalParameter();
@@ -268,6 +240,8 @@ export default {
       this.technicalParameterList.forEach(item => {
         delete item.imgUrl;
         delete item.imgUrlEn;
+        delete item.priceIn;
+        delete item.priceOut;
       });
     },
     async getRelatedSize() {

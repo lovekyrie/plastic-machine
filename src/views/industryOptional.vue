@@ -178,7 +178,6 @@ export default {
       showDialog: false,
       showIndustry: false,
       relatedSizeImg: "",
-      screwDiameter: "",
       cartId: "",
       selectIndex: 0,
       selectTwoIndex: 0,
@@ -284,11 +283,13 @@ export default {
           if (originType) {
             if (child.cd === element.cd) {
               child.checked = true;
+              child.name = child.sname;
               this.propertyList.push(child);
             }
           } else {
             if (child.cd === element.code) {
               child.checked = true;
+              child.name = child.sname;
               this.propertyList.push(child);
             }
           }
@@ -348,7 +349,7 @@ export default {
     },
     pickItem(item) {
       item.checked = !item.checked;
-
+      item.name = item.sname;
       const i = this.optionList.findIndex(k => k === item);
       this.$set(this.optionList, i, item);
       //拼进propertyList,供我的清单中查看
@@ -408,6 +409,7 @@ export default {
       this.optionList.forEach((item, index) => {
         if (item.status === -1 || item.status === 0) {
           item.checked = true;
+          item.name = item.sname;
           this.propertyList.push(item);
         } else {
           item.checked = false;
@@ -516,7 +518,6 @@ export default {
           param
         );
 
-        this.screwDiameter = this.screwModelList[0].screwDiameter;
         this.form.screwId = this.screwModelList[0].screwType;
         this.form.screw = this.screwModelList[0].screwTypeNm;
       }

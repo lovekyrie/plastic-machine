@@ -188,7 +188,7 @@ export default {
   },
   filters: {
     toFixed(input, param) {
-      return input.toFixed(param);
+      return parseInt(input).toFixed(param);
     }
   },
   async mounted() {

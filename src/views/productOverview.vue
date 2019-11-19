@@ -288,7 +288,7 @@ export default {
         margin-left: 3%;
       }
       > .ul-style {
-        color: #00338d;
+        color: #000;
         display: -webkit-flex;
         display: flex;
         display: block;
@@ -299,15 +299,15 @@ export default {
         top: 100%;
         left: 43%;
         border: 1px solid #d2d2d2;
-        background-color: #00338d;
+        background-color: @themeColor;
         box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.1);
         > li {
           width: 100%;
           background-color: #fff;
           padding: 8px 0 8px 6%;
           &:hover {
-            background-color: #00338d;
-            color: #fff;
+            background-color: @themeColor;
+            color: #000;
           }
         }
       }

@@ -374,8 +374,6 @@ export default {
       await this.getStandardOrCombination();
       await this.getOrderInfo();
     }
-
-    await this.getBigMenuList();
   },
   watch: {},
   methods: {
@@ -389,6 +387,9 @@ export default {
     },
     showModelOp() {
       this.showModel = !this.showModel;
+      this.showClampingForce = false;
+      this.showInjection = false;
+      this.showScrew = false;
     },
     showOption() {
       this.showType = !this.showType;
@@ -407,12 +408,21 @@ export default {
     },
     showClampingForceOp() {
       this.showClampingForce = !this.showClampingForce;
+      this.showModel = false;
+      this.showInjection = false;
+      this.showScrew = false;
     },
     showInjectionOp() {
       this.showInjection = !this.showInjection;
+      this.showModel = false;
+      this.showClampingForce = false;
+      this.showScrew = false;
     },
     showScrewOp() {
       this.showScrew = !this.showScrew;
+      this.showModel = false;
+      this.showClampingForce = false;
+      this.showInjection = false;
     },
     async chooseModel(item) {
       this.model = item.name;
@@ -494,7 +504,7 @@ export default {
     toIndex() {
       this.until.href("home.html");
     },
-    confirm() {
+    async confirm() {
       this.form.model = this.model;
       this.form.clampingForce = this.clampingForce;
       this.form.injection = this.injection;
@@ -504,7 +514,8 @@ export default {
       this.showBasic = false;
       this.showUsual = true;
       //根据选项得出标准机/组合机
-      this.getStandardOrCombination();
+      await this.getStandardOrCombination();
+      await this.getBigMenuList();
     },
     toOptionResult() {
       this.form.machineType = this.machineType;
@@ -654,13 +665,13 @@ export default {
             const fixedParam = {
               machineId: this.form.modelID,
               clampForceId: this.form.clampingForceId,
-              injectionId: this.form.injectionId
+              injectionId: this.form.injectionId,
+              screwType: this.form.screwId
             };
             //二级菜单循环取数
 
             if (this.category === "常规选配") {
               const param = { ...fixedParam };
-              param.screwType = this.form.screwId;
               param.secondLevelMenuId = element.secondLevelMenuId;
               this.api.sysGetMatchMenuOptional(param).then(res => {
                 const list = res;
@@ -683,10 +694,13 @@ export default {
               });
             } else {
               const param = { ...fixedParam };
-              param.screwTypeId = this.form.screwId;
               param.secondLevelMenuId = res[0].secondLevelMenuId;
               this.api.sysGetUniqueMatchMenu(param).then(res => {
                 const list = res;
+                list.forEach((item, index) => {
+                  item.name = item.selectEditInfoNm;
+                  this.$set(list, index, item);
+                });
 
                 /*    list.forEach((item, index) => {
                   if (item.status === -1 || item.status === 0) {
@@ -1166,7 +1180,7 @@ body {
   top: 100%;
   left: 20%;
   border: 1px solid #d2d2d2;
-  background-color: #00338d;
+  background-color: @themeColor;
 }
 
 .model-sel > div > .ul-style > li {
@@ -1177,8 +1191,8 @@ body {
 }
 
 .model-sel > div > .ul-style > li:hover {
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
 }
 
 .model-sel > div input:focus {

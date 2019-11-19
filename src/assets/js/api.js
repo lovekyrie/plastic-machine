@@ -427,7 +427,7 @@ class api {
   //特殊选配-获取选配项
   sysGetUniqueMatchMenu(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get("/suji/selectEditInfo/listPC", data).then(res => {
+      untilApi.get("/suji/selectEditInfoRelation/listPC", data).then(res => {
         if (res.code === 0) {
           resolve(res.data.list);
         } else {

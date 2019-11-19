@@ -155,6 +155,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
+@import url("../styles/main.less");
 html,
 body {
   background-color: #fff;
@@ -167,7 +168,7 @@ body {
 
 .header {
   > .ul-style {
-    color: #00338d;
+    color: #000;
     display: -webkit-flex;
     display: flex;
     display: block;
@@ -178,7 +179,7 @@ body {
     top: 100%;
     left: 43%;
     border: 1px solid #d2d2d2;
-    background-color: #00338d;
+    background-color: @themeColor;
     box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.1);
     > li {
       width: 100%;
@@ -186,8 +187,8 @@ body {
       background-color: #fff;
       padding: 8px 0 8px 6%;
       &:hover {
-        background-color: #00338d;
-        color: #fff;
+        background-color: @themeColor;
+        color: #000;
       }
     }
   }

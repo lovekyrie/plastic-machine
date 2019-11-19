@@ -114,6 +114,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+@import url("../styles/main.less");
 .content {
   display: -webkit-flex;
   display: flex;
@@ -140,8 +141,8 @@ export default {
     color: #8c8c8c;
   }
   .active {
-    background-color: #00338d;
-    color: #fff;
+    background-color: @themeColor;
+    color: #000;
   }
 }
 .right {

@@ -435,10 +435,13 @@ export default {
       await this.getInjectionList();
       await this.getScrewList();
     },
-    selectChildItem(item, index) {
+    async selectChildItem(item, index) {
       this.selectTwoIndex = index;
       this.thirdId = item.id;
-      this.getModelList();
+      await this.getModelList();
+      await this.getClampingForceList();
+      await this.getInjectionList();
+      await this.getScrewList();
     },
     async getModelList() {
       const query = new this.Query();
@@ -453,8 +456,16 @@ export default {
         this.modelCode = this.modelList[0].modelCode;
         this.propertiesLetter = this.modelList[0].propertiesLetter;
       } else {
-        this.form.modelID = "";
-        this.form.model = "";
+        this.form = {
+          model: "",
+          clampingForce: "",
+          injection: "",
+          screw: "",
+          modelID: "",
+          clampingForceId: "",
+          injectionId: "",
+          screwId: ""
+        };
       }
     },
     async getClampingForceList() {
@@ -626,29 +637,6 @@ body {
               flex-direction: row;
               flex-wrap: nowrap;
               align-content: center;
-              > .ul-style {
-                display: -webkit-flex;
-                display: flex;
-                display: block;
-                width: 60%;
-                z-index: 9999;
-                list-style: none;
-                position: absolute;
-                top: 100%;
-                left: 40%;
-                border: 1px solid #d2d2d2;
-                background-color: #00338d;
-                > li {
-                  width: 100%;
-                  /* background-color: #00338D; */
-                  background-color: #fff;
-                  padding: 8px 0 8px 1%;
-                  &:hover {
-                    background-color: #00338d;
-                    color: #fff;
-                  }
-                }
-              }
             }
             .sel-wrap {
               font-size: 16px;

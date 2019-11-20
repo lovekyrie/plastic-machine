@@ -683,19 +683,6 @@ export default {
       }
     }
   }
-  .footer {
-    margin-top: 30px;
-    width: 100%;
-    text-align: center;
-    button {
-      border: 0;
-      width: 250px;
-      height: 50px;
-      line-height: 50px;
-      background-color: @themeColor;
-      border: 0;
-      border-radius: 6px;
-    }
-  }
+
 }
 </style>

@@ -335,7 +335,7 @@ export default {
           width: 100%;
           padding: 15px 0;
           > span {
-            margin-left: 40%;
+            margin-left: 10%;
           }
         }
         .active {
@@ -405,15 +405,15 @@ export default {
                 width: 210px;
                 height: 100%;
                 background-color: @themeColor;
-                color: #fff;
+                color: #000;
                 text-indent: 30px;
               }
               > .triangle {
                 width: 0;
                 height: 0;
                 border: 15px solid #fff;
-                border-left-color: #00338d;
-                border-bottom-color: #00338d;
+                border-left-color: @themeColor;
+                border-bottom-color: @themeColor;
               }
             }
             .injection-ct,

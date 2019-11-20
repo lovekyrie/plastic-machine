@@ -43,13 +43,13 @@
     <div class="pic-operate">
       <div>
         <!-- 宣传视频 -->
-        <div >
+        <div @click="toVideo">
           <img :src="videoImg" />
         </div>
       </div>
       <div>
         <!-- 塑机计算 -->
-        <div >
+        <div @click="toCalculate">
           <img :src="calculateImg" alt />
         </div>
       </div>
@@ -124,6 +124,12 @@ export default {
     },
     toIndustry() {
       this.until.href("industryOptional.html");
+    },
+    toCalculate(){
+      this.until.href("calculate.html")
+    },
+    toVideo() {
+      window.open("http://106.14.184.214:88/bochuang.mp4","_blank");
     },
     showVideo() {
       this.showVideoFlag = true;

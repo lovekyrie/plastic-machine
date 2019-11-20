@@ -9,32 +9,24 @@
         </div>
         <div class="select">
           <p>机型</p>
-          <el-select
-            v-model="currentChoose.machineModel"
-            placeholder="请选择机型"
-          >
+          <el-select v-model="currentChoose.machineModel" placeholder="请选择机型">
             <el-option
               v-for="item in modelList"
               :key="item.machineModel"
               :label="item.machineModel"
               :value="item.machineModel"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </div>
         <div class="select">
           <p>锁模力</p>
-          <el-select
-            v-model="currentChoose.clampForce"
-            placeholder="请选择锁模力"
-          >
+          <el-select v-model="currentChoose.clampForce" placeholder="请选择锁模力">
             <el-option
               v-for="item in clampingForce"
               :key="item.clampForce"
               :label="item.clampForce"
               :value="item.clampForce"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </div>
         <div class="select">
@@ -45,20 +37,13 @@
               :key="item.injection"
               :label="item.injection"
               :value="item.injection"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </div>
         <div class="select">
           <p>数量</p>
           <el-select v-model="currentChoose.qty" placeholder="请选择">
-            <el-option
-              v-for="item in qtyList"
-              :key="item"
-              :label="item"
-              :value="item"
-            >
-            </el-option>
+            <el-option v-for="item in qtyList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </div>
         <div class="button">
@@ -83,14 +68,16 @@
           <p>{{ item.injection }}</p>
           <p>{{ item.manipulatorGas }}</p>
           <p>{{ item.qty }}</p>
-          <p @click="toDelet(index)"><i class="el-icon-delete"></i></p>
+          <p @click="toDelet(index)">
+            <i class="el-icon-delete"></i>
+          </p>
         </div>
         <p @click="view = false">确定</p>
       </div>
     </div>
     <p>
-      <span @click="view = true">编辑</span
-      ><span @click="choose = true">添加</span>
+      <span @click="view = true">编辑</span>
+      <span @click="choose = true">添加</span>
     </p>
     <el-table
       class="list"
@@ -99,16 +86,11 @@
       style="width: 100%"
       :row-class-name="tabRowClassName"
     >
-      <el-table-column
-        align="center"
-        prop="nominalCaliber"
-        label="机型/代号"
-        width="180"
-      >
+      <el-table-column align="center" prop="nominalCaliber" label="机型/代号" width="180">
         <template slot-scope="scop">
           <p>
             {{ scop.row.machineModel ? scop.row.machineModel : "空" }}/{{
-              scop.row.codeName ? scop.row.codeName : "空"
+            scop.row.codeName ? scop.row.codeName : "空"
             }}
           </p>
         </template>
@@ -117,41 +99,20 @@
         <template slot-scope="scop">
           <p>
             {{ scop.row.clampForce ? scop.row.clampForce : "空" }}/{{
-              scop.row.injection ? scop.row.injection : "空"
+            scop.row.injection ? scop.row.injection : "空"
             }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="machinePower" label="整机功率(KW)">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="transformerPower"
-        label="变压器功率(KW)"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="powerConsumer" label="用电量(KW)">
-      </el-table-column>
-      <el-table-column align="center" prop="totalWater" label="用水量(L/min)">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="gasConsumption"
-        label="用气量(L/Min)"
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="manipulatorGas"
-        label="机械手用气量(L/Min)"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="totalWeight" label="总重量(T)">
-      </el-table-column>
-      <el-table-column align="center" prop="machineHeight" label="机器高度(M)">
-      </el-table-column>
-      <el-table-column align="center" prop="qty" label="数量">
-      </el-table-column>
+      <el-table-column align="center" prop="machinePower" label="整机功率(KW)"></el-table-column>
+      <el-table-column align="center" prop="transformerPower" label="变压器功率(KW)"></el-table-column>
+      <el-table-column align="center" prop="powerConsumer" label="用电量(KW)"></el-table-column>
+      <el-table-column align="center" prop="totalWater" label="用水量(L/min)"></el-table-column>
+      <el-table-column align="center" prop="gasConsumption" label="用气量(L/Min)"></el-table-column>
+      <el-table-column align="center" prop="manipulatorGas" label="机械手用气量(L/Min)"></el-table-column>
+      <el-table-column align="center" prop="totalWeight" label="总重量(T)"></el-table-column>
+      <el-table-column align="center" prop="machineHeight" label="机器高度(M)"></el-table-column>
+      <el-table-column align="center" prop="qty" label="数量"></el-table-column>
     </el-table>
     <el-table
       class="total"
@@ -161,35 +122,14 @@
       style="width: 100%"
       :row-class-name="tabRowClassName"
     >
-      <el-table-column align="center" prop="qty" label="机器总数量" width="180">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="powerConsumer"
-        label="总用电量(KW)"
-        width="180"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="totalWater" label="总用水量(L/Min)">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="transformerPower"
-        label="变压器功率(KW)"
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="coolingTower"
-        label="所需冷却塔(T/h)"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="pondage" label="蓄水量(m3)">
-      </el-table-column>
-      <el-table-column align="center" prop="diameter" label="公称内径(mm)">
-      </el-table-column>
-      <el-table-column align="center" prop="gas" label="厂房用气量(L/Min)">
-      </el-table-column>
+      <el-table-column align="center" prop="qty" label="机器总数量" width="180"></el-table-column>
+      <el-table-column align="center" prop="powerConsumer" label="总用电量(KW)" width="180"></el-table-column>
+      <el-table-column align="center" prop="totalWater" label="总用水量(L/Min)"></el-table-column>
+      <el-table-column align="center" prop="transformerPower" label="变压器功率(KW)"></el-table-column>
+      <el-table-column align="center" prop="coolingTower" label="所需冷却塔(T/h)"></el-table-column>
+      <el-table-column align="center" prop="pondage" label="蓄水量(m3)"></el-table-column>
+      <el-table-column align="center" prop="diameter" label="公称内径(mm)"></el-table-column>
+      <el-table-column align="center" prop="gas" label="厂房用气量(L/Min)"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -256,6 +196,12 @@ export default {
           let total = JSON.parse(JSON.stringify(this.totalData));
           this.total = [];
           data.forEach(item => {
+            item.totalWater = item.totalWater ? item.totalWater : 0;
+            item.powerConsumer = item.powerConsumer ? item.powerConsumer : 0;
+            item.gasConsumption = item.gasConsumption ? item.gasConsumption : 0;
+            item.moldGas=item.moldGas?item.moldGas:0
+            item.doorGas=item.doorGas?item.doorGas:0
+            item.manipulatorGas=item.manipulatorGas?item.manipulatorGas:0
             total.qty += item.qty;
             total.transformerPower +=
               parseFloat(item.transformerPower) * item.qty;

@@ -134,10 +134,13 @@
           <!-- 不要title，因为没有内容，也撑不开 -->
           <p>请详细写下您的意见和问题，我们会尽快解决您的反馈：</p>
           <div class="text-suggest">
-            <textarea v-model="sug.content" class="textarea-sugg" placeholder="请填写您的意见和问题......"></textarea>
-            <p>
-              <span class="suggest-len">0</span>/200
-            </p>
+            <el-input
+              type="textarea"
+              placeholder="请输入内容"
+              v-model="sug.content"
+              maxlength="200"
+              show-word-limit
+            ></el-input>
             <!-- <div> -->
             <!-- 默认的文件上传控件是没有+符号的 -->
             <!-- <input type="file" /> -->
@@ -658,7 +661,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 @import url("../styles/main.less");
 html,
 body {
@@ -862,10 +865,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
-  padding: 10px 0 15px 10px;
+  padding: 10px 0 0 10px;
   border: 1px solid #f2f5f9;
   border-radius: 10px;
   background-color: #f2f5f9;
+}
+
+.text-linked{
+  padding-bottom: 15px;
 }
 
 .text-linked {
@@ -878,11 +885,19 @@ body {
   width: 100%;
 }
 
-.text-suggest > textarea {
+.text-suggest > .el-textarea {
   height: 120px;
-  resize: none;
-  border: 0;
-  background-color: #f2f5f9;
+
+  textarea {
+    height: 120px;
+    resize: none;
+    border: 0;
+    background-color: #f2f5f9;
+  }
+  .el-input__count{
+    background-color: #f2f5f9;
+    left: 10px;
+  }
 }
 
 .text-linked > input {
@@ -895,18 +910,6 @@ body {
 .text-suggest > p {
   font-size: 10px;
   margin-bottom: 0;
-}
-
-.text-suggest > div {
-  position: relative;
-  border: 1px solid #999;
-  background-color: #fff;
-  width: 60px;
-  height: 60px;
-  background: url("./images/up.png") 50% 50% no-repeat;
-  background-size: 20px 20px;
-  overflow: hidden;
-  background-color: #fff;
 }
 
 .text-suggest > div > input {

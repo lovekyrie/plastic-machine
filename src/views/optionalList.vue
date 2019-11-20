@@ -30,7 +30,7 @@
           <div>
             <input type="text" value="特殊选配" />
           </div>
-           <div v-for="(item, index) in rightPropertyArr" :key="index">
+          <div v-for="(item, index) in rightPropertyArr" :key="index">
             <p>{{ item.name }}</p>
             <img :src="numIcon" alt />
             <span>{{ item.num }}</span>
@@ -55,7 +55,7 @@ export default {
       leftPropertyArr: [],
       rightPropertyArr: [],
       propertyRightArr: [],
-      storagePro:''
+      storagePro: ""
     };
   },
   computed: {
@@ -67,21 +67,22 @@ export default {
         return 0;
       }
     },
-     remainRightLen() {
+    remainRightLen() {
       const len = this.rightPropertyArr.length;
       if (len < 13) {
         return 13 - len;
       } else {
         return 0;
       }
-    },
+    }
   },
   mounted() {
     //常规选配展示在左边，特殊选配展示在右边
-   this.storagePro = this.until.loGet("property");
+    this.storagePro = this.until.loGet("property");
     if (this.storagePro) {
       const arr = JSON.parse(this.storagePro);
       arr.forEach(item => {
+        item.num = item.num ? item.num : 1;
         if (item.type === 0) {
           this.leftPropertyArr.push(item);
         } else {
@@ -125,6 +126,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("../styles/main.less");
 html,
 body {
   height: 100%;
@@ -138,8 +140,8 @@ body {
 
 .row > .header {
   position: relative;
-  background-color: #00338d;
-  color: #fff;
+  background-color: @themeColor;
+  color: #000;
   p {
     margin: 18px 0;
   }

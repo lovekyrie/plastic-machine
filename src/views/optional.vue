@@ -869,29 +869,6 @@ body {
         flex-direction: row;
         flex-wrap: nowrap;
         align-content: center;
-        > .ul-style {
-          display: -webkit-flex;
-          display: flex;
-          display: block;
-          width: 60%;
-          z-index: 9999;
-          list-style: none;
-          position: absolute;
-          top: 100%;
-          left: 40%;
-          border: 1px solid #d2d2d2;
-          background-color: #00338d;
-          > li {
-            width: 100%;
-            /* background-color: #00338D; */
-            background-color: #fff;
-            padding: 8px 0 8px 1%;
-            &:hover {
-              background-color: #00338d;
-              color: #fff;
-            }
-          }
-        }
       }
       .sel-wrap {
         font-size: 16px;
@@ -903,9 +880,14 @@ body {
           width: 40%;
         }
         .el-select {
-          input {
-            border: 0;
-            background-color: @grayColor;
+          .el-input {
+            input {
+              border: 0;
+              background-color: @grayColor;
+            }
+            .el-select__caret{
+              color: @headerColor;
+            }
           }
         }
         input {
@@ -999,8 +981,8 @@ body {
           text-align: center;
         }
         > .active {
-          color: #00338d;
-          border-bottom: 1px solid #00338d;
+          color: @headerColor;
+          border-bottom: 1px solid @themeColor;
         }
       }
       .sel-three {

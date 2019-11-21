@@ -4,7 +4,7 @@
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" @click="back" :src="bankArrow" />
-        <p class="text-center">
+        <p class="text-center-nopick">
           塑机计算器
           <!-- 下拉图标 -->
         </p>
@@ -31,7 +31,8 @@
               <span>制品投影面积：</span>
               <input type="text" placeholder="投影面积" />
               <span>
-                cm<sup>2</sup>
+                cm
+                <sup>2</sup>
               </span>
             </div>
             <div>
@@ -50,7 +51,8 @@
               <span>熔融密度：</span>
               <input type="text" />
               <span>
-                g/cm<sup>2</sup>
+                g/cm
+                <sup>2</sup>
               </span>
             </div>
             <div>
@@ -79,7 +81,7 @@
               <span>最小壁厚：</span>
               <el-select v-model="value1" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options1"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -91,7 +93,7 @@
               <span>射出速度：</span>
               <el-select v-model="value2" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options2"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -103,7 +105,7 @@
               <span>重量修正系数N：</span>
               <el-select v-model="value3" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options3"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -115,14 +117,15 @@
               <span>材料类型：</span>
               <el-select v-model="value4" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in options4"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
               <span>
-                g/cm<sup>2</sup>
+                g/cm
+                <sup>2</sup>
               </span>
             </div>
             <div>
@@ -146,26 +149,40 @@ export default {
   data() {
     return {
       bankArrow,
-      options: [
+      options1: [
         {
-          value: "选项1",
-          label: "黄金糕"
+          value: "1",
+          label: "0.4"
         },
         {
-          value: "选项2",
-          label: "双皮奶"
+          value: "2",
+          label: "1"
         },
         {
-          value: "选项3",
-          label: "蚵仔煎"
+          value: "3",
+          label: "2"
         },
         {
-          value: "选项4",
-          label: "龙须面"
-        },
+          value: "4",
+          label: "3"
+        }
+      ],
+      options2: [
         {
-          value: "选项5",
-          label: "北京烤鸭"
+          value: "1",
+          label: "100"
+        }
+      ],
+      options3: [
+        {
+          value: "1",
+          label: "1.2"
+        }
+      ],
+       options4: [
+        {
+          value: "1",
+          label: "PS"
         }
       ],
       value1: "",
@@ -191,17 +208,7 @@ body {
     width: 100%;
     background-color: #fff;
     .row {
-      > .header {
-        position: relative;
-        background-color: @headerColor;
-        color: #fff;
-      }
-      .arrow-left {
-        position: absolute;
-        top: 50%;
-        left: 12%;
-        transform: translateY(-50%);
-      }
+    
       p {
         font-size: 18px;
         margin: 16px 0;

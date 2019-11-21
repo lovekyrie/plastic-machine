@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="msgDetail" v-show="showDetail">
       <div>
         <i class="el-icon-close" @click="showDetail = false"></i>
@@ -12,7 +12,7 @@
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
-        <p class="text-center">
+        <p class="text-center-nopick">
           消息中心
           <!-- 下拉图标 -->
         </p>

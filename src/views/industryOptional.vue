@@ -4,7 +4,7 @@
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
-        <p class="text-center">
+        <p class="text-center-nopick">
           <span>行业选配</span>
         </p>
       </div>
@@ -548,28 +548,6 @@ body {
 #container {
   padding: 0 15px;
   width: 100%;
-  .header {
-    position: relative;
-    background-color: @headerColor;
-    color: #fff;
-    p {
-      margin: 15px 0;
-      font-size: 18px;
-    }
-    .arrow-left {
-      position: absolute;
-      top: 50%;
-      left: 8%;
-      transform: translateY(-50%);
-    }
-    .text-center {
-      font-size: 18px;
-      > span {
-        display: inline-block;
-        width: 10%;
-      }
-    }
-  }
 
   .row {
     .content {

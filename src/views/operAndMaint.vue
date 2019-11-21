@@ -125,35 +125,6 @@ export default {
 
 };
 </script>
-<style lang="less">
-@import url("../styles/main.less");
-.row > .header {
-  position: relative;
-  background-color: @headerColor;
-  color: #fff;
-}
-
-.row .arrow-left {
-  position: absolute;
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
-
-.row .arrow-side {
-  display: inline-block;
-  margin-left: 3%;
-}
-
-.text-center {
-  font-size: 18px;
-}
-
-.text-center > span {
-  display: inline-block;
-  /*width: 5%;*/
-}
-</style>
 <style lang="less" scoped>
 @import url("../styles/main.less");
 html,

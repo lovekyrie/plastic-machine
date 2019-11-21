@@ -797,30 +797,6 @@ body {
   padding: 0 15px;
   width: 100%;
   .header {
-    position: relative;
-    background-color: @headerColor;
-    color: #fff;
-    p {
-      margin: 15px 0;
-      font-size: 18px;
-    }
-    .arrow-left {
-      position: absolute;
-      top: 50%;
-      left: 8%;
-      transform: translateY(-50%);
-    }
-    .text-center {
-      font-size: 18px;
-      > span {
-        display: inline-block;
-        width: 10%;
-      }
-    }
-    .arrow-side {
-      display: inline-block;
-      margin-left: 3%;
-    }
     > .ul-style {
       color: #000;
       display: -webkit-flex;

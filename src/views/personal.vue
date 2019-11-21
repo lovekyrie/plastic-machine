@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" @click="back" :src="bankArrow" />
-        <p class="text-center">
+        <p class="text-center-nopick">
           个人中心
           <!-- 下拉图标 -->
         </p>
@@ -665,25 +665,11 @@ export default {
 @import url("../styles/main.less");
 html,
 body {
-  .container {
+  #container {
     width: 100%;
     background-color: #fff;
     .row {
-      > .header {
-        position: relative;
-        background-color: @headerColor;
-        color: #fff;
-      }
-      .arrow-left {
-        position: absolute;
-        top: 50%;
-        left: 12%;
-        transform: translateY(-50%);
-      }
-      p {
-        font-size: 18px;
-        margin: 16px 0;
-      }
+     
       .content {
         display: -webkit-flex;
         display: flex;

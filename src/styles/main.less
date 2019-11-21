@@ -8,7 +8,7 @@ ul {
   margin: 0;
 }
 
-.container {
+#container {
   position: relative;
   width: 100%;
   background-color: #fff;
@@ -17,30 +17,54 @@ ul {
       position: relative;
       background-color: @headerColor;
       color: #fff;
-    }
-    .arrow-left {
-      position: absolute;
-      top: 50%;
-      left: 12%;
-      transform: translateY(-50%);
+      .arrow-left {
+        position: absolute;
+        top: 50%;
+        left: 8%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+      .text-center {
+        cursor: pointer;
+        width: 10%;
+        margin: 18px auto;
+        font-size: 18px;
+        display: flex;
+        display: -webkit-flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        span {
+          flex: 1;
+        }
+        img {
+          width: 18px;
+          height: 10px;
+        }
+      }
+      .text-center-nopick {
+        width: 10%;
+        margin: 18px auto;
+        font-size: 18px;
+      }
     }
   }
 }
 
-  .footer {
-    margin-top: 30px;
-    width: 100%;
-    text-align: center;
-    button {
-      border: 0;
-      width: 250px;
-      height: 50px;
-      line-height: 50px;
-      background-color: @themeColor;
-      border: 0;
-      border-radius: 6px;
-    }
+.footer {
+  margin-top: 30px;
+  width: 100%;
+  text-align: center;
+  button {
+    border: 0;
+    width: 250px;
+    height: 50px;
+    line-height: 50px;
+    background-color: @themeColor;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
   }
+}
 
 @themeColor: #fff200;
 @headerColor: #575756;

@@ -373,6 +373,7 @@ export default {
     if (idStr) {
       await this.getStandardOrCombination();
       await this.getOrderInfo();
+      await this.getBigMenuList()
     }
   },
   watch: {},

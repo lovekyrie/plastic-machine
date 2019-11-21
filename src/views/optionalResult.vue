@@ -41,6 +41,14 @@
                 <span>客户名称</span>
                 <input type="text" v-model="proSaleInfo.neederCompany" />
               </div>
+               <div>
+                <span>联系人</span>
+                <input type="text" />
+              </div>
+               <div>
+                <span>联系电话</span>
+                <input type="text" />
+              </div>
             </div>
           </div>
 
@@ -244,11 +252,11 @@ export default {
         this.$message.error("规格型号必填！");
         return;
       }
-      if (!this.proSaleInfo.price) {
+      if (this.proSaleInfo.price==='') {
         this.$message.error("单价必填！");
         return;
       }
-      if (!this.proSaleInfo.salePrice) {
+      if (this.proSaleInfo.salePrice==='') {
         this.$message.error("优惠价必填！");
         return;
       }

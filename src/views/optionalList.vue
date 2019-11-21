@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <div id="container">
     <div class="row">
       <div class="col-md-12 header">
         <!-- 返回箭头 -->
         <img class="arrow-left" :src="backArrow" @click="back" />
-        <p class="text-center">
+        <p class="text-center-nopick">
           当前清单
           <!-- 下拉图标 -->
         </p>
@@ -133,135 +133,100 @@ body {
   background-color: #fff;
 }
 
-.container {
+#container {
   position: relative;
   width: 100%;
-}
 
-.row > .header {
-  position: relative;
-  background-color: @themeColor;
-  color: #000;
-  p {
-    margin: 18px 0;
-  }
-}
-
-.row .arrow-left {
-  position: absolute;
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-}
-
-.row p {
-  font-size: 18px;
-  margin: 0;
-}
-
-.row .confirmBtn {
-  font-size: 16px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 8%;
-}
-
-.row .content {
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #fff;
-}
-
-.left-side,
-.right-side {
-  height: 100%;
-  width: 38%;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: #f2f5f9;
-}
-
-.left-side {
-  margin-left: 8%;
-}
-
-.right-side {
-  margin-right: 8%;
-}
-
-.left-side,
-.right-side {
-  div {
-    position: relative;
-    font-size: 16px;
-    padding: 15px 20px;
-    width: 100%;
-    border-bottom: 1px solid #bebebe;
-    &:not(:nth-of-type(1)) {
-      position: relative;
-      display: flex;
+  .row {
+    p {
+      font-size: 18px;
+      margin: 0;
+    }
+    .content {
       display: -webkit-flex;
-      flex-flow: row nowrap;
-      align-items: center;
-      height: 71px;
-      p {
-        flex: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: space-between;
+      background-color: #fff;
+      .left-side,
+      .right-side {
+        height: 100%;
+        width: 38%;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: #f2f5f9;
+        div {
+          position: relative;
+          font-size: 16px;
+          padding: 15px 20px;
+          width: 100%;
+          border-bottom: 1px solid #bebebe;
+          &:not(:nth-of-type(1)) {
+            position: relative;
+            display: flex;
+            display: -webkit-flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            height: 71px;
+            p {
+              flex: 1;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+            > span {
+              position: absolute;
+              right: 13%;
+              top: 50%;
+              transform: translate3d(-50%, -50%, 0);
+            }
+            > button {
+              position: absolute;
+              top: 50%;
+              width: 50px;
+              height: 40px;
+              transform: translateY(-50%);
+              opacity: 0;
+            }
+            > .left-btn {
+              right: 20%;
+            }
+            > .right-btn {
+              right: 3%;
+            }
+          }
+        }
+        > div {
+          > input {
+            background-color: #f2f5f9;
+            border: 0;
+            width: 100%;
+            &:focus {
+              outline: none;
+            }
+          }
+          &:nth-of-type(1) {
+            background-color: #fff;
+            border-bottom: 1px solid @themeColor;
+            color: #000;
+            > input {
+              background-color: #fff;
+            }
+          }
+        }
       }
-      img {
-        max-width: 100%;
-        max-height: 100%;
+      .left-side {
+        margin-left: 8%;
       }
-      > span {
-        position: absolute;
-        right: 13%;
-        top: 50%;
-        transform: translate3d(-50%, -50%, 0);
-      }
-      > button {
-        position: absolute;
-        top: 50%;
-        width: 50px;
-        height: 40px;
-        transform: translateY(-50%);
-        opacity: 0;
-      }
-      > .left-btn {
-        right: 20%;
-      }
-      > .right-btn {
-        right: 3%;
+
+      .right-side {
+        margin-right: 8%;
       }
     }
   }
-}
-
-.left-side > div:nth-of-type(1),
-.right-side > div:nth-of-type(1) {
-  background-color: #fff;
-  border-bottom: 1px solid #00338d;
-  color: #00338d;
-}
-
-.left-side > div:nth-of-type(1) > input,
-.right-side > div:nth-of-type(1) > input {
-  background-color: #fff;
-}
-
-.left-side > div > input,
-.right-side > div > input {
-  background-color: #f2f5f9;
-  border: 0;
-  width: 100%;
-}
-
-.left-side > div > input:focus,
-.right-side > div > input:focus {
-  outline: none;
 }
 </style>

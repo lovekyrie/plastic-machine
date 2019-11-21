@@ -173,8 +173,8 @@ export default {
       cartList: [],
       userInfo: {},
       param: {
-        email: "954540387@qq.com",
-         remark:''
+        email: "",
+        remark:''
       },
       time: "",
       attach: {
@@ -362,6 +362,7 @@ export default {
     const userInfoStr = this.until.loGet("userInfo");
     if (userInfoStr) {
       this.userInfo = JSON.parse(userInfoStr);
+      this.param.email=this.userInfo.email
       this.getCartList();
     }
 
@@ -435,16 +436,14 @@ export default {
   margin: 16px 0;
 }
 
-.row .confirmBtn {
-  font-size: 16px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 8%;
-}
-
 .row .select-all {
   margin-left: 8%;
+  span{
+    margin-left: 12px;
+  }
+  img{
+    vertical-align: middle;
+  }
 }
 
 .row .content {
@@ -453,7 +452,7 @@ export default {
 
 .content .product-info {
   position: relative;
-  padding: 35px 0 35px 25px;
+  padding: 35px 0 35px 35px;
   display: -webkit-flex;
   display: flex;
   flex-direction: row;
@@ -585,9 +584,11 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    align-items: center;
     &:not(:nth-last-of-type(1)) {
       margin-bottom: 30px;
+    }
+    &:nth-of-type(2){
+      align-items: center;
     }
     &:nth-of-type(3) {
       textarea {

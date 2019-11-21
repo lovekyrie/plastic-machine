@@ -375,7 +375,7 @@ export default {
       orderList: [],
       showDialog: false,
       param: {
-        email: "954540387@qq.com",
+        email: "",
         remark: ""
       },
       attach: {
@@ -391,6 +391,7 @@ export default {
     const userInfoStr = this.until.loGet("userInfo");
     if (userInfoStr) {
       this.userInfo = JSON.parse(userInfoStr);
+      this.param.email=this.userInfo.email
     }
     this.getCartList();
   },
@@ -606,7 +607,7 @@ export default {
         return;
       }
 
-      const checkedCartList = this.cartList.filter(
+      const checkedCartList = this.orderList.filter(
         (item, index) => index === this.selectIndex
       );
       const param1 = checkedCartList.map(item => {

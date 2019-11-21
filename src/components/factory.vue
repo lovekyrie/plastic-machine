@@ -7,44 +7,46 @@
           <p>基础机型</p>
           <span @click="toView">查看</span>
         </div>
-        <div class="select">
-          <p>机型</p>
-          <el-select v-model="currentChoose.machineModel" placeholder="请选择机型">
-            <el-option
-              v-for="item in modelList"
-              :key="item.machineModel"
-              :label="item.machineModel"
-              :value="item.machineModel"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="select">
-          <p>锁模力</p>
-          <el-select v-model="currentChoose.clampForce" placeholder="请选择锁模力">
-            <el-option
-              v-for="item in clampingForce"
-              :key="item.clampForce"
-              :label="item.clampForce"
-              :value="item.clampForce"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="select">
-          <p>注射当量</p>
-          <el-select v-model="currentChoose.injection" placeholder="请选择">
-            <el-option
-              v-for="item in injection"
-              :key="item.injection"
-              :label="item.injection"
-              :value="item.injection"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="select">
-          <p>数量</p>
-          <el-select v-model="currentChoose.qty" placeholder="请选择">
-            <el-option v-for="item in qtyList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
+        <div class="select-wrap">
+          <div class="select">
+            <p>机型</p>
+            <el-select v-model="currentChoose.machineModel" placeholder="请选择机型">
+              <el-option
+                v-for="item in modelList"
+                :key="item.machineModel"
+                :label="item.machineModel"
+                :value="item.machineModel"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="select">
+            <p>锁模力</p>
+            <el-select v-model="currentChoose.clampForce" placeholder="请选择锁模力">
+              <el-option
+                v-for="item in clampingForce"
+                :key="item.clampForce"
+                :label="item.clampForce"
+                :value="item.clampForce"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="select">
+            <p>注射当量</p>
+            <el-select v-model="currentChoose.injection" placeholder="请选择">
+              <el-option
+                v-for="item in injection"
+                :key="item.injection"
+                :label="item.injection"
+                :value="item.injection"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="select">
+            <p>数量</p>
+            <el-select v-model="currentChoose.qty" placeholder="请选择">
+              <el-option v-for="item in qtyList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </div>
         </div>
         <div class="button">
           <button @click="confirm">确定</button>
@@ -199,9 +201,9 @@ export default {
             item.totalWater = item.totalWater ? item.totalWater : 0;
             item.powerConsumer = item.powerConsumer ? item.powerConsumer : 0;
             item.gasConsumption = item.gasConsumption ? item.gasConsumption : 0;
-            item.moldGas=item.moldGas?item.moldGas:0
-            item.doorGas=item.doorGas?item.doorGas:0
-            item.manipulatorGas=item.manipulatorGas?item.manipulatorGas:0
+            item.moldGas = item.moldGas ? item.moldGas : 0;
+            item.doorGas = item.doorGas ? item.doorGas : 0;
+            item.manipulatorGas = item.manipulatorGas ? item.manipulatorGas : 0;
             total.qty += item.qty;
             total.transformerPower +=
               parseFloat(item.transformerPower) * item.qty;
@@ -324,7 +326,7 @@ p {
   z-index: 99;
   .main {
     margin: auto;
-    width: 500px;
+    width: 60%;
     background: #ffffff;
     border-radius: 10px;
     .title {
@@ -346,20 +348,34 @@ p {
         font-weight: bold;
       }
     }
-    .select {
+    .select-wrap {
       display: flex;
       display: -webkit-flex;
-      align-items: center;
-      margin-left: 40px;
-      margin-bottom: 20px;
-      p {
-        width: 90px;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      padding: 0 50px 0 10px;
+      .select {
+        flex: 1;
+        display: flex;
+        display: -webkit-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        p {
+          width: 90px;
+          text-align: right;
+          margin-right: 3%;
+        }
       }
     }
+
     .button {
       width: 100%;
       border-top: 1px solid #e4e4e4;
       padding: 20px 0;
+      display: flex;
+      display: -webkit-flex;
+      flex-flow: row nowrap;
+      justify-content: center;
       button {
         width: 120px;
         text-align: center;
@@ -369,7 +385,9 @@ p {
         color: #000;
         border: 0;
         border-radius: 5px;
-        margin-left: 40px;
+        &:nth-last-of-type(1){
+          margin-left: 4%;
+        }
       }
     }
   }

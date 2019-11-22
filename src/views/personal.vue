@@ -384,15 +384,18 @@ export default {
         credentials: false,
         businessLicense: false
       },
-      selectIndex: 0
+      selectIndex: 0,
+      time: ""
     };
   },
   mounted() {
     const userInfoStr = this.until.loGet("userInfo");
     if (userInfoStr) {
       this.userInfo = JSON.parse(userInfoStr);
-      this.param.email=this.userInfo.email
+      this.param.email = this.userInfo.email;
     }
+
+    this.time = this.until.formatDay("yyyy-MM-dd");
     this.getCartList();
   },
   filters: {
@@ -528,7 +531,7 @@ export default {
 
       let param = this.sug;
       if (this.userInfo) {
-        param.appuserId = this.userInfo.userId;
+        param.appuserId = this.userInfo.subId;
       }
 
       this.api.sysSuggestCallback(param).then(res => {
@@ -670,7 +673,6 @@ body {
     width: 100%;
     background-color: #fff;
     .row {
-     
       .content {
         display: -webkit-flex;
         display: flex;
@@ -858,7 +860,7 @@ body {
   background-color: #f2f5f9;
 }
 
-.text-linked{
+.text-linked {
   padding-bottom: 15px;
 }
 
@@ -881,7 +883,7 @@ body {
     border: 0;
     background-color: #f2f5f9;
   }
-  .el-input__count{
+  .el-input__count {
     background-color: #f2f5f9;
     left: 10px;
   }

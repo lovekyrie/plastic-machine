@@ -151,7 +151,7 @@
       <h3>二 技术参数及配置</h3>
       <div class="item" v-for="(item, index) in technologyList" :key="index">
         <div class="title">2-1 技术参数表</div>
-        <p>113技术参数表</p>
+        <p>{{item[4].val}}技术参数表</p>
         <div class="param">
           <div v-for="(itemChild, index) in item" :key="index">
             <div>{{ itemChild.nm }}</div>
@@ -525,9 +525,8 @@ export default {
   }
   .quotation {
     font-size: 16px;
-    h3 {
-      text-align: center;
-    }
+    width: 60%;
+    margin: 20px auto;
     > p {
       text-indent: 30px;
       text-decoration: underline;
@@ -569,7 +568,6 @@ export default {
         .product-info,
         .optional-list,
         .optional-signal {
-          width: 50%;
           display: flex;
           display: -webkit-flex;
           flex-flow: column wrap;
@@ -618,7 +616,6 @@ export default {
           display: -webkit-flex;
           flex-flow: row nowrap;
           align-items: center;
-          width: 50%;
           border: 1px solid #bebebe;
           border-top: 0;
           div {
@@ -651,9 +648,17 @@ export default {
     }
   }
   .technology-setting {
+    font-size: 16px;
+    width: 60%;
+    margin: 0 auto;
     .item {
+       .title {
+        font-weight: 700;
+      }
+      >p{
+        margin-top: 20px;
+      }
       .param {
-        width: 50%;
         display: flex;
         display: -webkit-flex;
         flex-flow: column wrap;

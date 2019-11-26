@@ -51,9 +51,6 @@
         <div class="order-content" v-show="showOrder">
           <div class="title">
             <div>
-              <span>订单编号</span>
-            </div>
-            <div>
               <span>客户名称</span>
             </div>
             <div>
@@ -75,6 +72,9 @@
               <span>编辑</span>
             </div>
             <div>
+              <span>技术参数</span>
+            </div>
+            <div>
               <span>状态</span>
             </div>
             <div>
@@ -83,9 +83,6 @@
           </div>
           <div class="order-wrap">
             <div class="concept" v-for="(item, index) in orderList" :key="index">
-              <div>
-                <span>{{ item.orderno ? item.orderno : "" }}</span>
-              </div>
               <div>
                 <span>
                   {{
@@ -116,6 +113,9 @@
                   :src="editIcon"
                   @click="editOrder(item.form, item.id)"
                 />
+              </div>
+              <div>
+                <a :href="toShowTechnology(item.id)">查看详情</a>
               </div>
               <div :class="{ active: item.status === 0 }" v-if="item.status === 0">
                 <span @click="showSaveOrder(index)">生成订单</span>
@@ -434,6 +434,9 @@ export default {
         this.email.superiorMail = this.newEamil || this.userInfo.email;
       }
     },
+    toShowTechnology(id) {
+      return `technologyAgreement.html?id=${id}`;
+    },
     toShowPassword() {
       this.showPassword = true;
     },
@@ -589,6 +592,11 @@ export default {
           const data = JSON.parse(item.data);
           data.id = item.id;
           data.status = item.status;
+          const modelArr = data.form.model.split("/");
+          const modelStr =
+            modelArr[0] + data.form.clampingForce + modelArr[1];
+          data.proNm = `${modelStr}/${data.form.injection}/${data.form.screw}`;
+
           this.orderList.push(data);
         }
       });
@@ -758,24 +766,22 @@ body {
   padding: 0.5% 0 0.5% 1%;
 }
 
-.order-content > .title > div:nth-of-type(1),
-.order-content > .title > div:nth-of-type(7),
+.order-content > .title > div:nth-of-type(6),
 .concept > div:nth-of-type(1),
 .concept > div:nth-of-type(7) {
   width: 13%;
 }
 
-.order-content > .title > div:nth-of-type(5),
-.order-content > .title > div:nth-of-type(8),
-.order-content > .title > div:nth-of-type(10),
-.concept > div:nth-of-type(5),
-.concept > div:nth-of-type(8),
-.concept > div:nth-of-type(10) {
+.order-content > .title > div:nth-of-type(4),
+.order-content > .title > div:nth-of-type(7),
+.concept > div:nth-of-type(4),
+.concept > div:nth-of-type(7) {
   width: 5%;
 }
 
 .order-content > .title > div:nth-of-type(9),
 .concept > div:nth-of-type(9) {
+  width: 10%;
   padding-left: 0;
   color: #d5d5d5;
   text-align: center;
@@ -791,19 +797,19 @@ body {
   color: #000;
 }
 
-.order-content > .title > div:nth-of-type(3),
-.concept > div:nth-of-type(3) {
+.order-content > .title > div:nth-of-type(2),
+.concept > div:nth-of-type(2) {
   width: 19%;
 }
 
-.order-content > .title > div:nth-of-type(2),
-.order-content > .title > div:nth-of-type(4),
-.order-content > .title > div:nth-of-type(6),
-.order-content > .title > div:nth-of-type(9),
-.concept > div:nth-of-type(2),
-.concept > div:nth-of-type(4),
-.concept > div:nth-of-type(6),
-.concept > div:nth-of-type(9) {
+.order-content > .title > div:nth-of-type(1),
+.order-content > .title > div:nth-of-type(3),
+.order-content > .title > div:nth-of-type(5),
+.order-content > .title > div:nth-of-type(8),
+.concept > div:nth-of-type(1),
+.concept > div:nth-of-type(3),
+.concept > div:nth-of-type(5),
+.concept > div:nth-of-type(8) {
   width: 8%;
 }
 

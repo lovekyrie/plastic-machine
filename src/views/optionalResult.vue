@@ -248,10 +248,6 @@ export default {
         this.$message.error("客户名称必填！");
         return;
       }
-      if (!this.proSaleInfo.modelNumber) {
-        this.$message.error("规格型号必填！");
-        return;
-      }
       if (this.proSaleInfo.price==='') {
         this.$message.error("单价必填！");
         return;

@@ -1,23 +1,19 @@
 // const hostUrl = 'http://192.165.2.195'
 import $ from "jquery";
-import {
-  MessageBox
-} from "element-ui";
-import {
-  Message
-} from "element-ui";
+import { MessageBox } from "element-ui";
+import { Message } from "element-ui";
 
 class until {
   //对象数组方法去重
   arrayDeduplication(arr) {
     const obj = {};
     return arr.reduce((curr, next) => {
-      obj[next.matchMenuId] ?
-        "" :
-        (obj[next.matchMenuId] = true && curr.push(next));
-      return curr
+      obj[next.matchMenuId]
+        ? ""
+        : (obj[next.matchMenuId] =
+            true && (next.type === 0 || next.type === 1) && curr.push(next));
+      return curr;
     }, []);
-
   }
   //判断是否登录
   ifLogin() {
@@ -448,9 +444,9 @@ class until {
       if (new RegExp("(" + k + ")").test(fmt)) {
         fmt = fmt.replace(
           RegExp.$1,
-          RegExp.$1.length == 1 ?
-          o[k] :
-          ("00" + o[k]).substr(("" + o[k]).length)
+          RegExp.$1.length == 1
+            ? o[k]
+            : ("00" + o[k]).substr(("" + o[k]).length)
         );
       }
     }
@@ -665,8 +661,4 @@ class reg {
   }
 }
 
-export {
-  until,
-  reg,
-  judge
-};
+export { until, reg, judge };

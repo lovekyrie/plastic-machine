@@ -59,9 +59,9 @@
             </div>
           </div>
           <!-- 差异价 -->
-          <div>
+          <!-- <div>
             <span>差异价：{{ item.diff ? item.diff * item.num : 0 }}</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -174,7 +174,7 @@ export default {
       userInfo: {},
       param: {
         email: "",
-        remark:''
+        remark: ""
       },
       time: "",
       attach: {
@@ -261,8 +261,10 @@ export default {
         const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
         const money = (item.proSaleInfo.price * item.num).toFixed(2);
         const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
+        const modelArr = item.form.model.split("/");
+        const modelStr = modelArr[0] + item.form.clampingForce + modelArr[1];
         return {
-          name: item.form.model,
+          name: modelStr,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
           price,
@@ -362,7 +364,7 @@ export default {
     const userInfoStr = this.until.loGet("userInfo");
     if (userInfoStr) {
       this.userInfo = JSON.parse(userInfoStr);
-      this.param.email=this.userInfo.email
+      this.param.email = this.userInfo.email;
       this.getCartList();
     }
 
@@ -438,10 +440,10 @@ export default {
 
 .row .select-all {
   margin-left: 8%;
-  span{
+  span {
     margin-left: 12px;
   }
-  img{
+  img {
     vertical-align: middle;
   }
 }
@@ -587,7 +589,7 @@ export default {
     &:not(:nth-last-of-type(1)) {
       margin-bottom: 30px;
     }
-    &:nth-of-type(2){
+    &:nth-of-type(2) {
       align-items: center;
     }
     &:nth-of-type(3) {

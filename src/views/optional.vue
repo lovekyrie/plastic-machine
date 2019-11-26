@@ -87,7 +87,12 @@
         <div class="usual-pick" v-show="showUsual">
           <ul class="sel-three">
             <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
-              <img v-if="item.checked" :src="item.status===-1 ?requiredIcon:pickAll" @click="pickItem(item)" alt />
+              <img
+                v-if="item.checked"
+                :src="item.status===-1 ?requiredIcon:pickAll"
+                @click="pickItem(item)"
+                alt
+              />
               <img v-else :src="noPick" alt @click="pickItem(item)" />
               <span>{{ item.name }}</span>
             </li>
@@ -298,7 +303,7 @@ export default {
       showRelatedSize: false,
       relatedSizeImg: "",
       showMachineColor: false,
-      injectionWeight:"",
+      injectionWeight: "",
       cartId: "",
       paramForm: {},
       modelType: "",
@@ -337,6 +342,7 @@ export default {
     this.specialList.push(JSON.parse(JSON.stringify(this.special)));
     const formStr = this.until.getQueryString("form");
     const idStr = this.until.getQueryString("id");
+
     if (formStr && idStr) {
       this.paramForm = JSON.parse(formStr);
       this.cartId = idStr;
@@ -376,8 +382,9 @@ export default {
     if (idStr) {
       await this.getStandardOrCombination();
       await this.getOrderInfo();
-      await this.getBigMenuList();
     }
+    this.propertyList = [];
+    await this.getBigMenuList();
   },
   watch: {},
   methods: {
@@ -739,6 +746,8 @@ export default {
       let originType = true;
       const proArr = this.until.loGet("property");
       if (proArr) {
+        this.showDialog = false;
+        this.showUsual = true;
         originType = true;
         this.originalProp = JSON.parse(proArr);
       } else {
@@ -759,11 +768,13 @@ export default {
                 if (originType) {
                   if (child.cd === element.cd) {
                     child.checked = true;
+                    child.type = element.type;
                     this.propertyList.push(child);
                   }
                 } else {
                   if (child.cd === element.code) {
                     child.checked = true;
+                    child.type = element.type;
                     this.propertyList.push(child);
                   }
                 }

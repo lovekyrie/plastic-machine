@@ -21,7 +21,7 @@
             <p>{{ item.name }}</p>
             <img :src="numIcon" alt />
             <span>{{ item.num }}</span>
-            <button class="left-btn" @click="mins(item)"></button>
+            <button class="left-btn" @click.stop="mins(item)"></button>
             <button class="right-btn" @click.stop="plus(item)"></button>
           </div>
           <div v-for="i in remainLeftLen" :key="i + remainLeftLen"></div>
@@ -108,7 +108,7 @@ export default {
         this.$message.error("您所选择的项目数量已经达到下限！");
         return;
       }
-      if (item.count >= 2) {
+      if (item.num >= 2) {
         item.num -= item.multiple ? item.multiple : 1;
       }
     },

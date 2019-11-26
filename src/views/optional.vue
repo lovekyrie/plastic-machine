@@ -87,7 +87,8 @@
         <div class="usual-pick" v-show="showUsual">
           <ul class="sel-three">
             <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
-              <img :src="item.checked ? pickAll : noPick" alt @click="pickItem(item)" />
+              <img v-if="item.checked" :src="item.status===-1 ?requiredIcon:pickAll" @click="pickItem(item)" alt />
+              <img v-else :src="noPick" alt @click="pickItem(item)" />
               <span>{{ item.name }}</span>
             </li>
           </ul>
@@ -203,7 +204,7 @@
             </div>
             <img :src="pullDown" alt />
           </div>
-          <p>注射重量(PS):{{ screwDiameter }}g</p>
+          <p>注射重量(PS):{{ injectionWeight }}g</p>
           <div>
             <span></span>
             <button class="confirmPick" @click="confirm">确认</button>
@@ -253,10 +254,12 @@ import delSetting from "./images/删除配置.png";
 import closeIcon from "./images/关闭.png";
 import pickAll from "./images/选配清单_全选.png";
 import noPick from "./images/选配清单_未选.png";
+import requiredIcon from "./images/required.png";
 
 export default {
   data: () => {
     return {
+      requiredIcon,
       backArrow,
       searchIcon,
       pullDown,
@@ -295,7 +298,7 @@ export default {
       showRelatedSize: false,
       relatedSizeImg: "",
       showMachineColor: false,
-      screwDiameter: "",
+      injectionWeight:"",
       cartId: "",
       paramForm: {},
       modelType: "",
@@ -373,7 +376,7 @@ export default {
     if (idStr) {
       await this.getStandardOrCombination();
       await this.getOrderInfo();
-      await this.getBigMenuList()
+      await this.getBigMenuList();
     }
   },
   watch: {},
@@ -486,7 +489,7 @@ export default {
     },
     async chooseScrew(item) {
       this.screw = item.name;
-      this.screwDiameter = item.screwDiameter;
+      this.injectionWeight = item.injectionWeight;
       this.form.screwId = item.screwTypeId;
       this.showScrew = false;
     },
@@ -527,13 +530,20 @@ export default {
       );
     },
     pickItem(item) {
-      item.checked = !item.checked;
-      item.type = this.category === "常规选配" ? 0 : 1;
-      const i = this.smallMenuList.findIndex(k => k === item);
-      this.$set(this.smallMenuList, i, item);
-      //拼进propertyList,供我的清单中查看
-      if (item.checked) {
-        this.propertyList.push(item);
+      if (item.status === -1) {
+        this.$message.error("当前选择项不能取消");
+        return;
+      } else {
+        item.checked = !item.checked;
+        item.type = this.category === "常规选配" ? 0 : 1;
+        const i = this.smallMenuList.findIndex(k => k === item);
+        this.$set(this.smallMenuList, i, item);
+        //拼进propertyList,供我的清单中查看
+        if (item.checked) {
+          this.propertyList.push(item);
+        } else {
+          this.propertyList = this.propertyList.filter(pro => pro != item);
+        }
       }
     },
     toOptionalList() {
@@ -641,7 +651,7 @@ export default {
         };
         this.screwModelList = await this.api.sysGetScrewList(param);
         this.screw = this.screwModelList[0].name;
-        this.screwDiameter = this.screwModelList[0].screwDiameter;
+        this.injectionWeight = this.screwModelList[0].injectionWeight;
         this.form.screwId = this.screwModelList[0].screwTypeId;
         this.form.screw = this.screwModelList[0].name;
       }
@@ -862,7 +872,7 @@ body {
               border: 0;
               background-color: @grayColor;
             }
-            .el-select__caret{
+            .el-select__caret {
               color: @headerColor;
             }
           }

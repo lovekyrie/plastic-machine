@@ -246,11 +246,10 @@ export default {
     },
     async getRelatedSize() {
       const list = await this.api.sysGetTechnicalParameter(this.technicalParam);
-      list.forEach(item => {
-        this.relatedSizeList.push(item.imgUrl);
-      });
-
-      this.relatedSizeList = new Set(this.relatedSizeList);
+      if (list.length > 0) {
+        this.relatedSizeList = list.map(item => item.imgUrl);
+        this.relatedSizeList = new Set(this.relatedSizeList);
+      }
     }
   },
   components: {

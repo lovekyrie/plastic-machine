@@ -7,9 +7,9 @@
         <div>博创智能装备股份有限公司</div>
       </div>
       <div>
-        <span>供方：</span>
+        <span>需方：</span>
         <div>
-          <input type="text" />
+          <input type="text" v-model="cartInfo.proSaleInfo.neederCompany" />
         </div>
       </div>
       <p>经过双方友好协商除对采购设备的标准配置和参数确定以外，另外达成以下技术协议进行补充，若本协议中还有未涉及的条款双方友好协商解决：</p>
@@ -24,7 +24,7 @@
         </div>
         <div class="machine-type">
           <div>机型</div>
-          <div>{{ cartInfo.proNm }}</div>
+          <div>{{ showNm }}</div>
           <div></div>
           <div></div>
         </div>
@@ -70,23 +70,23 @@
           v-for="(item, index) in cartInfo.techAgreementMatchs"
           :key="item.code"
         >
-          <div>{{ index }}</div>
+          <div>{{ index+1 }}</div>
           <div>{{ item.matchNameCH }}</div>
           <div>{{ item.num }}</div>
           <div>{{ item.unitPrice | toFixed(2) }}</div>
           <div>{{ (item.num * item.unitPrice) | toFixed(2) }}</div>
         </div>
-        <div class="terms" v-for="item in 3" :key="item">
+        <!-- <div class="terms" v-for="item in 3" :key="item">
           <div>条款修改</div>
           <div></div>
           <div>供方确认</div>
           <div></div>
           <div>需方确认</div>
           <div></div>
-        </div>
+        </div>-->
       </div>
     </div>
-    <div class="paragraph">
+    <!-- <div class="paragraph">
       <p>二、安全要求：按塑料机械国家标准G8/T2S156-2010要求执行，同时符合国家工作健康和安全法规。</p>
     </div>
     <div class="paragraph">
@@ -94,7 +94,7 @@
     </div>
     <div class="paragraph">
       <p>四、本技术协议作为合同的附件之一（设备的标准配置说明条款，供方拥有最终解释权；若需方对设备的标准配置有异议之处，请列入商标；未列入上表则按遵从供方设备的标准配置看待），本协议同相关合同具有相等法律效力</p>
-    </div>
+    </div>-->
     <div class="footer">
       <button @click="toBack">确定</button>
     </div>
@@ -183,7 +183,8 @@ export default {
         "KN"
       ],
       list: [],
-      cartInfo: {}
+      cartInfo: {},
+      showNm: ""
     };
   },
   filters: {
@@ -208,6 +209,11 @@ export default {
       const info = await this.api.sysGetOrderInfoById(this.id);
       if (info) {
         this.cartInfo = JSON.parse(info.data);
+        //
+        const modelArr = this.cartInfo.form.model.split("/");
+        const modelStr =
+          modelArr[0] + this.cartInfo.form.clampingForce + modelArr[1];
+        this.showNm = `${modelStr}/${this.cartInfo.form.injection}/${this.cartInfo.form.screw}`;
       }
     },
     async getParamList() {
@@ -314,11 +320,12 @@ export default {
       .machine-type {
         > div {
           &:nth-of-type(1) {
-            padding-left: 8%;
+            text-align: center;
             width: 30%;
           }
           &:nth-of-type(2) {
             width: 20%;
+            padding-left: 2%;
           }
           &:nth-of-type(3) {
             width: 25%;

@@ -54,8 +54,8 @@
               <div>注塑机</div>
               <div>{{ item.name }}</div>
               <div>{{ item.num }}</div>
-              <div>{{ item.price }}</div>
-              <div>{{ item.salePrice }}</div>
+              <div>{{ item.priceAll }}</div>
+              <div>{{ item.salePriceAll }}</div>
               <div>{{ item.money }}</div>
               <div>{{ item.saleMoney }}</div>
             </div>

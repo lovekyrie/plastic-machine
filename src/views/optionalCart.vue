@@ -265,21 +265,25 @@ export default {
           return curr + parseInt(next.money);
         }, 0);
 
-        const price = (parseInt(item.proSaleInfo.price) + optionMoney).toFixed(
-          2
-        );
-        const salePrice = (
+        const price = parseInt(item.proSaleInfo.price).toFixed(2);
+        const priceAll = (
+          parseInt(item.proSaleInfo.price) + optionMoney
+        ).toFixed(2);
+        const salePrice=parseInt(item.proSaleInfo.salePrice).toFixed(2)
+        const salePriceAll = (
           parseInt(item.proSaleInfo.salePrice) + optionMoney
         ).toFixed(2);
-        const money = (price * item.num).toFixed(2);
-        const saleMoney = (salePrice * item.num).toFixed(2);
-        
+        const money = (priceAll * item.num).toFixed(2);
+        const saleMoney = (salePriceAll * item.num).toFixed(2);
+
         return {
           name: modelStr,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
           price,
+          priceAll,
           salePrice,
+          salePriceAll,
           money,
           saleMoney
         };

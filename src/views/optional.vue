@@ -86,14 +86,9 @@
         <!-- 常规选配 -->
         <div class="usual-pick" v-show="showUsual">
           <ul class="sel-three">
-            <li v-for="item in this.smallMenuList" :key="item.matchMenuId">
-              <img
-                v-if="item.checked"
-                :src="item.status===-1 ?requiredIcon:pickAll"
-                @click="pickItem(item)"
-                alt
-              />
-              <img v-else :src="noPick" alt @click="pickItem(item)" />
+            <li v-for="item in this.smallMenuList" :key="item.matchMenuId" @click="pickItem(item)">
+              <img v-if="item.checked" :src="item.status===-1 ?requiredIcon:pickAll" alt />
+              <img v-else :src="noPick" alt />
               <span>{{ item.name }}</span>
             </li>
           </ul>
@@ -380,7 +375,7 @@ export default {
       this.form.screwId = screwId;
     }
     if (idStr) {
-     // await this.getStandardOrCombination();
+      // await this.getStandardOrCombination();
       await this.getOrderInfo();
     }
     this.propertyList = [];
@@ -455,7 +450,7 @@ export default {
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
-    //  await this.getStandardOrCombination();
+      //  await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -473,7 +468,7 @@ export default {
       if (index >= 0)
         this.form.clampingForce = this.clampingForceList[index].name;
       await this.getInjectionList();
-     // await this.getStandardOrCombination();
+      // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -490,7 +485,7 @@ export default {
       );
       if (index >= 0) this.form.injection = this.injectionList[index].name;
       await this.getScrewList();
-     // await this.getStandardOrCombination();
+      // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -505,7 +500,7 @@ export default {
         item => item.screwTypeId === e
       );
       if (index >= 0) this.form.screw = this.screwModelList[index].name;
-     // await this.getStandardOrCombination();
+      // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -988,13 +983,17 @@ body {
         display: -webkit-flex;
         flex-flow: column wrap;
         justify-content: flex-start;
-        height: 600px;
+        height: 650px;
 
         li {
           list-style: none;
           color: #000;
           margin-bottom: 20px;
+          img{
+            cursor: pointer;
+          }
           span {
+            cursor: pointer;
             margin-left: 30px;
           }
         }
@@ -1022,13 +1021,10 @@ body {
       border-top: 1px solid #cdcdcd;
       background-color: #fafafa;
       width: 100%;
-      position: fixed;
-      height: 6.6%;
-      bottom: 0;
+      height:60px;
       .foot-wrap {
         width: 42%;
-        height: 6.6%;
-        position: fixed;
+         height:60px;
         display: -webkit-flex;
         display: flex;
         flex-direction: row;

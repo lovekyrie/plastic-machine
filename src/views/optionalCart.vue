@@ -61,7 +61,7 @@
           <!-- 差异价 -->
           <!-- <div>
             <span>差异价：{{ item.diff ? item.diff * item.num : 0 }}</span>
-          </div> -->
+          </div>-->
         </div>
       </div>
     </div>
@@ -257,12 +257,23 @@ export default {
       });
 
       const param2 = checkedCartList.map(item => {
-        const price = parseInt(item.proSaleInfo.price).toFixed(2);
-        const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
-        const money = (item.proSaleInfo.price * item.num).toFixed(2);
-        const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
         const modelArr = item.form.model.split("/");
         const modelStr = modelArr[0] + item.form.clampingForce + modelArr[1];
+        const arr = item.techAgreementMatchs;
+
+        const optionMoney = arr.reduce((curr, next) => {
+          return curr + parseInt(next.money);
+        }, 0);
+
+        const price = (parseInt(item.proSaleInfo.price) + optionMoney).toFixed(
+          2
+        );
+        const salePrice = (
+          parseInt(item.proSaleInfo.salePrice) + optionMoney
+        ).toFixed(2);
+        const money = (price * item.num).toFixed(2);
+        const saleMoney = (salePrice * item.num).toFixed(2);
+        
         return {
           name: modelStr,
           modelNumber: item.proSaleInfo.modelNumber,

@@ -29,27 +29,12 @@
           <div></div>
         </div>
         <div class="param">
-          <!-- 序号 -->
-          <div>
-            <div v-for="item in 35" :key="item">{{ item }}</div>
-          </div>
-          <!-- 名称 -->
-          <div>
-            <div v-for="(item, index) in nmList" :key="index">{{ item }}</div>
-          </div>
-          <!-- 单位 -->
-          <div>
-            <div v-for="(item, index) in unList" :key="index">{{ item }}</div>
-          </div>
-          <div v-for="(item, index) in list" :key="index">
-            <div
-              v-for="(itemJ, index1) in Object.values(item)"
-              :key="index1"
-            >{{ itemJ ? itemJ : "--" }}</div>
-          </div>
-          <!-- 空白 -->
-          <div>
-            <div v-for="item in 35" :key="item"></div>
+          <div v-for="(itemChild, index) in list[0]" :key="index">
+            <div>{{index+1}}</div>
+            <div>{{ itemChild.nm }}</div>
+            <div>{{ itemChild.unit }}</div>
+            <div>{{ itemChild.val }}</div>
+            <div></div>
           </div>
         </div>
         <div class="optional">
@@ -184,7 +169,189 @@ export default {
       ],
       list: [],
       cartInfo: {},
-      showNm: ""
+      showNm: "",
+      TECH_LIST: [
+        {
+          nm: "技术参数",
+          enNm: "",
+          unit: "UNIT",
+          val: "BS80-III"
+        },
+        {
+          nm: "注射系统",
+          enNm: "",
+          unit: "unit",
+          val: ""
+        },
+        {
+          nm: "螺杆直径",
+          enNm: "screwDiameter",
+          unit: "mm",
+          val: "D30"
+        },
+        {
+          nm: "注射容积",
+          enNm: "shotSize",
+          unit: "cm3",
+          val: "120"
+        },
+        {
+          nm: "注射量（PS）",
+          enNm: "injectionWeight",
+          unit: "g",
+          val: "113"
+        },
+        {
+          nm: "理论注射压力",
+          enNm: "injectionPressure",
+          unit: "MPa",
+          val: "209"
+        },
+        {
+          nm: "螺杆长径比",
+          enNm: "screwRatioLD",
+          unit: "L/D",
+          val: "24"
+        },
+        {
+          nm: "注射行程",
+          enNm: "injectionStroke",
+          unit: "mm",
+          val: "500"
+        },
+        {
+          nm: "最大螺杆转速",
+          enNm: "screwSpeed",
+          unit: "rpm",
+          val: "250"
+        },
+        {
+          nm: "射嘴接触力",
+          enNm: "nozzleContactForce",
+          unit: "KN",
+          val: "12"
+        },
+        {
+          nm: "射移行程",
+          enNm: "injectionRoute",
+          unit: "mm",
+          val: "320"
+        },
+        {
+          nm: "锁模系统",
+          enNm: "",
+          unit: "unit",
+          val: ""
+        },
+        {
+          nm: "锁模力",
+          enNm: "clampTonnage",
+          unit: "KN",
+          val: "800"
+        },
+        {
+          nm: "开模行程",
+          enNm: "maxtoggleStroke",
+          unit: "mm",
+          val: "200"
+        },
+        {
+          nm: "模板尺寸",
+          enNm: "moldPlatenDimension",
+          unit: "mm×mm",
+          val: "540×540"
+        },
+        {
+          nm: "拉杆间距",
+          enNm: "spaceBetweenTieBars",
+          unit: "mm×mm",
+          val: "360×360"
+        },
+        {
+          nm: "模板最大距离",
+          enNm: "maxMoldOpeningStroke",
+          unit: "mm",
+          val: "680"
+        },
+        {
+          nm: "容模厚度",
+          enNm: "moldHeight",
+          unit: "mm",
+          val: "1.2"
+        },
+        {
+          nm: "顶针行程",
+          enNm: "ejectorStroke",
+          unit: "mm",
+          val: "100"
+        },
+        {
+          nm: "理论顶出力",
+          enNm: "ejectorTonnage",
+          unit: "KN",
+          val: "28.5"
+        },
+        {
+          nm: "顶针数",
+          enNm: "ejectorQty",
+          unit: "unit",
+          val: "56"
+        },
+        {
+          nm: "电力/电热",
+          enNm: "",
+          unit: "unit",
+          val: ""
+        },
+        {
+          nm: "液压系统压力",
+          enNm: "maxPumpPressure",
+          unit: "MPa",
+          val: "84"
+        },
+        {
+          nm: "油泵电机功率",
+          enNm: "pumpMotorPower",
+          unit: "KW",
+          val: "11"
+        },
+        {
+          nm: "电热功率",
+          enNm: "heaterPower",
+          unit: "KW",
+          val: "6.5"
+        },
+        {
+          nm: "温控区数",
+          enNm: "tempCtlQty",
+          unit: "unit",
+          val: "2"
+        },
+        {
+          nm: "其他",
+          enNm: "",
+          unit: "unit",
+          val: ""
+        },
+        {
+          nm: "理论油箱容量",
+          enNm: "oilTankCapacity",
+          unit: "L",
+          val: "175"
+        },
+        {
+          nm: "外形尺寸",
+          enNm: "machineDimension",
+          unit: "m×m×m",
+          val: "230×200"
+        },
+        {
+          nm: "理论机重",
+          enNm: "machineWeight",
+          unit: "KG",
+          val: "3"
+        }
+      ]
     };
   },
   filters: {
@@ -232,12 +399,12 @@ export default {
       };
 
       const data = await this.api.sysGetOptionResultParamList(param);
-      delete data.imgUrl;
-      delete data.imgUrlEn;
-      delete data.priceIn;
-      delete data.priceOut;
-
-      this.list.push(data);
+      this.TECH_LIST.forEach(pro => {
+        if (data.length > 0) {
+          pro.val = data[0][pro.enNm];
+        }
+      });
+      this.list.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
     }
   },
   components: {}
@@ -376,22 +543,26 @@ export default {
       .param {
         display: flex;
         display: -webkit-flex;
-        flex-flow: row nowrap;
+        flex-flow: column wrap;
+        border-right: 0;
+        border-bottom: 0;
         > div {
-          flex: 1;
+          width: 100%;
           display: flex;
-          flex-flow: column wrap;
-          &:nth-of-type(1) {
-            flex: 0 0 5%;
-          }
-          &:nth-of-type(3) {
-            flex: 0 0 20%;
-          }
-          &:nth-of-type(2) {
-            flex: 0 0 25%;
-          }
+          flex-flow: row nowrap;
+
           > div {
-            padding-left: 10%;
+            flex: 1;
+            &:nth-of-type(1) {
+              flex: 0 0 5%;
+            }
+            &:nth-of-type(2) {
+              flex: 0 0 25%;
+            }
+            &:nth-of-type(3) {
+              flex: 0 0 20%;
+            }
+            padding-left: 2%;
             width: 100%;
             height: 30px;
             line-height: 30px;

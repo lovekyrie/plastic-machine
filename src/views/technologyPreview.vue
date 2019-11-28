@@ -51,8 +51,8 @@
               <div v-for="(item, index) in PRODUCT_TITLE" :key="index">{{ item }}</div>
             </div>
             <div v-for="(item, index) in saleAgreementJson.saleAgreementProducts" :key="index">
+              <div>注塑机</div>
               <div>{{ item.name }}</div>
-              <div>{{ item.modelNumber }}</div>
               <div>{{ item.num }}</div>
               <div>{{ item.price }}</div>
               <div>{{ item.salePrice }}</div>
@@ -84,7 +84,7 @@
           <!-- 货物信息对应的选配参数 -->
           <div class="optional-signal">
             <div>
-              <div>选配配置或功能</div>
+              <div>选配功能或附件</div>
             </div>
           </div>
           <div class="optional-list">
@@ -97,11 +97,11 @@
               <div>{{ index1 + 1 }}</div>
               <div>{{ itemChild.matchNameCH }}</div>
               <div>{{ itemChild.num }}</div>
-              <div>{{ itemChild.unitPrice | toFixed(2) }}</div>
-              <div>{{ itemChild.money | toFixed(2) }}</div>
+              <!-- <div>{{ itemChild.unitPrice | toFixed(2) }}</div>
+              <div>{{ itemChild.money | toFixed(2) }}</div> -->
             </div>
           </div>
-          <div class="total">
+          <!-- <div class="total">
             <div>总计</div>
             <div>
               <p>
@@ -109,7 +109,7 @@
                 元）
               </p>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="item">
@@ -242,7 +242,7 @@ export default {
         },
         {
           nm: "射移行程",
-          enNm: "shootMoveStroke",
+          enNm: "injectionRoute",
           unit: "mm",
           val: "320"
         },
@@ -260,7 +260,7 @@ export default {
         },
         {
           nm: "开模行程",
-          enNm: "toggle_stroke",
+          enNm: "maxtoggleStroke",
           unit: "mm",
           val: "200"
         },
@@ -302,7 +302,7 @@ export default {
         },
         {
           nm: "顶针数",
-          enNm: "ejectorNum",
+          enNm: "ejectorQty",
           unit: "unit",
           val: "56"
         },
@@ -314,7 +314,7 @@ export default {
         },
         {
           nm: "液压系统压力",
-          enNm: "hydraulicSystemPressure",
+          enNm: "maxPumpPressure",
           unit: "MPa",
           val: "84"
         },
@@ -332,7 +332,7 @@ export default {
         },
         {
           nm: "温控区数",
-          enNm: "temperatureControlNum",
+          enNm: "tempCtlQty",
           unit: "unit",
           val: "2"
         },
@@ -370,7 +370,7 @@ export default {
         "合计（面价）",
         "合计（优惠价）"
       ],
-      OPTIONAL_TITLE: ["序号", "名称", "数量", "单价", "小计"],
+      OPTIONAL_TITLE: ["序号", "名称", "数量"],
       orderParam: {},
       saleAgreementJson: {},
       techAgreementJson: [],

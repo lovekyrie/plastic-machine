@@ -380,7 +380,7 @@ export default {
       this.form.screwId = screwId;
     }
     if (idStr) {
-      await this.getStandardOrCombination();
+     // await this.getStandardOrCombination();
       await this.getOrderInfo();
     }
     this.propertyList = [];
@@ -455,7 +455,7 @@ export default {
       await this.getClampingForceList();
       await this.getInjectionList();
       await this.getScrewList();
-      await this.getStandardOrCombination();
+    //  await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -473,7 +473,7 @@ export default {
       if (index >= 0)
         this.form.clampingForce = this.clampingForceList[index].name;
       await this.getInjectionList();
-      await this.getStandardOrCombination();
+     // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -490,7 +490,7 @@ export default {
       );
       if (index >= 0) this.form.injection = this.injectionList[index].name;
       await this.getScrewList();
-      await this.getStandardOrCombination();
+     // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -505,7 +505,7 @@ export default {
         item => item.screwTypeId === e
       );
       if (index >= 0) this.form.screw = this.screwModelList[index].name;
-      await this.getStandardOrCombination();
+     // await this.getStandardOrCombination();
       await this.getBigMenuList();
       this.propertyList = [];
     },
@@ -525,7 +525,7 @@ export default {
       this.showBasic = false;
       this.showUsual = true;
       //根据选项得出标准机/组合机
-      await this.getStandardOrCombination();
+      // await this.getStandardOrCombination();
       await this.getBigMenuList();
     },
     toOptionResult() {

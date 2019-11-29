@@ -593,8 +593,7 @@ export default {
           data.id = item.id;
           data.status = item.status;
           const modelArr = data.form.model.split("/");
-          const modelStr =
-            modelArr[0] + data.form.clampingForce + modelArr[1];
+          const modelStr = modelArr[0] + data.form.clampingForce + modelArr[1];
           data.proNm = `${modelStr}/${data.form.injection}/${data.form.screw}`;
 
           this.orderList.push(data);
@@ -629,16 +628,32 @@ export default {
       });
 
       const param2 = checkedCartList.map(item => {
+        const modelArr = item.form.model.split("/");
+        const modelStr = modelArr[0] + item.form.clampingForce + modelArr[1];
+        const arr = item.techAgreementMatchs;
+
+        const optionMoney = arr.reduce((curr, next) => {
+          return curr + parseInt(next.money);
+        }, 0);
+
         const price = parseInt(item.proSaleInfo.price).toFixed(2);
+        const priceAll = (
+          parseInt(item.proSaleInfo.price) + optionMoney
+        ).toFixed(2);
         const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
-        const money = (item.proSaleInfo.price * item.num).toFixed(2);
-        const saleMoney = (item.proSaleInfo.salePrice * item.num).toFixed(2);
+        const salePriceAll = (
+          parseInt(item.proSaleInfo.salePrice) + optionMoney
+        ).toFixed(2);
+        const money = (priceAll * item.num).toFixed(2);
+        const saleMoney = (salePriceAll * item.num).toFixed(2);
         return {
-          name: item.form.model,
+          name: modelStr,
           modelNumber: item.proSaleInfo.modelNumber,
           num: item.num,
           price,
+          priceAll,
           salePrice,
+          salePriceAll,
           money,
           saleMoney
         };
@@ -799,7 +814,7 @@ body {
 
 .order-content > .title > div:nth-of-type(2),
 .concept > div:nth-of-type(2) {
-  width: 19%;
+  width: 16%;
 }
 
 .order-content > .title > div:nth-of-type(1),

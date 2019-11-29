@@ -83,7 +83,7 @@
             <div></div>
           </div>
           <div class="param">
-            <div v-for="(itemChild, index) in list[0]" :key="index">
+            <div v-for="(itemChild, index) in technologyList[0]" :key="index">
               <div>{{index+1}}</div>
               <div>{{ itemChild.nm }}</div>
               <div>{{ itemChild.unit }}</div>
@@ -106,6 +106,7 @@ export default {
       time: "",
       form: {},
       list: [],
+      technologyList:[],
       discount: "",
       TECH_LIST: [
         {
@@ -442,13 +443,20 @@ export default {
       };
 
       const data = await this.api.sysGetOptionResultParamList(param);
+
+      delete data.imgUrl;
+      delete data.imgUrlEn;
       this.proSaleInfo.price = data.priceIn ? data.priceIn : 0;
+      delete data.priceIn;
+      delete data.priceOut;
+      this.list.push(data);
+
       this.TECH_LIST.forEach(pro => {
         if (data.length > 0) {
           pro.val = data[0][pro.enNm];
         }
       });
-      this.list.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
+      this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
     }
   },
   components: {}

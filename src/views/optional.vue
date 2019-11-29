@@ -452,6 +452,7 @@ export default {
       await this.getScrewList();
       //  await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.bigMenuIndex = 0;
       this.propertyList = [];
     },
     async chooseClamping(item) {
@@ -470,6 +471,7 @@ export default {
       await this.getInjectionList();
       // await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.bigMenuIndex = 0;
       this.propertyList = [];
     },
     async chooseInjection(item) {
@@ -487,6 +489,7 @@ export default {
       await this.getScrewList();
       // await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.bigMenuIndex = 0;
       this.propertyList = [];
     },
     async chooseScrew(item) {
@@ -502,6 +505,7 @@ export default {
       if (index >= 0) this.form.screw = this.screwModelList[index].name;
       // await this.getStandardOrCombination();
       await this.getBigMenuList();
+      this.bigMenuIndex = 0;
       this.propertyList = [];
     },
     back() {
@@ -989,7 +993,7 @@ body {
           list-style: none;
           color: #000;
           margin-bottom: 20px;
-          img{
+          img {
             cursor: pointer;
           }
           span {
@@ -1021,10 +1025,10 @@ body {
       border-top: 1px solid #cdcdcd;
       background-color: #fafafa;
       width: 100%;
-      height:60px;
+      height: 60px;
       .foot-wrap {
         width: 42%;
-         height:60px;
+        height: 60px;
         display: -webkit-flex;
         display: flex;
         flex-direction: row;

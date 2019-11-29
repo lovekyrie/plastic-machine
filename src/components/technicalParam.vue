@@ -118,7 +118,7 @@ export default {
 
 <style scoped lang="less">
 .techical {
-  margin: 50px 150px 0 40px;
+  margin: 50px 150px 20px 40px;
   .right-part {
     font-size: 16px;
     width: 100%;

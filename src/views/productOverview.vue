@@ -242,6 +242,11 @@ export default {
         delete item.imgUrlEn;
         delete item.priceIn;
         delete item.priceOut;
+        delete item.pumpMotorPower;
+        delete item.screwSpeed;
+        delete item.shotSize;
+        delete item.spaceBetweenTieBars;
+        delete item.tempCtlQty;
       });
     },
     async getRelatedSize() {

@@ -2,22 +2,11 @@
   <div class="techical">
     <div class="right-part">
       <div class="param">
-        <!-- 序号 -->
-        <div>
-          <div v-for="item in 35" :key="item">{{ item }}</div>
-        </div>
-        <!-- 名称 -->
-        <div>
-          <div v-for="(item, index) in nmList" :key="index">{{ item }}</div>
-        </div>
-        <!-- 单位 -->
-        <div>
-          <div v-for="(item, index) in unList" :key="index">{{ item }}</div>
-        </div>
-        <div v-for="(item, index) in list" :key="index">
-          <div v-for="(itemJ, index1) in Object.values(item)" :key="index1">
-            {{ itemJ ? itemJ : "--" }}
-          </div>
+        <div v-for="(itemChild, index) in list[0]" :key="index">
+          <div>{{index+1}}</div>
+          <div>{{ itemChild.nm }}</div>
+          <div>{{ itemChild.unit }}</div>
+          <div v-for="(itemG, j) in itemChild.val" :key="j">{{itemG}}</div>
         </div>
       </div>
     </div>
@@ -29,7 +18,7 @@ export default {
   props: {
     list: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     }
   },
   data() {
@@ -157,25 +146,26 @@ export default {
     .param {
       display: flex;
       display: -webkit-flex;
-      flex-flow: row nowrap;
+      flex-flow: column wrap;
+      border-right: 0;
+      border-bottom: 0;
       > div {
-        flex: 1;
+        width: 100%;
         display: flex;
-        flex-flow: column wrap;
-        &:nth-of-type(1) {
-          flex: 0 0 4%;
-          > div {
-            padding-left: 20%;
-          }
-        }
-        &:nth-of-type(3) {
-          flex: 0 0 10%;
-        }
-        &:nth-of-type(2) {
-          flex: 0 0 20%;
-        }
+        flex-flow: row nowrap;
+
         > div {
-          padding-left: 5%;
+          flex: 1;
+          &:nth-of-type(1) {
+            flex: 0 0 5%;
+          }
+          &:nth-of-type(2) {
+            flex: 0 0 25%;
+          }
+          &:nth-of-type(3) {
+            flex: 0 0 20%;
+          }
+          padding-left: 2%;
           width: 100%;
           height: 30px;
           line-height: 30px;

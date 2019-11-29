@@ -83,7 +83,7 @@
             </div>
           </div>
           <!-- 技术参数 -->
-          <technical-param v-show="selectTab === 4" :list="technicalParameterList"></technical-param>
+          <technical-param v-show="selectTab === 4" :list="technologyList"></technical-param>
           <!-- 相关尺寸 -->
           <div class="related-size" v-show="selectTab === 5">
             <img v-for="(item, index) in relatedSizeList" :key="index" :src="item" alt="图片" />
@@ -122,10 +122,115 @@ export default {
         "技术参数",
         "相关尺寸"
       ],
+      TECH_LIST: [
+        {
+          nm: "螺杆型号",
+          enNm: "screwTypeNm",
+          unit: "",
+          val: ""
+        },
+        {
+          nm: "螺杆直径",
+          enNm: "screwDiameter",
+          unit: "mm",
+          val: "D30"
+        },
+        {
+          nm: "螺杆长径比",
+          enNm: "screwRatioLd",
+          unit: "L/D",
+          val: "24"
+        },
+        {
+          nm: "注射压力",
+          enNm: "injectionPressure",
+          unit: "Mpa",
+          val: "500"
+        },
+        {
+          nm: "注射重量",
+          enNm: "injectionWeight",
+          unit: "g",
+          val: "500"
+        },
+        {
+          nm: "最大拉杆内间距(H×V)",
+          enNm: "spaceBetweenTieBars",
+          unit: "mm",
+          val: "360×360"
+        },
+        {
+          nm: "最大模厚",
+          enNm: "maxMoldHeight",
+          unit: "mm",
+          val: "360×360"
+        },
+        {
+          nm: "最小模厚",
+          enNm: "minMoldHeight",
+          unit: "mm",
+          val: "360×360"
+        },
+        {
+          nm: "顶针行程",
+          enNm: "ejectorStroke",
+          unit: "mm",
+          val: "100"
+        },
+        {
+          nm: "理论顶出力",
+          enNm: "ejectorTonnage",
+          unit: "KN",
+          val: "28.5"
+        },
+        {
+          nm: "最大模板开距(开模行程)",
+          enNm: "maxMoldOpeningStroke",
+          unit: "mm",
+          val: "28.5"
+        },
+        {
+          nm: "最小模具尺寸",
+          enNm: "minMoldDimension",
+          unit: "mm",
+          val: "28.5"
+        },
+        {
+          nm: "模板尺寸(H×V)",
+          enNm: "moldPlatenDimension",
+          unit: "mm",
+          val: "28.5"
+        },
+        {
+          nm: "油泵马达(电机功率)",
+          enNm: "pumpMotorPower",
+          unit: "Kw",
+          val: "11"
+        },
+        {
+          nm: "电热功率",
+          enNm: "heaterPower",
+          unit: "Kw",
+          val: "230×200"
+        },
+        {
+          nm: "机器重量",
+          enNm: "machineWeight",
+          unit: "t",
+          val: "175"
+        },
+        {
+          nm: "总电气容量",
+          enNm: "connectionPower",
+          unit: "Kw/A",
+          val: "175"
+        }
+      ],
       performanceList: [],
       typicalProductList: [],
       standardSettingList: [],
       technicalParameterList: [],
+      technologyList: [],
       relatedSizeList: []
     };
   },
@@ -225,6 +330,7 @@ export default {
       this.standardSettingList = await this.api.sysGetStandardSetting(param);
     },
     async getTechnicalParameter() {
+      this.technologyList = [];
       this.technicalParam = {
         modelType: this.categoryObj.modelType,
         modelCode: this.categoryObj.modelCode,
@@ -236,18 +342,17 @@ export default {
       this.technicalParameterList = await this.api.sysGetTechnicalParameter(
         this.technicalParam
       );
-      //去除后两个字段
-      this.technicalParameterList.forEach(item => {
-        delete item.imgUrl;
-        delete item.imgUrlEn;
-        delete item.priceIn;
-        delete item.priceOut;
-        delete item.pumpMotorPower;
-        delete item.screwSpeed;
-        delete item.shotSize;
-        delete item.spaceBetweenTieBars;
-        delete item.tempCtlQty;
+
+      const paramLen = this.technicalParameterList.length;
+      this.TECH_LIST.forEach(pro => {
+        pro.val = [];
+        if (paramLen > 0) {
+          this.technicalParameterList.forEach(param => {
+            pro.val.push(param[pro.enNm]);
+          });
+        }
       });
+      this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
     },
     async getRelatedSize() {
       const list = await this.api.sysGetTechnicalParameter(this.technicalParam);
@@ -358,6 +463,13 @@ export default {
         .related-size {
           margin: 50px 150px 0 40px;
           line-height: 30px;
+          img{
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            vertical-align: middle;
+          }
         }
         .content {
           > p {

@@ -142,15 +142,51 @@ export default {
           val: "24"
         },
         {
-          nm: "注射压力",
-          enNm: "injectionPressure",
-          unit: "Mpa",
-          val: "500"
+          nm: "理论注射容量",
+          enNm: "shotSize",
+          unit: "cm³",
+          val: "24"
         },
         {
           nm: "注射重量",
           enNm: "injectionWeight",
           unit: "g",
+          val: "500"
+        },
+          {
+          nm: "注射速率",
+          enNm: "injectionRate",
+          unit: "g/s",
+          val: "500"
+        },
+          {
+          nm: "塑化能力",
+          enNm: "plasticizingCapacity",
+          unit: "g/s",
+          val: "500"
+        },
+        {
+          nm: "注射压力",
+          enNm: "injectionPressure",
+          unit: "Mpa",
+          val: "500"
+        },
+         {
+          nm: "螺杆转速",
+          enNm: "screwSpeed",
+          unit: "rpm",
+          val: "500"
+        },
+          {
+          nm: "锁模力",
+          enNm: "clampTonnage",
+          unit: "t",
+          val: "500"
+        },
+          {
+          nm: "最大移模行程",
+          enNm: "maxToggleStroke",
+          unit: "mm",
           val: "500"
         },
         {
@@ -196,9 +232,21 @@ export default {
           val: "28.5"
         },
         {
+          nm: "最大模具重量",
+          enNm: "maxMoldWeight",
+          unit: "Kg",
+          val: "28.5"
+        },
+        {
           nm: "模板尺寸(H×V)",
           enNm: "moldPlatenDimension",
           unit: "mm",
+          val: "28.5"
+        },
+          {
+          nm: "电热功率",
+          enNm: "heaterPower",
+          unit: "Kw",
           val: "28.5"
         },
         {
@@ -207,16 +255,40 @@ export default {
           unit: "Kw",
           val: "11"
         },
-        {
-          nm: "电热功率",
-          enNm: "heaterPower",
-          unit: "Kw",
-          val: "230×200"
+          {
+          nm: "外形尺寸",
+          enNm: "machineDimension",
+          unit: "m",
+          val: "175"
         },
         {
           nm: "机器重量",
           enNm: "machineWeight",
           unit: "t",
+          val: "175"
+        },
+         {
+          nm: "料斗容积",
+          enNm: "hopperCapacity",
+          unit: "Kg",
+          val: "175"
+        },
+          {
+          nm: "油箱容积",
+          enNm: "oilTankCapacity",
+          unit: "L",
+          val: "175"
+        },
+            {
+          nm: "保压压力",
+          enNm: "holdingPressure",
+          unit: "Mpa",
+          val: "175"
+        },
+         {
+          nm: "喷嘴接触力",
+          enNm: "nozzleContactForce",
+          unit: "Mpa",
           val: "175"
         },
         {
@@ -463,7 +535,7 @@ export default {
         .related-size {
           margin: 50px 150px 0 40px;
           line-height: 30px;
-          img{
+          img {
             width: auto;
             height: auto;
             max-width: 100%;

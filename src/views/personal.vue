@@ -258,6 +258,12 @@
               <input type="text" v-model="param.email" />
             </div>
           </div>
+          <div>
+            <span>客户名称：</span>
+            <div class="email-input">
+              <input type="text" v-model="param.neederCompany" />
+            </div>
+          </div>
           <!-- 备注 -->
           <div>
             <span>备注：</span>
@@ -376,7 +382,8 @@ export default {
       showDialog: false,
       param: {
         email: "",
-        remark: ""
+        remark: "",
+        neederCompany: ""
       },
       attach: {
         technicalParameters: false,
@@ -427,6 +434,11 @@ export default {
     showSaveOrder(index) {
       this.selectIndex = index;
       this.showDialog = true;
+      const neederCompany = this.orderList[this.selectIndex].proSaleInfo
+        .neederCompany;
+      if (neederCompany) {
+        this.param.neederCompany = neederCompany;
+      }
     },
     toShowEmail() {
       this.showEmail = true;
@@ -660,7 +672,7 @@ export default {
       });
 
       const param3 = {
-        neederCompany: checkedCartList[0].proSaleInfo.neederCompany,
+        neederCompany: this.param.neederCompany,
         supplier: "博创智能装备股份有限公司",
         appuserId: this.userInfo.userId,
         remark: this.param.remark,
@@ -678,6 +690,19 @@ export default {
         saleAgreementJson: JSON.stringify(param3),
         cartIds: JSON.stringify(carts)
       };
+
+      //修改选中carts的客户信息
+      checkedCartList.forEach(async item => {
+        item.proSaleInfo.neederCompany = this.param.neederCompany;
+        const cartId = item.id;
+        delete item.id;
+
+        const paramCart = {
+          id: cartId,
+          data: JSON.stringify(item)
+        };
+        await this.api.sysModifyCart(paramCart);
+      });
 
       this.until.loSave("orderParam", JSON.stringify(param));
       this.until.href("technologyPreview.html");

@@ -9,7 +9,7 @@
       <div>
         <span>需方：</span>
         <div>
-          <input type="text" v-model="cartInfo.proSaleInfo.neederCompany" />
+          <input type="text" />
         </div>
       </div>
       <p>经过双方友好协商除对采购设备的标准配置和参数确定以外，另外达成以下技术协议进行补充，若本协议中还有未涉及的条款双方友好协商解决：</p>

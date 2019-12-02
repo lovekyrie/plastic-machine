@@ -120,6 +120,12 @@
               <input type="text" v-model="param.email" />
             </div>
           </div>
+          <div>
+            <span>客户名称：</span>
+            <div class="email-input">
+              <input type="text" v-model="param.neederCompany" />
+            </div>
+          </div>
           <!-- 备注 -->
           <div>
             <span>备注：</span>
@@ -174,7 +180,8 @@ export default {
       userInfo: {},
       param: {
         email: "",
-        remark: ""
+        remark: "",
+        neederCompany: ""
       },
       time: "",
       attach: {
@@ -269,7 +276,7 @@ export default {
         const priceAll = (
           parseInt(item.proSaleInfo.price) + optionMoney
         ).toFixed(2);
-        const salePrice=parseInt(item.proSaleInfo.salePrice).toFixed(2)
+        const salePrice = parseInt(item.proSaleInfo.salePrice).toFixed(2);
         const salePriceAll = (
           parseInt(item.proSaleInfo.salePrice) + optionMoney
         ).toFixed(2);
@@ -290,7 +297,7 @@ export default {
       });
 
       const param3 = {
-        neederCompany: checkedCartList[0].proSaleInfo.neederCompany,
+        neederCompany: this.param.neederCompany,
         supplier: "博创智能装备股份有限公司",
         appuserId: this.userInfo.userId,
         remark: this.param.remark,
@@ -308,6 +315,19 @@ export default {
         saleAgreementJson: JSON.stringify(param3),
         cartIds: JSON.stringify(carts)
       };
+
+      //修改选中carts的客户信息
+      checkedCartList.forEach(async item => {
+        item.proSaleInfo.neederCompany = this.param.neederCompany;
+        const cartId = item.id;
+        delete item.id;
+
+        const paramCart = {
+          id: cartId,
+          data: JSON.stringify(item)
+        };
+        await this.api.sysModifyCart(paramCart);
+      });
 
       this.until.loSave("orderParam", JSON.stringify(param));
       this.until.href("technologyPreview.html");
@@ -564,7 +584,7 @@ export default {
   top: 50%;
   left: 50%;
   width: 500px;
-  height: 470px;
+  height: 520px;
   transform: translate3d(-50%, -50%, 0);
   background-color: #fff;
   border-radius: 10px;
@@ -604,10 +624,11 @@ export default {
     &:not(:nth-last-of-type(1)) {
       margin-bottom: 30px;
     }
-    &:nth-of-type(2) {
+    &:nth-of-type(2),
+    &:nth-of-type(3) {
       align-items: center;
     }
-    &:nth-of-type(3) {
+    &:nth-of-type(4) {
       textarea {
         padding-left: 10px;
         width: 100%;

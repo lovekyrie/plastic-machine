@@ -34,24 +34,6 @@
             <div>{{ form.screw }}</div>
           </div>
 
-          <div class="customer">
-            <p>客户信息</p>
-            <div>
-              <div>
-                <span>客户名称</span>
-                <input type="text" v-model="proSaleInfo.neederCompany" />
-              </div>
-              <div>
-                <span>联系人</span>
-                <input type="text" />
-              </div>
-              <div>
-                <span>联系电话</span>
-                <input type="text" />
-              </div>
-            </div>
-          </div>
-
           <div class="product-info">
             <p>产品信息</p>
             <div>
@@ -302,7 +284,7 @@ export default {
       neederCompany: "",
       cartInfo: {},
       proSaleInfo: {
-        neederCompany: "",
+        // neederCompany: "",
         modelNumber: "",
         price: "",
         salePrice: ""
@@ -349,10 +331,7 @@ export default {
       }
     },
     toCart() {
-      if (!this.proSaleInfo.neederCompany) {
-        this.$message.error("客户名称必填！");
-        return;
-      }
+    
       if (this.proSaleInfo.price === "") {
         this.$message.error("单价必填！");
         return;

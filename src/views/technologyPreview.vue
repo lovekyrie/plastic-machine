@@ -82,7 +82,7 @@
             天，以上为标准机台报价，含增值税费等；若有其它特殊要求，则另行商议价格。
           </p>
           <!-- 货物信息对应的选配参数 -->
-          <div class="optional-signal">
+          <!-- <div class="optional-signal">
             <div>
               <div>选配功能或附件</div>
             </div>
@@ -91,16 +91,16 @@
             <div>
               <div v-for="(item, index) in OPTIONAL_TITLE" :key="index">{{ item }}</div>
             </div>
-          </div>
-          <div class="optional-list" v-for="(item, index) in techAgreementJson" :key="index">
+          </div> -->
+          <!-- <div class="optional-list" v-for="(item, index) in techAgreementJson" :key="index">
             <div v-for="(itemChild, index1) in item.techAgreementMatchs" :key="index1">
               <div>{{ index1 + 1 }}</div>
               <div>{{ itemChild.matchNameCH }}</div>
               <div>{{ itemChild.num }}</div>
-              <!-- <div>{{ itemChild.unitPrice | toFixed(2) }}</div>
-              <div>{{ itemChild.money | toFixed(2) }}</div> -->
+              <div>{{ itemChild.unitPrice | toFixed(2) }}</div>
+              <div>{{ itemChild.money | toFixed(2) }}</div>
             </div>
-          </div>
+          </div>-->
           <!-- <div class="total">
             <div>总计</div>
             <div>
@@ -109,7 +109,7 @@
                 元）
               </p>
             </div>
-          </div> -->
+          </div>-->
         </div>
       </div>
       <div class="item">
@@ -149,14 +149,31 @@
     <!-- 技术参数及配置 -->
     <div class="technology-setting">
       <h3>二 技术参数及配置</h3>
-      <div class="item" v-for="(item, index) in technologyList" :key="index">
+      <div class="item" v-for="(item, index) in techAgreementJson" :key="index">
         <div class="title">2-1 技术参数表</div>
-        <p>{{item[4].val}}技术参数表</p>
+        <p>{{item.propertyArr[4].val}}技术参数表</p>
         <div class="param">
-          <div v-for="(itemChild, index) in item" :key="index">
+          <div v-for="(itemChild, index) in item.propertyArr" :key="index">
             <div>{{ itemChild.nm }}</div>
             <div>{{ itemChild.unit }}</div>
             <div>{{ itemChild.val }}</div>
+          </div>
+          <div class="detail-title">
+            <div>选配明细</div>
+          </div>
+          <div class="detail-list">
+            <div v-for="(item, index) in OPTIONAL_TITLE" :key="index+30">{{ item }}</div>
+          </div>
+          <div
+            class="detail-list"
+            v-for="(itemChild, index1) in item.techAgreementMatchs"
+            :key="index1+31"
+          >
+            <div>{{ index1 + 1 }}</div>
+            <div>{{ itemChild.matchNameCH }}</div>
+            <div>{{ itemChild.num }}</div>
+            <!-- <div>{{ itemChild.unitPrice | toFixed(2) }}</div>
+            <div>{{ itemChild.money | toFixed(2) }}</div>-->
           </div>
         </div>
       </div>
@@ -410,10 +427,13 @@ export default {
       this.techAgreementJson.forEach(item => {
         this.TECH_LIST.forEach(pro => {
           if (item.techAgreement.length > 0) {
-            pro.val = item.techAgreement[0][pro.enNm];
+            pro.val = item.techAgreement[0][pro.enNm]
+              ? item.techAgreement[0][pro.enNm]
+              : "";
           }
         });
-        this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
+        // this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));
+        item.propertyArr = JSON.parse(JSON.stringify(this.TECH_LIST));
       });
     },
     calculateMoney() {
@@ -652,10 +672,11 @@ export default {
     width: 60%;
     margin: 0 auto;
     .item {
-       .title {
+      margin-top: 30px;
+      .title {
         font-weight: 700;
       }
-      >p{
+      > p {
         margin-top: 20px;
       }
       .param {
@@ -685,9 +706,27 @@ export default {
             border-bottom: 1px solid #bebebe;
           }
         }
+        .detail-title {
+          > div {
+            &:nth-of-type(1) {
+              flex: 1;
+              text-align: center;
+            }
+          }
+        }
+        .detail-list {
+          > div {
+            &:nth-of-type(1),
+            &:nth-last-of-type(1) {
+              flex: 1;
+            }
+            &:nth-of-type(2) {
+              flex: 2;
+            }
+          }
+        }
       }
     }
   }
-
 }
 </style>

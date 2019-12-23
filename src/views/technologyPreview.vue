@@ -91,7 +91,7 @@
             <div>
               <div v-for="(item, index) in OPTIONAL_TITLE" :key="index">{{ item }}</div>
             </div>
-          </div> -->
+          </div>-->
           <!-- <div class="optional-list" v-for="(item, index) in techAgreementJson" :key="index">
             <div v-for="(itemChild, index1) in item.techAgreementMatchs" :key="index1">
               <div>{{ index1 + 1 }}</div>
@@ -277,7 +277,7 @@ export default {
         },
         {
           nm: "开模行程",
-          enNm: "maxtoggleStroke",
+          enNm: "maxToggleStroke",
           unit: "mm",
           val: "200"
         },
@@ -301,7 +301,7 @@ export default {
         },
         {
           nm: "容模厚度",
-          enNm: "moldHeight",
+          enNm: "minMoldHeight,maxMoldHeight",
           unit: "mm",
           val: "1.2"
         },
@@ -427,9 +427,16 @@ export default {
       this.techAgreementJson.forEach(item => {
         this.TECH_LIST.forEach(pro => {
           if (item.techAgreement.length > 0) {
-            pro.val = item.techAgreement[0][pro.enNm]
-              ? item.techAgreement[0][pro.enNm]
-              : "";
+            if (pro.enNm.indexOf(",") > 0) {
+              const arr = pro.enNm.split(",");
+              pro.val = ` ${item.techAgreement[0][arr[0]]}~${
+                item.techAgreement[0][arr[1]]
+              }`;
+            } else {
+              pro.val = item.techAgreement[0][pro.enNm]
+                ? item.techAgreement[0][pro.enNm]
+                : "";
+            }
           }
         });
         // this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));

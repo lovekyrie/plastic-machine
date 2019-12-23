@@ -106,11 +106,27 @@
               </div>
               <div>
                 <img
-                  :src="attach.businessLicense ? pickAll : noPick"
+                  :src="attach.Introduction ? pickAll : noPick"
                   alt
-                  @click="attach.businessLicense = !attach.businessLicense"
+                  @click="attach.Introduction = !attach.Introduction"
                 />
-                <span>营业执照</span>
+                <span>博创简介</span>
+              </div>
+              <div>
+                <img
+                  :src="attach.bsIntroduction ? pickAll : noPick"
+                  alt
+                  @click="attach.bsIntroduction = !attach.bsIntroduction"
+                />
+                <span>BS伺服节能系列注塑机介绍</span>
+              </div>
+              <div>
+                <img
+                  :src="attach.buIntroduction ? pickAll : noPick"
+                  alt
+                  @click="attach.buIntroduction = !attach.buIntroduction"
+                />
+                <span>BU二板智能注塑机介绍</span>
               </div>
             </div>
           </div>
@@ -188,7 +204,9 @@ export default {
         technicalParameters: false,
         afterSalesService: false,
         credentials: false,
-        businessLicense: false
+        Introduction: false,
+        bsIntroduction: false,
+        buIntroduction: false
       }
     };
   },
@@ -584,7 +602,7 @@ export default {
   top: 50%;
   left: 50%;
   width: 500px;
-  height: 520px;
+  height: 560px;
   transform: translate3d(-50%, -50%, 0);
   background-color: #fff;
   border-radius: 10px;
@@ -604,7 +622,7 @@ export default {
 }
 
 .submit > div {
-  margin: 0 55px;
+  margin: 0 28px;
   display: -webkit-flex;
   display: flex;
   flex-wrap: wrap;
@@ -622,7 +640,7 @@ export default {
     flex-wrap: nowrap;
     flex-direction: row;
     &:not(:nth-last-of-type(1)) {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     &:nth-of-type(2),
     &:nth-of-type(3) {

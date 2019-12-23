@@ -650,10 +650,11 @@ export default {
       }
     },
     async getScrewList() {
-      if (this.form.modelID && this.form.injectionId) {
+      if (this.form.modelID && this.form.injectionId && this.form.clampingForceId) {
         const param = {
           modelTypeId: this.form.modelID,
-          injectionId: this.form.injectionId
+          injectionId: this.form.injectionId,
+          clampForceId: this.form.clampingForceId
         };
         this.screwModelList = await this.api.sysGetScrewList(param);
         this.screw = this.screwModelList[0].name;

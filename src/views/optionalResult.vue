@@ -88,7 +88,7 @@ export default {
       time: "",
       form: {},
       list: [],
-      technologyList:[],
+      technologyList: [],
       discount: "",
       TECH_LIST: [
         {
@@ -171,9 +171,9 @@ export default {
         },
         {
           nm: "开模行程",
-          enNm: "maxtoggleStroke",
+          enNm: "maxToggleStroke",
           unit: "mm",
-          val: "200"
+          val: ""
         },
         {
           nm: "模板尺寸",
@@ -195,7 +195,7 @@ export default {
         },
         {
           nm: "容模厚度",
-          enNm: "moldHeight",
+          enNm: "minMoldHeight,maxMoldHeight",
           unit: "mm",
           val: "1.2"
         },
@@ -331,7 +331,6 @@ export default {
       }
     },
     toCart() {
-    
       if (this.proSaleInfo.price === "") {
         this.$message.error("单价必填！");
         return;
@@ -431,8 +430,13 @@ export default {
       this.list.push(data);
 
       this.TECH_LIST.forEach(pro => {
-        if (data.length > 0) {
-          pro.val = data[0][pro.enNm];
+        if (this.list.length > 0) {
+          if (pro.enNm.indexOf(",") > 0) {
+            const arr = pro.enNm.split(",");
+            pro.val = ` ${data[arr[0]]}~${data[arr[1]]}`;
+          } else {
+            pro.val = data[pro.enNm];
+          }
         }
       });
       this.technologyList.push(JSON.parse(JSON.stringify(this.TECH_LIST)));

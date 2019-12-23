@@ -251,7 +251,7 @@ export default {
         },
         {
           nm: "开模行程",
-          enNm: "maxtoggleStroke",
+          enNm: "maxToggleStroke",
           unit: "mm",
           val: "200"
         },
@@ -275,7 +275,7 @@ export default {
         },
         {
           nm: "容模厚度",
-          enNm: "moldHeight",
+          enNm: "minMoldHeight,maxMoldHeight",
           unit: "mm",
           val: "1.2"
         },
@@ -399,9 +399,16 @@ export default {
       };
 
       const data = await this.api.sysGetOptionResultParamList(param);
+      const paramList = [];
+      paramList.push(data);
       this.TECH_LIST.forEach(pro => {
-        if (data.length > 0) {
-          pro.val = data[0][pro.enNm];
+        if (paramList.length > 0) {
+          if (pro.enNm.indexOf(",") > 0) {
+            const arr = pro.enNm.split(",");
+            pro.val = ` ${data[arr[0]]}~${data[arr[1]]}`;
+          } else {
+            pro.val = data[pro.enNm];
+          }
         }
       });
       this.list.push(JSON.parse(JSON.stringify(this.TECH_LIST)));

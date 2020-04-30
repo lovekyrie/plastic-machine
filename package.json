@@ -15,7 +15,7 @@
     "core-js": "^2.6.5",
     "element-ui": "^2.12.0",
     "eslint-config-prettier": "^6.4.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "nzh": "^1.0.4",
     "prettier-eslint-cli": "^5.0.0",
     "vue": "^2.6.10",
